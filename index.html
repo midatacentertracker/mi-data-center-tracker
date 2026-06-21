@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <!--
-  MICHIGAN DATA CENTER TRACKER — v36
+  MICHIGAN DATA CENTER TRACKER — v37
   michigandatacentertracker.com
   Brand: black / white / red primary · slate-blue (#1E3A5F) secondary utility accent
 
@@ -17,7 +17,7 @@
   ║  ✏️ METRO DETROIT → headline · date · url                            ║
   ║  ✏️ WEST MICHIGAN → headline · date · url                            ║
   ║  ✏️ MID-MICHIGAN  → headline · date · url                            ║
-  ║  ✏️ NORTHERN MI / UP → headline · date · url                         ║
+  ║  ✏️ NORTHERN MI → headline · date · url                                                   ║
   ║  ✏️ PUBLIC WATCH  → source-type · headline · date · url              ║
   ╚══════════════════════════════════════════════════════════════════════╝
 
@@ -784,12 +784,12 @@ h2.ev-hdr-title{
 @media(max-width:640px){
   .ev-item{
     grid-template-columns:1fr;
-    gap:6px;padding:14px 16px;
+    gap:4px;padding:12px 16px;
   }
   .ev-date{ flex-direction:row;align-items:baseline;gap:10px; }
-  .ev-actions{ justify-content:flex-start;margin-top:6px; }
+  .ev-actions{ justify-content:flex-start;margin-top:8px;gap:6px;flex-wrap:wrap; }
   .ev-hed{ font-size:16px; }
-  .ev-pill{ padding:9px 14px;font-size:11px; }
+  .ev-pill{ padding:7px 10px;font-size:10px; }
 }
 
 .ev-extra-wrap{ border-top:1px solid var(--bdr); }
@@ -819,12 +819,13 @@ h2.ev-hdr-title{
   border-top:3px solid var(--bdr2);
   background:var(--bg);
 }
-.reg-hdr{
+.reg-hdr,.sec-hdr{
   display:flex;align-items:center;gap:12px;
   padding:13px 20px 12px;
   border-bottom:2px solid var(--bdr);
   background:var(--blk);
 }
+.sec-hdr-title{ font-family:var(--sans);font-size:16px;font-weight:900;letter-spacing:.10em;text-transform:uppercase;color:#fff;line-height:1;margin:0; }
 h2.reg-hdr-title{
   font-family:var(--sans);font-size:16px;font-weight:900;
   letter-spacing:.10em;text-transform:uppercase;
@@ -965,7 +966,7 @@ h2.rec-hdr-title{
   gap:0;
   list-style:none;
 }
-.rec-list li{ list-style:none; }
+.rec-list li{ list-style:none;display:contents; }
 .rec-list li::marker{ font-size:0; }
 .rec-item{
   display:flex;gap:10px;align-items:flex-start;
@@ -1018,7 +1019,7 @@ h2.rec-hdr-title{
 .chat-hdr{
   display:flex;align-items:center;gap:10px;
   padding:13px 20px 12px;
-  border-bottom:2px solid var(--bdr);
+  border-bottom:2px solid var(--red);
   background:var(--blk);
 }
 h2.chat-hdr-title{
@@ -1034,20 +1035,22 @@ h2.chat-hdr-title{
 }
 .chat-list{ list-style:none; }
 .chat-item{
-  display:flex;gap:12px;align-items:flex-start;
-  padding:14px 20px;border-bottom:1px solid var(--bdr);
+  display:flex;gap:10px;align-items:flex-start;
+  padding:10px 18px 10px 15px;border-bottom:1px solid var(--bdr);
+  border-left:3px solid transparent;
   text-decoration:none;color:var(--blk);
-  transition:background .12s;
+  transition:background .12s,border-color .12s;
 }
+.chat-item:hover{ border-left-color:var(--red); }
 .chat-item:last-child{ border-bottom:none; }
 .chat-item:hover{ background:var(--off); }
 
 .chat-avatar{
-  width:34px;height:34px;border-radius:50%;
+  width:28px;height:28px;border-radius:50%;
   background:var(--off);border:1.5px solid var(--bdr2);
   flex-shrink:0;overflow:hidden;
   display:flex;align-items:center;justify-content:center;
-  font-size:14px;font-weight:700;color:var(--mid);
+  font-size:12px;font-weight:700;color:var(--mid);
 }
 .chat-avatar img{ width:100%;height:100%;object-fit:cover; }
 .chat-avatar-x{ background:var(--blk);color:#fff;border-color:var(--blk); }
@@ -1058,7 +1061,7 @@ h2.chat-hdr-title{
   display:flex;align-items:center;gap:6px;margin-bottom:4px;flex-wrap:wrap;
 }
 .chat-name{
-  font-size:13px;font-weight:800;color:var(--blk);
+  font-size:12px;font-weight:800;color:var(--blk);
 }
 .chat-handle{
   font-size:11px;color:var(--lite);font-weight:500;
@@ -1068,7 +1071,7 @@ h2.chat-hdr-title{
   margin-left:auto;
 }
 .chat-text{
-  font-size:14px;line-height:1.52;color:var(--mid);font-weight:400;
+  font-size:13px;line-height:1.45;color:var(--mid);font-weight:400;
 }
 .chat-text a{ color:var(--blu);text-decoration:underline; }
 .chat-text a:hover{ color:var(--blu-lt); }
@@ -1089,29 +1092,31 @@ h2.chat-hdr-title{
    SPONSOR BOARD
 ══════════════════════════════════════════════════════════ */
 .sponsor-board{
-  background:var(--off);
-  border-top:1px solid var(--bdr);
-  padding:26px 22px;
+  background:var(--char);
+  border-top:3px solid var(--red);
+  border-bottom:3px solid var(--red);
+  padding:24px 22px;
   text-align:center;
 }
 .sponsor-lbl{
   font-family:var(--body);font-size:9px;font-weight:800;
   letter-spacing:.16em;text-transform:uppercase;
-  color:var(--lite);margin-bottom:14px;
+  color:rgba(255,255,255,.40);margin-bottom:14px;
   display:block;
 }
 .sponsor-logo{
   display:inline-flex;align-items:center;justify-content:center;
-  width:120px;height:48px;
-  border:1px solid var(--bdr2);background:#fff;
-  color:var(--lite);font-size:11px;
+  width:200px;height:64px;
+  border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.06);
+  color:rgba(255,255,255,.35);font-size:11px;letter-spacing:.08em;
 }
 .sponsor-cta{
-  display:block;margin-top:12px;
-  font-size:11px;color:var(--lite);
+  display:block;margin-top:14px;
+  font-size:11px;color:rgba(255,255,255,.35);
   font-style:italic;
 }
-.sponsor-cta a{ color:var(--mid);text-decoration:underline; }
+.sponsor-cta a{ color:rgba(255,255,255,.55);text-decoration:underline; }
+.sponsor-cta a:hover{ color:#fff; }
 
 /* ══════════════════════════════════════════════════════════
    NEWSLETTER
@@ -1579,6 +1584,7 @@ h2.ml-title{
           >Senate Energy &amp; Environment Committee — Data Center Water &amp; Power Hearing</a>
       </div>
       <div class="ev-actions">
+        <a href="/michigan-senate-energy-committee-hearing-jun22" class="ev-pill">Agenda</a>
         <a href="/michigan-senate-energy-committee-hearing-jun22#livestream" class="ev-pill live">Watch Live</a>
         </div>
     </li>
@@ -1596,6 +1602,7 @@ h2.ml-title{
       </div>
       <div class="ev-actions">
         <a href="/gaines-township-board-meeting-jun24" class="ev-pill">Agenda</a>
+        <a href="/gaines-township-board-meeting-jun24#livestream" class="ev-pill live">Watch Live</a>
         </div>
     </li>
 
@@ -1612,6 +1619,7 @@ h2.ml-title{
       </div>
       <div class="ev-actions">
         <a href="/kalamazoo-county-planning-commission-jun25" class="ev-pill">Agenda</a>
+        <a href="/kalamazoo-county-planning-commission-jun25#livestream" class="ev-pill live">Watch Live</a>
       </div>
     </li>
 
@@ -1636,6 +1644,7 @@ h2.ml-title{
         </div>
         <div class="ev-actions">
           <a href="/ada-township-planning-commission-jun29" class="ev-pill">Agenda</a>
+        <a href="/ada-township-planning-commission-jun29#livestream" class="ev-pill live">Watch Live</a>
         </div>
       </li>
       <li class="ev-item">
@@ -1651,6 +1660,7 @@ h2.ml-title{
         </div>
         <div class="ev-actions">
           <a href="/mpsc-data-center-rate-design-jul1" class="ev-pill">Agenda</a>
+          <a href="/mpsc-data-center-rate-design-jul1#livestream" class="ev-pill live">Watch Live</a>
           </div>
       </li>
     </ul>
@@ -1673,8 +1683,8 @@ h2.ml-title{
      REGIONAL COVERAGE
 ════════════════════════════════════════════════════════ -->
 <section id="regions" aria-labelledby="regions-hed">
-  <div class="sec-hdr">
-    <h2 class="sec-hdr-title" id="regions-hed">Regional Coverage</h2>
+  <div class="reg-hdr">
+    <h2 class="reg-hdr-title" id="regions-hed">Regional Coverage</h2>
   </div>
   <div class="reg-grid">
 
@@ -1762,10 +1772,10 @@ h2.ml-title{
       </ul>
     </div>
 
-    <!-- NORTHERN MI / UP -->
+    <!-- NORTHERN MI -->
     <div class="reg-cell">
       <div class="reg-cell-hdr">
-        <h3 class="reg-name">Northern MI / UP</h3>
+        <h3 class="reg-name">Northern MI</h3>
       </div>
       <ul style="list-style:none;padding:0;margin:0;">
         <li><a class="reg-item" href="/marquette-county-data-center-proposal" target="_blank" rel="noopener">
@@ -1851,6 +1861,7 @@ h2.ml-title{
 <section id="chatter" aria-label="Live Chatter">
   <div class="chat-hdr">
     <h2 class="chat-hdr-title">Live Chatter</h2>
+    <span class="chat-hdr-badge">Live</span>
   </div>
   <ul class="chat-list">
 
@@ -2077,7 +2088,7 @@ h2.ml-title{
 ════════════════════════════════════════════════════════ -->
 <aside class="sponsor-board" aria-label="Sponsor">
   <span class="sponsor-lbl">Sponsored</span>
-  <div class="sponsor-logo" style="background:#f0f2f5;color:#aaa;font-family:var(--body);font-size:9px;letter-spacing:.14em;text-transform:uppercase;border:none;">Sponsor</div>
+  <div class="sponsor-logo" style="font-family:var(--body);font-size:9px;letter-spacing:.16em;text-transform:uppercase;">YOUR LOGO HERE</div>
   <span class="sponsor-cta">Reach Michigan’s data center policy audience. <a href="/advertise">Learn more &rsaquo;</a></span>
 </aside>
 
@@ -2110,10 +2121,15 @@ h2.ml-title{
   <div class="ft-top">
     <div class="ft-brand">
       <div class="ft-logo-wrap"><span class="ft-logo-state">Michigan</span><span class="ft-logo-rule"></span><span class="ft-logo-sub">Data Center Tracker</span></div>
-      <div class="ft-tagline">Tracking the projects, meetings, and decisions that shape Michigan’s data center future.</div>
+      <div class="ft-tagline">Independent coverage of data center projects, meetings, permits &amp; policy in Michigan.</div>
     </div>
     <nav class="ft-links" aria-label="Footer navigation">
-      <a href="/map">Map</a>
+      <a href="/map">Live Map</a>
+      <a href="/records">Public Records</a>
+      <a href="/tip">Tip Line</a>
+      <a href="#nl">Newsletter</a>
+      <a href="/advertise">Advertise</a>
+      <a href="/about">About</a>
       <a href="/contact">Contact</a>
     </nav>
   </div>
