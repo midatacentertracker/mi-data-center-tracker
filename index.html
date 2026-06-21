@@ -914,6 +914,7 @@ h3.reg-name{
     grid-template-columns:repeat(4,1fr);
   }
   .reg-cell:nth-child(2n){ border-right:1px solid var(--bdr); }
+  .reg-cell:nth-child(3n){ border-right:1px solid var(--bdr); }
   .reg-cell:nth-child(4n){ border-right:none; }
   .reg-cell.full-width{ grid-column:1 / -1;border-right:none; }
 }
@@ -1050,13 +1051,6 @@ h2.chat-hdr-title{
 }
 .chat-text a{ color:var(--blu);text-decoration:underline; }
 .chat-text a:hover{ color:var(--blu-lt); }
-.chat-platform{
-  width:16px;height:16px;flex-shrink:0;margin-top:2px;
-  border-radius:3px;overflow:hidden;
-  display:flex;align-items:center;justify-content:center;
-  background:var(--blk);
-}
-.chat-platform svg{ width:10px;height:10px; }
 .chat-extra-list{ display:none; }
 .chat-extra-list.open{ display:block; }
 .chat-toggle-btn{
@@ -1653,209 +1647,12 @@ h2.ml-title{
 <!-- ═══════════════════════════════════════════════════════
      REGIONAL COVERAGE
 ════════════════════════════════════════════════════════ -->
-<section id="regions" aria-label="Regional Coverage">
-  <div class="reg-hdr">
-    <span class="reg-hdr-dot" aria-hidden="true"></span>
-    <h2 class="reg-hdr-title">Regional Coverage</h2>
-  </div>
 
-  <div class="reg-grid">
-
-    <!-- ✏️ AT THE CAPITOL -->
-    <div class="reg-cell full-width">
-      <div class="reg-cell-hdr">
-        <h3 class="reg-name">At The Capitol</h3>
-        
-      </div>
-      <a class="reg-item" href="/michigan-data-center-senate-democrat-bill-package" target="_blank" rel="noopener">
-        <span class="reg-bullet" aria-hidden="true"></span>
-        <div class="reg-body">
-          <div class="reg-hed">Senate Dems file 5-bill package: water, power, labor rules for data centers</div>
-          <div class="reg-meta" data-ts="2026-06-20T09:30:00">Jun. 20</div>
-        </div>
-      </a>
-      <a class="reg-item" href="/michigan-house-data-center-tax-incentive-hearings" target="_blank" rel="noopener">
-        <span class="reg-bullet" aria-hidden="true"></span>
-        <div class="reg-body">
-          <div class="reg-hed">House committee holds second hearing on data center tax incentive repeal</div>
-          <div class="reg-meta" data-ts="2026-06-16T13:00:00">Jun. 16</div>
-        </div>
-      </a>
-    </div>
-
-    <!-- ✏️ METRO DETROIT -->
-    <div class="reg-cell">
-      <div class="reg-cell-hdr">
-        <h3 class="reg-name">Metro Detroit</h3>
-        
-      </div>
-      <a class="reg-item" href="/northville-township-data-center-zoning" target="_blank" rel="noopener">
-        <span class="reg-bullet" aria-hidden="true"></span>
-        <div class="reg-body">
-          <div class="reg-hed">Northville Twp. planning board tables data center special use after neighbor pushback</div>
-          <div class="reg-meta" data-ts="2026-06-18T19:00:00">Jun. 18</div>
-        </div>
-      </a>
-      <a class="reg-item" href="/novi-data-center-utility-upgrade" target="_blank" rel="noopener">
-        <span class="reg-bullet" aria-hidden="true"></span>
-        <div class="reg-body">
-          <div class="reg-hed">Novi: DTE proposes $220M substation upgrade to serve campus data center cluster</div>
-          <div class="reg-meta" data-ts="2026-06-14T10:00:00">Jun. 14</div>
-        </div>
-      </a>
-    </div>
-
-    <!-- ✏️ WEST MICHIGAN -->
-    <div class="reg-cell">
-      <div class="reg-cell-hdr">
-        <h3 class="reg-name">West Michigan</h3>
-        
-      </div>
-      <a class="reg-item" href="/gaines-township-zoning-moratorium" target="_blank" rel="noopener">
-        <span class="reg-bullet" aria-hidden="true"></span>
-        <div class="reg-body">
-          <div class="reg-hed">Gaines Twp. planning commission OKs moratorium; board vote set for June 24</div>
-          <div class="reg-meta" data-ts="2026-06-19T18:00:00">Jun. 19</div>
-        </div>
-      </a>
-      <a class="reg-item" href="/ada-township-data-center-conditional-use" target="_blank" rel="noopener">
-        <span class="reg-bullet" aria-hidden="true"></span>
-        <div class="reg-body">
-          <div class="reg-hed">Ada Twp. planners set June 29 hearing on 180-acre data center campus proposal</div>
-          <div class="reg-meta" data-ts="2026-06-15T12:00:00">Jun. 15</div>
-        </div>
-      </a>
-    </div>
-
-    <!-- ✏️ MID-MICHIGAN -->
-    <div class="reg-cell">
-      <div class="reg-cell-hdr">
-        <h3 class="reg-name">Mid-Michigan</h3>
-        
-      </div>
-      <a class="reg-item" href="/delta-township-data-center-site-plan" target="_blank" rel="noopener">
-        <span class="reg-bullet" aria-hidden="true"></span>
-        <div class="reg-body">
-          <div class="reg-hed">Delta Twp. approves site plan for 400MW data center; neighbors file suit</div>
-          <div class="reg-meta" data-ts="2026-06-12T15:00:00">Jun. 12</div>
-        </div>
-      </a>
-      <a class="reg-item" href="/eaton-county-data-center-groundwater" target="_blank" rel="noopener">
-        <span class="reg-bullet" aria-hidden="true"></span>
-        <div class="reg-body">
-          <div class="reg-hed">Eaton County: state DEQ opens groundwater review for proposed data center well</div>
-          <div class="reg-meta" data-ts="2026-06-10T09:00:00">Jun. 10</div>
-        </div>
-      </a>
-    </div>
-
-    <!-- ✏️ NORTHERN MI / UP -->
-    <div class="reg-cell">
-      <div class="reg-cell-hdr">
-        <h3 class="reg-name">Northern MI / UP</h3>
-        
-      </div>
-      <a class="reg-item" href="/marquette-county-data-center-proposal" target="_blank" rel="noopener">
-        <span class="reg-bullet" aria-hidden="true"></span>
-        <div class="reg-body">
-          <div class="reg-hed">Marquette County: developer eyes former paper mill site for 50MW data center</div>
-          <div class="reg-meta" data-ts="2026-06-11T11:00:00">Jun. 11</div>
-        </div>
-      </a>
-      <a class="reg-item" href="/traverse-city-data-center-energy-study" target="_blank" rel="noopener">
-        <span class="reg-bullet" aria-hidden="true"></span>
-        <div class="reg-body">
-          <div class="reg-hed">Traverse City Light &amp; Power commissions load study after data center inquiry</div>
-          <div class="reg-meta" data-ts="2026-06-08T10:00:00">Jun. 8</div>
-        </div>
-      </a>
-    </div>
-
-    <!-- ✏️ PUBLIC WATCH -->
-    <div class="reg-cell full-width">
-      <div class="reg-cell-hdr">
-        <h3 class="reg-name">Public Watch</h3>
-        <span class="reg-count">Records &amp; Filings</span>
-      </div>
-      <a class="reg-item" href="/mpsc-consumers-data-center-contract-foia" target="_blank" rel="noopener">
-        <span class="reg-bullet" aria-hidden="true"></span>
-        <div class="reg-body">
-          <div class="reg-hed">FOIA: Consumers Energy data center power contracts released with redactions — we're fighting for full disclosure
-          </div>
-          <div class="reg-meta" data-ts="2026-06-17T09:00:00">MPSC Filing &middot; Jun. 17</div>
-        </div>
-      </a>
-      <a class="reg-item" href="/egle-data-center-groundwater-permit" target="_blank" rel="noopener">
-        <span class="reg-bullet" aria-hidden="true"></span>
-        <div class="reg-body">
-          <div class="reg-hed">EGLE groundwater withdrawal permit application: Cascade Data Systems — public comment open until July 5</div>
-          <div class="reg-meta" data-ts="2026-06-13T08:00:00">EGLE Permit &middot; Jun. 13</div>
-        </div>
-      </a>
-    </div>
-
-  </div><!-- /.reg-grid -->
-</section>
 
 <!-- ═══════════════════════════════════════════════════════
      YOU SHOULD KNOW (Recommendations)
 ════════════════════════════════════════════════════════ -->
-<section id="rec" aria-label="You Should Know">
-  <div class="rec-hdr">
-    <h2 class="rec-hdr-title">You Should Know</h2>
-    <span class="rec-hdr-sub">Context &amp; Background</span>
-  </div>
-  <div class="rec-list">
-    <a class="rec-item" href="/michigan-data-center-water-use-explainer" target="_blank" rel="noopener">
-      <span class="rec-icon" aria-hidden="true" style="font-size:15px;color:var(--blu);">◈</span>
-      <div class="rec-body">
-        <span class="rec-label">Explainer</span>
-        <div class="rec-hed">How much water do Michigan data centers actually use?</div>
-        <div class="rec-sub">The industry says “cooling towers.” Residents say “none of your business.” Here’s what the data shows.</div>
-      </div>
-    </a>
-    <a class="rec-item" href="/michigan-data-center-property-tax-incentive" target="_blank" rel="noopener">
-      <span class="rec-icon" aria-hidden="true" style="font-size:15px;color:var(--blu);">◈</span>
-      <div class="rec-body">
-        <span class="rec-label">Policy</span>
-        <div class="rec-hed">Michigan’s data center tax break: who gets it, what it costs</div>
-        <div class="rec-sub">The 2016 law exempts qualifying facilities from sales and use tax. Critics say the math doesn’t add up.</div>
-      </div>
-    </a>
-    <a class="rec-item" href="/michigan-data-center-map-guide" target="_blank" rel="noopener">
-      <span class="rec-icon" aria-hidden="true" style="font-size:15px;color:var(--blu);">◈</span>
-      <div class="rec-body">
-        <span class="rec-label">Guide</span>
-        <div class="rec-hed">How to use the Michigan Data Center map</div>
-        <div class="rec-sub">Every marker, filter, and layer on our live project tracker explained in plain English.</div>
-      </div>
-    </a>
-    <a class="rec-item" href="/michigan-data-center-moratorium-tracker" target="_blank" rel="noopener">
-      <span class="rec-icon" aria-hidden="true" style="font-size:15px;color:var(--red);">◈</span>
-      <div class="rec-body">
-        <span class="rec-label">Tracker</span>
-        <div class="rec-hed">Every Michigan community that has passed or proposed a data center moratorium</div>
-        <div class="rec-sub">12 communities, updated weekly as local governments act.</div>
-      </div>
-    </a>
-    <a class="rec-item" href="/michigan-data-center-jobs-vs-impact" target="_blank" rel="noopener">
-      <span class="rec-icon" aria-hidden="true" style="font-size:15px;color:var(--blu);">◈</span>
-      <div class="rec-body">
-        <span class="rec-label">Analysis</span>
-        <div class="rec-hed">Data centers promise jobs. Communities want to know: how many, and for whom?</div>
-        <div class="rec-sub">An analysis of employment claims in permit applications vs. actual hiring records.</div>
-      </div>
-    </a>
-    <a class="rec-item" href="/how-to-file-foia-michigan-data-center" target="_blank" rel="noopener">
-      <span class="rec-icon" aria-hidden="true" style="font-size:15px;color:var(--blu);">◈</span>
-      <div class="rec-body">
-        <span class="rec-label">How-To</span>
-        <div class="rec-hed">How to file a FOIA request about a data center in your Michigan community</div>
-        <div class="rec-sub">A step-by-step guide to getting zoning, permits, and water contracts.</div>
-      </div>
-    </a>
-  </div>
-</section>
+
 
 <!-- ═══════════════════════════════════════════════════════
      LIVE CHATTER
@@ -1878,10 +1675,7 @@ h2.ml-title{
           </div>
           <p class="chat-text">“Data centers want our tax breaks, our water, our grid capacity. What do Michigan communities get in return? That’s what this bill package demands an answer to.”</p>
         </div>
-        <div class="chat-platform" aria-label="X (Twitter)">
-          <svg viewBox="0 0 24 24" fill="#fff"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.747l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-        </div>
-      </a>
+        </a>
     </li>
 
     <!-- ✏️ CHATTER ROW 2 -->
@@ -1896,10 +1690,7 @@ h2.ml-title{
           </div>
           <p class="chat-text">Gaines Township just showed what local democracy looks like in the age of AI infrastructure. Residents showed up, spoke up, and the planning commission listened. The July vote is the next test. 💪</p>
         </div>
-        <div class="chat-platform" aria-label="X (Twitter)">
-          <svg viewBox="0 0 24 24" fill="#fff"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.747l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-        </div>
-      </a>
+        </a>
     </li>
 
 
@@ -1915,8 +1706,7 @@ h2.ml-title{
           </div>
           <p class="chat-text">When a data center uses more electricity than 50,000 homes and pays less in taxes than a small strip mall, something has gone wrong with our incentive structure. Time for a serious reckoning.</p>
         </div>
-        <div class="chat-platform" aria-label="X (Twitter)"><svg viewBox="0 0 24 24" fill="#fff"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.747l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></div>
-      </a>
+        </a>
     </li>
   </ul>
   <ul class="chat-list chat-extra-list" id="chat-extra" aria-hidden="true">
@@ -1932,10 +1722,7 @@ h2.ml-title{
           </div>
           <p class="chat-text">Public comment period is open for the Cascade Data Systems groundwater withdrawal permit application in Cascade Township, Kent County. Comments accepted through July 5, 2026. Details at michigan.gov/egle.</p>
         </div>
-        <div class="chat-platform" aria-label="Facebook" style="background:#1877F2">
-          <svg viewBox="0 0 24 24" fill="#fff" width="10" height="10"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
-        </div>
-      </a>
+        </a>
     </li>
 
     <!-- ✏️ CHATTER ROW 4 -->
@@ -1950,10 +1737,7 @@ h2.ml-title{
           </div>
           <p class="chat-text">When a data center uses more electricity than 50,000 homes and pays less in taxes than a small strip mall, something has gone wrong with our incentive structure. Time for a serious reckoning.</p>
         </div>
-        <div class="chat-platform" aria-label="X (Twitter)">
-          <svg viewBox="0 0 24 24" fill="#fff"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.747l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-        </div>
-      </a>
+        </a>
     </li>
 
 
@@ -1969,8 +1753,7 @@ h2.ml-title{
           </div>
           <p class="chat-text">My township just got a notice about a data center application. 400 acres. Says it'll use as much water as a small city daily. Nobody told us this was coming. How do we fight this?</p>
         </div>
-        <div class="chat-platform" aria-label="Reddit" style="background:#FF4500"><svg viewBox="0 0 24 24" fill="#fff" width="10" height="10"><path d="M12 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.01 4.744c.688 0 1.25.561 1.25 1.249a1.25 1.25 0 0 1-2.498.056l-2.597-.547-.8 3.747c1.824.07 3.48.632 4.674 1.488.308-.309.73-.491 1.207-.491.968 0 1.754.786 1.754 1.754 0 .716-.435 1.333-1.01 1.614a3.111 3.111 0 0 1 .042.52c0 2.694-3.13 4.87-7.004 4.87-3.874 0-7.004-2.176-7.004-4.87 0-.183.015-.366.043-.534A1.748 1.748 0 0 1 4.028 12c0-.968.786-1.754 1.754-1.754.463 0 .898.196 1.207.49 1.207-.883 2.878-1.43 4.744-1.487l.885-4.182a.342.342 0 0 1 .14-.197.35.35 0 0 1 .238-.042l2.906.617a1.214 1.214 0 0 1 1.108-.701zM9.25 12C8.561 12 8 12.562 8 13.25c0 .687.561 1.248 1.25 1.248.687 0 1.248-.561 1.248-1.249 0-.688-.561-1.249-1.249-1.249zm5.5 0c-.687 0-1.248.561-1.248 1.25 0 .687.561 1.248 1.249 1.248.688 0 1.249-.561 1.249-1.249 0-.687-.562-1.249-1.25-1.249zm-5.466 3.99a.327.327 0 0 0-.231.094.33.33 0 0 0 0 .463c.842.842 2.484.913 2.961.913.477 0 2.105-.056 2.961-.913a.361.361 0 0 0 .029-.463.33.33 0 0 0-.464 0c-.547.533-1.684.73-2.512.73-.828 0-1.979-.196-2.512-.73a.326.326 0 0 0-.232-.095z"/></svg></div>
-      </a>
+        </a>
     </li>
     <li>
       <a class="chat-item" href="https://x.com/MichLCV" target="_blank" rel="noopener">
@@ -1983,8 +1766,7 @@ h2.ml-title{
           </div>
           <p class="chat-text">Michigan's water is a public resource. Not a subsidy for Big Tech. We support SB 412 and the full Senate Dem package. Our communities deserve answers before shovels go in the ground.</p>
         </div>
-        <div class="chat-platform" aria-label="X (Twitter)"><svg viewBox="0 0 24 24" fill="#fff"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.747l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></div>
-      </a>
+        </a>
     </li>
     <li>
       <a class="chat-item" href="https://facebook.com/GainesTownshipResidents" target="_blank" rel="noopener">
@@ -1997,8 +1779,7 @@ h2.ml-title{
           </div>
           <p class="chat-text">REMINDER: Township board votes on the data center moratorium June 24 at 7pm. Cascade Charter Township Hall. Pack the room. Bring your neighbors. This is the vote that matters.</p>
         </div>
-        <div class="chat-platform" aria-label="Facebook" style="background:#1877F2"><svg viewBox="0 0 24 24" fill="#fff" width="10" height="10"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></div>
-      </a>
+        </a>
     </li>
     <li>
       <a class="chat-item" href="https://x.com/ConsumersEnergy" target="_blank" rel="noopener">
@@ -2011,8 +1792,7 @@ h2.ml-title{
           </div>
           <p class="chat-text">We remain committed to reliable, affordable energy for all Michigan customers as we navigate significant load growth from new industries including data centers. Our IRP update will reflect this reality.</p>
         </div>
-        <div class="chat-platform" aria-label="X (Twitter)"><svg viewBox="0 0 24 24" fill="#fff"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.747l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></div>
-      </a>
+        </a>
     </li>
     <li>
       <a class="chat-item" href="https://www.reddit.com/r/mildlyinfuriating/data_center" target="_blank" rel="noopener">
@@ -2025,8 +1805,7 @@ h2.ml-title{
           </div>
           <p class="chat-text">Anyone else notice the construction starting on 68th St near the old farm fields? Looked it up — data center permit filed in March. Zero public notice that I can find. This is how it happens.</p>
         </div>
-        <div class="chat-platform" aria-label="Reddit" style="background:#FF4500"><svg viewBox="0 0 24 24" fill="#fff" width="10" height="10"><path d="M12 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.01 4.744c.688 0 1.25.561 1.25 1.249a1.25 1.25 0 0 1-2.498.056l-2.597-.547-.8 3.747c1.824.07 3.48.632 4.674 1.488.308-.309.73-.491 1.207-.491.968 0 1.754.786 1.754 1.754 0 .716-.435 1.333-1.01 1.614a3.111 3.111 0 0 1 .042.52c0 2.694-3.13 4.87-7.004 4.87-3.874 0-7.004-2.176-7.004-4.87 0-.183.015-.366.043-.534A1.748 1.748 0 0 1 4.028 12c0-.968.786-1.754 1.754-1.754.463 0 .898.196 1.207.49 1.207-.883 2.878-1.43 4.744-1.487l.885-4.182a.342.342 0 0 1 .14-.197.35.35 0 0 1 .238-.042l2.906.617a1.214 1.214 0 0 1 1.108-.701zM9.25 12C8.561 12 8 12.562 8 13.25c0 .687.561 1.248 1.25 1.248.687 0 1.248-.561 1.248-1.249 0-.688-.561-1.249-1.249-1.249zm5.5 0c-.687 0-1.248.561-1.248 1.25 0 .687.561 1.248 1.249 1.248.688 0 1.249-.561 1.249-1.249 0-.687-.562-1.249-1.25-1.249zm-5.466 3.99a.327.327 0 0 0-.231.094.33.33 0 0 0 0 .463c.842.842 2.484.913 2.961.913.477 0 2.105-.056 2.961-.913a.361.361 0 0 0 .029-.463.33.33 0 0 0-.464 0c-.547.533-1.684.73-2.512.73-.828 0-1.979-.196-2.512-.73a.326.326 0 0 0-.232-.095z"/></svg></div>
-      </a>
+        </a>
     </li>
     <li>
       <a class="chat-item" href="https://x.com/MichiganDNR" target="_blank" rel="noopener">
@@ -2039,8 +1818,7 @@ h2.ml-title{
           </div>
           <p class="chat-text">Michigan holds 21% of the world's surface freshwater. Protecting that resource — for residents, agriculture, and ecosystems — is central to our mission. We are monitoring large-scale industrial water withdrawal applications closely.</p>
         </div>
-        <div class="chat-platform" aria-label="X (Twitter)"><svg viewBox="0 0 24 24" fill="#fff"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.747l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></div>
-      </a>
+        </a>
     </li>
     <li>
       <a class="chat-item" href="https://facebook.com/MichiganSierraClub" target="_blank" rel="noopener">
@@ -2053,8 +1831,7 @@ h2.ml-title{
           </div>
           <p class="chat-text">We've filed formal comments on three pending data center groundwater permits this month. Read our full analysis and find out how to add your voice before the July 5 deadline: [link in bio]</p>
         </div>
-        <div class="chat-platform" aria-label="Facebook" style="background:#1877F2"><svg viewBox="0 0 24 24" fill="#fff" width="10" height="10"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></div>
-      </a>
+        </a>
     </li>
     <li>
       <a class="chat-item" href="https://x.com/SenSamSingh" target="_blank" rel="noopener">
@@ -2067,8 +1844,7 @@ h2.ml-title{
           </div>
           <p class="chat-text">Proud to co-sponsor the Michigan Data Center Accountability Package. These facilities need to earn their place in our communities — not just show up and extract resources while locals foot the infrastructure bill.</p>
         </div>
-        <div class="chat-platform" aria-label="X (Twitter)"><svg viewBox="0 0 24 24" fill="#fff"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.747l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></div>
-      </a>
+        </a>
     </li>
     <li>
       <a class="chat-item" href="https://www.reddit.com/r/Michigan/data_center_jobs" target="_blank" rel="noopener">
@@ -2081,8 +1857,7 @@ h2.ml-title{
           </div>
           <p class="chat-text">The "jobs" argument for data centers always sounds great at the zoning hearing. Then 18 months later there are 40 permanent employees for a facility the size of 10 Walmart stores. We need honest accounting.</p>
         </div>
-        <div class="chat-platform" aria-label="Reddit" style="background:#FF4500"><svg viewBox="0 0 24 24" fill="#fff" width="10" height="10"><path d="M12 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.01 4.744c.688 0 1.25.561 1.25 1.249a1.25 1.25 0 0 1-2.498.056l-2.597-.547-.8 3.747c1.824.07 3.48.632 4.674 1.488.308-.309.73-.491 1.207-.491.968 0 1.754.786 1.754 1.754 0 .716-.435 1.333-1.01 1.614a3.111 3.111 0 0 1 .042.52c0 2.694-3.13 4.87-7.004 4.87-3.874 0-7.004-2.176-7.004-4.87 0-.183.015-.366.043-.534A1.748 1.748 0 0 1 4.028 12c0-.968.786-1.754 1.754-1.754.463 0 .898.196 1.207.49 1.207-.883 2.878-1.43 4.744-1.487l.885-4.182a.342.342 0 0 1 .14-.197.35.35 0 0 1 .238-.042l2.906.617a1.214 1.214 0 0 1 1.108-.701zM9.25 12C8.561 12 8 12.562 8 13.25c0 .687.561 1.248 1.25 1.248.687 0 1.248-.561 1.248-1.249 0-.688-.561-1.249-1.249-1.249zm5.5 0c-.687 0-1.248.561-1.248 1.25 0 .687.561 1.248 1.249 1.248.688 0 1.249-.561 1.249-1.249 0-.687-.562-1.249-1.25-1.249zm-5.466 3.99a.327.327 0 0 0-.231.094.33.33 0 0 0 0 .463c.842.842 2.484.913 2.961.913.477 0 2.105-.056 2.961-.913a.361.361 0 0 0 .029-.463.33.33 0 0 0-.464 0c-.547.533-1.684.73-2.512.73-.828 0-1.979-.196-2.512-.73a.326.326 0 0 0-.232-.095z"/></svg></div>
-      </a>
+        </a>
     </li>
     <li>
       <a class="chat-item" href="https://x.com/dteDotCom" target="_blank" rel="noopener">
@@ -2095,8 +1870,7 @@ h2.ml-title{
           </div>
           <p class="chat-text">DTE is investing in the grid infrastructure needed to power Michigan's growing economy — including the data center industry. Reliability and clean energy transition remain our top priorities for all customers.</p>
         </div>
-        <div class="chat-platform" aria-label="X (Twitter)"><svg viewBox="0 0 24 24" fill="#fff"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.747l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></div>
-      </a>
+        </a>
     </li>
   </ul>
   <div>
