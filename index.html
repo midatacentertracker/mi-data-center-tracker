@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <!--
-  MICHIGAN DATA CENTER TRACKER — v44
+  MICHIGAN DATA CENTER TRACKER — v49
   michigandatacentertracker.comndatacentertracker.com
   Brand: black / white / red primary · slate-blue (#1E3A5F) secondary utility accent
 
@@ -376,7 +376,7 @@ h1.wm-inner,
 }
 .hn-bar-date{
   font-family:var(--body);font-size:10px;font-weight:700;
-  color:rgba(255,255,255,.65);letter-spacing:.04em;
+  color:rgba(255,255,255,.90);letter-spacing:.04em;
   margin-left:auto;white-space:nowrap;
 }
 .hn-bar-items{
@@ -416,12 +416,12 @@ h1.wm-inner,
 @media(min-width:760px){
   .hn-bar-items{ flex-direction:row;gap:0;padding:4px 0 6px; }
   .hn-bar-item{
+    display:flex;flex-direction:column;align-items:flex-start;justify-content:space-between;
     flex:1;padding:4px 14px 4px 0;
     border-bottom:none;
     border-right:1px solid rgba(255,255,255,.08);
     margin-right:14px;
-    flex-direction:column;
-    align-items:flex-start;
+    gap:4px;
   }
   .hn-bar-item:last-child{ border-right:none;margin-right:0;padding-right:0; }
 }
@@ -736,9 +736,9 @@ h2.ev-hdr-title{
 }
 /* Bullseye — Big Story */
 .lead{ position:relative;overflow:hidden; }
-.lead-bullseye{ position:absolute;left:-80px;top:50%;transform:translateY(-50%);width:560px;height:560px;pointer-events:none;opacity:.09;z-index:0; }
+.lead-bullseye{ position:absolute;left:-160px;top:40%;transform:translateY(-40%);width:700px;height:700px;pointer-events:none;opacity:.065;z-index:0; }
 .lead-bullseye ~ * { position:relative;z-index:1; }
-@media(max-width:680px){ .lead-bullseye{ display:none; } }
+@media(max-width:680px){ .lead-bullseye{ opacity:.04; } }
 /* THE BIG STORY label shimmer */
 .lead-lbl{
   background:linear-gradient(90deg,
@@ -803,8 +803,7 @@ h2.ev-hdr-title{
 @media(max-width:640px){
   .ev-item{
     grid-template-columns:1fr;
-    gap:3px;padding:12px 16px;
-  }gap:4px;padding:12px 16px;
+    gap:4px;padding:12px 16px;
   }
   .ev-date{ flex-direction:row;align-items:baseline;gap:10px; }
   .ev-actions{ justify-content:flex-start;margin-top:8px;gap:6px;flex-wrap:wrap; }
