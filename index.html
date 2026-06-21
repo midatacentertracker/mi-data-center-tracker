@@ -92,7 +92,7 @@
   /* Primary brand — black / white / red */
   --red:   #C8102E;
   --rdk:   #9E0B23;
-  --blk:   #0D0D0F;
+  --blk:   #0b1523;
   --char:  #16161A;
 
   /* Slate-blue utility accent — secondary, never dominant */
@@ -170,7 +170,7 @@ button{font-family:inherit;cursor:pointer;}
 ══════════════════════════════════════════════════════════ */
 #hdr{
   position:relative;
-  background:linear-gradient(to right, #0D0D10 0%, #1E3A5F 10%, #1E3A5F 100%);
+  background:linear-gradient(to right, #0b1523 0%, #1E3A5F 10%, #1E3A5F 100%);
 }
 
 .hdr-top{
@@ -180,7 +180,7 @@ button{font-family:inherit;cursor:pointer;}
   align-items:center;
   min-height:96px;
   /* Gradient fallback when video is absent — dark logo side, slate-blue right */
-  background:linear-gradient(to right, #0D0D10 0%, #0f1c2e 52%, #1a3352 100%);
+  background:linear-gradient(to right, #0b1523 0%, #0e1e35 52%, #1a3a5c 100%);
   overflow:hidden;
   padding:0 18px;
   gap:14px;
@@ -207,8 +207,8 @@ button{font-family:inherit;cursor:pointer;}
   filter:brightness(1.05) contrast(1.05) saturate(1.15);
   z-index:0;
 }
-@media(min-width:540px){ #hdr-video{ object-position:60% 35%; } }
-@media(min-width:960px){ #hdr-video{ object-position:50% 35%; } }
+@media(min-width:540px){ #hdr-video{ object-position:50% 50%; } }
+@media(min-width:960px){ #hdr-video{ object-position:50% 45%; } }
 
 #hdr-visual::before{ content:''; display:none; }
 #hdr-overlay{
@@ -665,7 +665,7 @@ h1.wm-inner,
 ══════════════════════════════════════════════════════════ */
 .map-cta{
   display:flex;align-items:center;justify-content:space-between;gap:16px;
-  background:#111113;color:#e8e8e8;
+  background:#0d1a2e;color:#e8e8e8;
   padding:18px 22px;text-decoration:none;
   border-top:1px solid rgba(255,255,255,.07);
   border-bottom:1px solid rgba(255,255,255,.07);
@@ -703,7 +703,7 @@ h1.wm-inner,
 .ev-hdr{
   position:relative;overflow:hidden;min-height:120px;
   display:flex;align-items:flex-end;
-  background:#0F1C2E;
+  background:#0e1e35;
 }
 .ev-hdr-bg{
   position:absolute;inset:0;
@@ -711,7 +711,7 @@ h1.wm-inner,
   background-size:cover;
   background-position:center 25%;
   opacity:0.92;
-  /* Fallback when image is absent: .ev-hdr base color #0F1C2E shows through */
+  /* Fallback when image is absent: .ev-hdr base color #0e1e35 shows through */
 }
 .ev-hdr-bg::after{
   content:'';position:absolute;inset:0;
@@ -1218,7 +1218,7 @@ h2.chat-hdr-title{
 .sponsor-board{
   position:relative;
   overflow:hidden;
-  background:#0a0a0c;
+  background:#091220;
   border-top:3px solid var(--red);
   border-bottom:3px solid var(--red);
   margin:28px 0;
@@ -1675,7 +1675,7 @@ h2.ml-title{
     <div id="hdr-visual">
       <!-- ✏️ ASSET: header video -->
       <video id="hdr-video"
-        src="header.mp4"
+        src="fields lake header.mp4"
         autoplay muted loop playsinline
         preload="auto" aria-hidden="true" tabindex="-1">
       </video>
@@ -1943,7 +1943,7 @@ h2.ml-title{
 <!-- ═══════════════════════════════════════════════════════
      REGIONAL COVERAGE
 ════════════════════════════════════════════════════════ -->
-<section class="hn-sect<section id="learning-library" style="background:#0f0f0f;padding:0 0 72px 0;border-top:3px solid var(--red);">
+<section class="hn-sect<section id="learning-library" style="background:#0b1523;padding:0 0 72px 0;border-top:3px solid var(--red);">
 
   <!-- BANNER -->
   <div class="ll-banner" style="position:relative;overflow:hidden;padding:54px 18px 52px 18px;"><div style="position:absolute;inset:0;background:url('michigan%20night%20view.jpg') 55% 40%/cover;filter:brightness(1.4);z-index:0;"></div><div style="position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.1) 0%,rgba(0,0,0,.1) 40%,rgba(15,15,15,.95) 100%);z-index:1;"></div><div style="position:relative;z-index:2;">
