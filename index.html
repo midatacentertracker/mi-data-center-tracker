@@ -1630,12 +1630,16 @@ h2.ml-title{
   }
 }
 
-/* 4. Sticky scroll-hide nav on mobile */
+/* 4. Fixed nav on mobile — always visible at top */
 @media(max-width:680px){
   #rnav{
-    position:sticky;
+    position:fixed;
     top:0;
-    z-index:100;
+    left:0;
+    width:100%;
+    z-index:200;
+  }
+  header{ padding-top:40px; }
 }
 
 /* 5. Footer — remove the stray gap entity spacing */
