@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <!--
-  MICHIGAN DATA CENTER TRACKER — v51
+  MICHIGAN DATA CENTER TRACKER — v52
   michigandatacentertracker.comndatacentertracker.com
   Brand: black / white / red primary · slate-blue (#1E3A5F) secondary utility accent
 
@@ -512,17 +512,33 @@ h1.wm-inner,
 .s-date{ font-size:11px;color:var(--mid);font-weight:700; }
 
 /* More Stories */
+@keyframes more-pulse{
+  0%,100%{ opacity:1;transform:translateX(0); }
+  50%{ opacity:.6;transform:translateX(3px); }
+}
 .hn-more{
   display:flex;align-items:center;justify-content:space-between;
   padding:10px 18px;
   font-family:var(--body);font-size:11px;font-weight:800;
   letter-spacing:.12em;text-transform:uppercase;
-  color:var(--blu);text-decoration:none;
-  border-top:1px solid var(--bdr);
+  color:var(--red);text-decoration:none;
+  border-top:2px solid var(--red);
+  border-left:3px solid var(--red);
   background:var(--off);
-  transition:background .12s,color .12s;
+  box-shadow:inset 0 0 0 0 rgba(196,0,0,0);
+  transition:background .15s,box-shadow .15s,color .15s;
 }
-.hn-more:hover{ background:#EAEDF2;color:var(--blu-lt); }
+.hn-more::after{
+  content:'›';
+  font-size:16px;font-weight:900;
+  color:var(--red);
+  animation:more-pulse 1.8s ease-in-out infinite;
+}
+.hn-more:hover{
+  background:#fff0f0;
+  box-shadow:inset 0 0 0 40px rgba(196,0,0,.05);
+  color:#a00;
+}
 
 /* Mobile */
 @media(max-width:679px){
