@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <!--
-  MICHIGAN DATA CENTER TRACKER — v42
+  MICHIGAN DATA CENTER TRACKER — v43
   michigandatacentertracker.comndatacentertracker.com
   Brand: black / white / red primary · slate-blue (#1E3A5F) secondary utility accent
 
@@ -467,6 +467,18 @@ h1.wm-inner,
   margin-bottom:13px;max-width:48ch;
   font-weight:500;
 }
+/* Timestamp — visual separation + fresh=red */
+.lead-meta{
+  display:block;
+  font-size:11px;font-weight:700;letter-spacing:.04em;
+  color:var(--mid);margin-bottom:6px;
+}
+.s-date{
+  display:block;
+  font-size:10px;font-weight:600;letter-spacing:.03em;
+  color:var(--mid);margin-top:3px;
+}
+.ts-fresh{ color:var(--red) !important; }
 .lead-meta{ font-size:11px;color:var(--mid);font-weight:700; }
 
 /* Stories 2–4 */
@@ -2182,7 +2194,10 @@ function relTime(ts){
   return d.toLocaleDateString('en-US',{month:'short',day:'numeric'});
 }
 document.querySelectorAll('[data-ts]').forEach(el=>{
-  el.textContent=relTime(el.dataset.ts);
+  const ts=el.dataset.ts;
+  const h=Math.floor((new Date()-new Date(ts))/36e5);
+  el.textContent=relTime(ts);
+  if(h<8) el.classList.add('ts-fresh');
 });
 
 // ── MOBILE DRAWER ────────────────────────────────────────
