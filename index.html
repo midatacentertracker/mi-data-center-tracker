@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <!--
-  MICHIGAN DATA CENTER TRACKER — v43
+  MICHIGAN DATA CENTER TRACKER — v44
   michigandatacentertracker.comndatacentertracker.com
   Brand: black / white / red primary · slate-blue (#1E3A5F) secondary utility accent
 
@@ -887,14 +887,15 @@ h2.sec-hdr-title{
   padding:0;
   display:flex;flex-direction:column;
 }
-.reg-cell:nth-child(2n){ border-right:none; }
+.reg-cell:nth-child(3n){ border-right:none; }
+.reg-cell:nth-child(5n){ border-right:none; }
 
 .reg-cell-hdr{
   display:flex;align-items:center;justify-content:space-between;
   padding:9px 14px 8px;
   border-bottom:2px solid var(--bdr);
   border-left:3px solid var(--red);
-  background:var(--char);
+  background:#222228;
   gap:8px;
 }
 h3.reg-name{
@@ -912,14 +913,15 @@ h3.reg-name{
 .reg-cell ul{ list-style:none;padding:0;margin:0; }
 .reg-cell ul li{ list-style:none; }
 .reg-cell ul li::marker{ font-size:0; }
+.reg-cell ul li:not(:last-child){ border-bottom:1px solid var(--bdr); }
 .reg-item{
   display:flex;gap:10px;align-items:flex-start;
-  padding:12px 14px;border-bottom:1px solid var(--bdr);
+  padding:12px 14px;
   text-decoration:none;color:var(--blk);
   transition:background .12s;
   flex:1;
 }
-.reg-item:last-child{ border-bottom:none; }
+
 .reg-item:hover{ background:var(--off); }
 .reg-item:hover .reg-hed{ color:var(--blu); }
 
@@ -1725,27 +1727,6 @@ h2.ml-title{
   </div>
   <div class="reg-grid">
 
-    <!-- AT THE CAPITOL -->
-    <div class="reg-cell full-width">
-      <div class="reg-cell-hdr">
-        <h3 class="reg-name">At The Capitol</h3>
-      </div>
-      <ul style="list-style:none;padding:0;margin:0;">
-        <li><a class="reg-item" href="/michigan-data-center-senate-democrat-bill-package" target="_blank" rel="noopener">
-          <span class="reg-bullet"></span>
-          <span class="reg-body" style="flex:1;min-width:0;"><span class="reg-hed">Senate Dems file 5-bill package: water, power, labor rules for data centers</span><span class="reg-meta" style="display:block;font-size:10.5px;color:var(--mid);font-weight:700;margin-top:3px;">Jun. 20</span></span>
-        </a></li>
-        <li><a class="reg-item" href="/michigan-house-data-center-tax-incentive-hearings" target="_blank" rel="noopener">
-          <span class="reg-bullet"></span>
-          <span class="reg-body" style="flex:1;min-width:0;"><span class="reg-hed">House committee holds second hearing on data center tax incentive repeal</span><span class="reg-meta" style="display:block;font-size:10.5px;color:var(--mid);font-weight:700;margin-top:3px;">Jun. 16</span></span>
-        </a></li>
-        <li><a class="reg-item" href="/michigan-data-center-water-use-reporting" target="_blank" rel="noopener">
-          <span class="reg-bullet"></span>
-          <span class="reg-body" style="flex:1;min-width:0;"><span class="reg-hed">Advocates push mandatory water-use reporting for data centers in state legislation</span><span class="reg-meta" style="display:block;font-size:10.5px;color:var(--mid);font-weight:700;margin-top:3px;">Jun. 18</span></span>
-        </a></li>
-      </ul>
-    </div>
-
     <!-- METRO DETROIT -->
     <div class="reg-cell">
       <div class="reg-cell-hdr">
@@ -1829,6 +1810,27 @@ h2.ml-title{
         </a></li>
       </ul>
     </div>
+    <!-- AT THE CAPITOL -->
+    <div class="reg-cell full-width">
+      <div class="reg-cell-hdr">
+        <h3 class="reg-name">At The Capitol</h3>
+      </div>
+      <ul style="list-style:none;padding:0;margin:0;">
+        <li><a class="reg-item" href="/michigan-data-center-senate-democrat-bill-package" target="_blank" rel="noopener">
+          <span class="reg-bullet"></span>
+          <span class="reg-body" style="flex:1;min-width:0;"><span class="reg-hed">Senate Dems file 5-bill package: water, power, labor rules for data centers</span><span class="reg-meta" style="display:block;font-size:10.5px;color:var(--mid);font-weight:700;margin-top:3px;">Jun. 20</span></span>
+        </a></li>
+        <li><a class="reg-item" href="/michigan-house-data-center-tax-incentive-hearings" target="_blank" rel="noopener">
+          <span class="reg-bullet"></span>
+          <span class="reg-body" style="flex:1;min-width:0;"><span class="reg-hed">House committee holds second hearing on data center tax incentive repeal</span><span class="reg-meta" style="display:block;font-size:10.5px;color:var(--mid);font-weight:700;margin-top:3px;">Jun. 16</span></span>
+        </a></li>
+        <li><a class="reg-item" href="/michigan-data-center-water-use-reporting" target="_blank" rel="noopener">
+          <span class="reg-bullet"></span>
+          <span class="reg-body" style="flex:1;min-width:0;"><span class="reg-hed">Advocates push mandatory water-use reporting for data centers in state legislation</span><span class="reg-meta" style="display:block;font-size:10.5px;color:var(--mid);font-weight:700;margin-top:3px;">Jun. 18</span></span>
+        </a></li>
+      </ul>
+    </div>
+
 
   </div>
 </section>
