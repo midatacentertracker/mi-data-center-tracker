@@ -735,6 +735,8 @@ h1.wm-inner,
 @media(max-width:540px){
   .ts-slogan, .ts-inner .ts-divider:nth-child(4){ display:none; }
   .map-cta-text{ display:none; }
+  /* Show rotating stat on mobile */
+  .ts-flip-wrap{ display:flex; }
 }
 
 /* ══════════════════════════════════════════════════════════
@@ -1602,11 +1604,12 @@ h2.ml-title{
 
 /* ══ v64 MOBILE POLISH ══════════════════════════════════════════════ */
 
-/* 1. The Latest — stack timestamp below headline on mobile */
+/* 1. The Latest — headline first, timestamp below on mobile */
 @media(max-width:680px){
   .hn-bar-item{ flex-wrap:wrap; align-items:flex-start; }
-  .hn-bar-tag{ margin-top:3px; order:3; flex-basis:100%; flex-shrink:1; white-space:normal; }
-  .hn-bar-text{ order:2; flex:1 1 auto; min-width:0; }
+  .hn-bar-text{ order:1; flex:1 1 auto; min-width:0; width:100%; }
+  .hn-bar-ago{ order:2; margin-top:2px; }
+  .hn-bar-tag{ order:3; margin-top:2px; flex-basis:100%; flex-shrink:1; white-space:normal; }
 }
 
 /* 2. Meetings — tighter, cleaner mobile layout */
@@ -1702,14 +1705,7 @@ h2.ml-title{
   opacity:1;
 }
 .ts-label{
-  font-family:var(--sans);
-  font-size:10px;
-  font-weight:700;
-  letter-spacing:.12em;
-  text-transform:uppercase;
-  color:rgba(255,255,255,.28);
-  white-space:nowrap;
-  flex-shrink:0;
+  display:none;
 }
 .ts-divider{
   width:1px;height:12px;
@@ -1844,8 +1840,6 @@ h2.ml-title{
     <div class="ts-right">
       <span class="ts-divider" aria-hidden="true"></span>
       <span class="ts-dot" aria-hidden="true"></span>
-      <span class="ts-label">Tracker Status</span>
-      <span class="ts-divider" aria-hidden="true"></span>
       <div class="ts-flip-wrap" aria-live="off">
         <span class="ts-flip-item ts-active">14 planned projects tracked statewide</span>
         <span class="ts-flip-item">Nearly 3 GW of proposed capacity</span>
