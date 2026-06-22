@@ -562,6 +562,20 @@ h1.wm-inner,
 .story-row:last-child{ border-bottom:none; }
 .story-row:hover{ background:var(--off); }
 .story-row:hover .s-hed{ color:var(--blu); }
+.s-source{
+  display:inline-block;
+  font-family:var(--sans);font-size:9px;font-weight:800;
+  letter-spacing:.11em;text-transform:uppercase;
+  color:rgba(255,255,255,.55);background:rgba(255,255,255,.07);
+  padding:2px 6px;border-radius:2px;margin-bottom:4px;
+}
+.lead-source{
+  display:inline-block;
+  font-family:var(--sans);font-size:9px;font-weight:800;
+  letter-spacing:.11em;text-transform:uppercase;
+  color:var(--red);background:rgba(200,16,46,.12);
+  padding:2px 7px;border-radius:2px;margin-bottom:8px;
+}
 
 .s-num{
   font-family:var(--disp);font-size:22px;font-weight:900;
@@ -1821,7 +1835,7 @@ h2.ml-title{
 
 <section id="bar" class="hn-bar" aria-label="The Latest">
   <div class="hn-bar-top">
-    <svg class="hn-bar-dot" aria-hidden="true" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="10" cy="14" r="1.8" fill="currentColor"/><path d="M6.8 11.2C7.7 9.6 8.8 8.8 10 8.8C11.2 8.8 12.3 9.6 13.2 11.2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" fill="none"/><path d="M4.2 8.8C5.7 6.2 7.7 4.8 10 4.8C12.3 4.8 14.3 6.2 15.8 8.8" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" fill="none"/><path d="M1.5 6.2C3.8 2.8 6.7 1 10 1C13.3 1 16.2 2.8 18.5 6.2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg>
+    <span class="hn-bar-dot" aria-hidden="true"></span>
     <span class="hn-bar-label">The Latest</span>
     <span class="hn-bar-date">Sunday, June 21, 2026</span>
   </div>
@@ -1877,7 +1891,8 @@ h2.ml-title{
       <div class="lead-mobile-row">
         <span class="lead-num" aria-hidden="true">1</span>
         <div class="lead-body">
-          <h2 class="lead-hed">
+          <span class="lead-source">Lansing State Journal</span>
+        <h2 class="lead-hed">
             <a href="#" target="_blank" rel="noopener"
               >Lansing: Michigan data center fight hits Capitol as Senate Democrats roll out new rules</a>
           </h2>
@@ -1895,6 +1910,7 @@ h2.ml-title{
       <a class="story-row" href="#" target="_blank" rel="noopener">
         <span class="s-num" aria-hidden="true">2</span>
         <div class="s-body">
+          <span class="s-source">MLive</span>
           <div class="s-hed">Gaines Twp. planning commission OKs moratorium on new data center zoning</div>
           <div class="s-date" data-ts="2026-06-19T18:00:00">Jun. 19</div>
         </div>
@@ -1903,6 +1919,7 @@ h2.ml-title{
       <a class="story-row" href="#" target="_blank" rel="noopener">
         <span class="s-num" aria-hidden="true">3</span>
         <div class="s-body">
+          <span class="s-source">Bridge Michigan</span>
           <div class="s-hed">Advocates push mandatory water-use reporting for data centers in state legislation</div>
           <div class="s-date" data-ts="2026-06-18T11:00:00">Jun. 18</div>
         </div>
@@ -1911,6 +1928,7 @@ h2.ml-title{
       <a class="story-row" href="#" target="_blank" rel="noopener">
         <span class="s-num" aria-hidden="true">4</span>
         <div class="s-body">
+          <span class="s-source">Energy News Network</span>
           <div class="s-hed">Consumers Energy IRP revision includes 1.4 GW data center demand scenario</div>
           <div class="s-date" data-ts="2026-06-17T14:00:00">Jun. 17</div>
         </div>
@@ -2413,11 +2431,11 @@ h2.ml-title{
     <style>
       .ll-banner{background-position:70% 30%;}
       @media(max-width:600px){.ll-banner{background-position:80% 10%;padding-top:36px!important;padding-bottom:36px!important;}}
-      .ll-row{border:1px solid rgba(255,255,255,.08);border-radius:6px;margin-bottom:5px;overflow:hidden;}
-      .ll-btn{width:100%;background:transparent;border:none;padding:18px 22px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;text-align:left;gap:12px;}
-      .ll-btn:hover{background:rgba(255,255,255,.04);}
-      .ll-btn-title{font-size:14px;font-weight:700;color:#fff;letter-spacing:.02em;text-transform:uppercase;}
-      .ll-chev{color:rgba(255,255,255,.30);font-size:14px;flex-shrink:0;transition:transform .25s;line-height:1;}
+      .ll-row{border:none;border-top:1px solid rgba(255,255,255,.10);margin-bottom:0;overflow:hidden;}
+      .ll-btn{width:100%;background:rgba(255,255,255,.03);border:none;border-left:3px solid transparent;padding:16px 20px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;text-align:left;gap:12px;transition:background .15s,border-color .15s;}
+      .ll-btn:hover{background:rgba(255,255,255,.06);border-left-color:var(--red);}
+      .ll-btn-title{font-size:12px;font-weight:800;color:rgba(255,255,255,.90);letter-spacing:.10em;text-transform:uppercase;}
+      .ll-chev{color:var(--red);font-size:16px;flex-shrink:0;transition:transform .25s;line-height:1;}
       .ll-body{display:none;padding:0 22px 24px 22px;border-top:1px solid rgba(255,255,255,.06);}
       .ll-intro{font-size:13px;color:rgba(255,255,255,.40);margin:20px 0 18px 0;line-height:1.65;max-width:580px;}
       .ll-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:12px;}
