@@ -381,6 +381,21 @@ h1.wm-inner,
   flex-shrink:0;margin-left:auto;
   align-self:center;
 }
+/* Slogan badge under wordmark — mobile only */
+.wm-slogan{
+  display:none;
+}
+@media(max-width:679px){
+  .wm-slogan{
+    display:inline-block;
+    font-family:var(--sans);font-size:7.5px;font-weight:900;
+    letter-spacing:.16em;text-transform:uppercase;
+    color:#fff;background:var(--red);
+    padding:3px 8px 3px;
+    margin-top:6px;
+    white-space:nowrap;
+  }
+}
 @media(max-width:679px){
   .rnav-slogan{ display:flex;align-items:center; }
 }
@@ -1828,6 +1843,7 @@ h2.ml-title{
         <span class="wm-state">Michigan</span>
         <span class="wm-rule"></span>
         <span class="wm-sub">Data Center Tracker</span>
+        <span class="wm-slogan">Independent · Aggregated · Nonpartisan</span>
       </h1>
     </a>
     <!-- Subscribe CTA -->
@@ -1840,7 +1856,6 @@ h2.ml-title{
     <a href="#regions">Your Area</a>
     <a href="#learning-library">Learn</a>
     <a href="map.html" class="rnav-livemap">Live Map</a>
-    <span class="rnav-slogan">Independent · Aggregated · Nonpartisan</span>
   </nav>
   <div class="hdr-rule"></div>
 </header>
