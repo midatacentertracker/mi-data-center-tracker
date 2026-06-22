@@ -371,6 +371,20 @@ h1.wm-inner,
 
 .hdr-rule{ height:3px;background:var(--red);position:relative;z-index:2; }
 
+/* Slogan badge — sits inside rnav bar on mobile */
+.rnav-slogan{
+  display:none;
+  font-family:var(--sans);font-size:8px;font-weight:900;
+  letter-spacing:.14em;text-transform:uppercase;
+  color:#fff;background:var(--red);
+  padding:3px 8px;white-space:nowrap;
+  flex-shrink:0;margin-left:auto;
+  align-self:center;
+}
+@media(max-width:679px){
+  .rnav-slogan{ display:flex;align-items:center; }
+}
+
 /* ── WHAT WE'RE WATCHING — mobile upgrade ───────────────────────────────── */
 @media(max-width:679px){
   .hn-bar{
@@ -460,6 +474,7 @@ h1.wm-inner,
 .hn-bar-text{
   font-family:var(--body);font-size:12px;font-weight:500;
   color:rgba(255,255,255,.75);line-height:1.4;flex:1;min-width:0;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
 }
 @keyframes hn-glow{
   0%,100%{ color:rgba(255,255,255,.55); text-shadow:none; }
@@ -737,6 +752,10 @@ h1.wm-inner,
   .map-cta-text{ display:none; }
   /* Show rotating stat on mobile */
   .ts-flip-wrap{ display:flex; }
+}
+/* Hide entire tracker strip on mobile — slogan moves to nav badge */
+@media(max-width:679px){
+  #tracker-status{ display:none; }
 }
 
 /* ══════════════════════════════════════════════════════════
@@ -1604,12 +1623,12 @@ h2.ml-title{
 
 /* ══ v64 MOBILE POLISH ══════════════════════════════════════════════ */
 
-/* 1. The Latest — headline first, timestamp below on mobile */
+/* 1. The Latest — headline · timestamp inline on mobile */
 @media(max-width:680px){
-  .hn-bar-item{ flex-wrap:wrap; align-items:flex-start; }
-  .hn-bar-text{ order:1; flex:1 1 auto; min-width:0; width:100%; }
-  .hn-bar-ago{ order:2; margin-top:2px; }
-  .hn-bar-tag{ order:3; margin-top:2px; flex-basis:100%; flex-shrink:1; white-space:normal; }
+  .hn-bar-item{ flex-wrap:nowrap; align-items:center; gap:8px; }
+  .hn-bar-text{ flex:1 1 auto; min-width:0; -webkit-line-clamp:2; }
+  .hn-bar-ago{ flex-shrink:0; }
+  .hn-bar-tag{ display:none; }
 }
 
 /* 2. Meetings — tighter, cleaner mobile layout */
@@ -1821,6 +1840,7 @@ h2.ml-title{
     <a href="#regions">Your Area</a>
     <a href="#learning-library">Learn</a>
     <a href="map.html" class="rnav-livemap">Live Map</a>
+    <span class="rnav-slogan">Independent · Aggregated · Nonpartisan</span>
   </nav>
   <div class="hdr-rule"></div>
 </header>
