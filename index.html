@@ -426,7 +426,7 @@ h1.wm-inner,
    WHAT WE'RE WATCHING BAR
 ══════════════════════════════════════════════════════════ */
 .hn-bar{
-  background:var(--blk);
+  background:#111114;
   border-bottom:1px solid rgba(255,255,255,.08);
   padding:0;
   display:flex;align-items:stretch;
@@ -528,7 +528,7 @@ h1.wm-inner,
 }
 @media(max-width:759px){
   .hn-bar-items{ padding:0 12px 0 12px;flex-direction:column; }
-  .hn-bar-item{ padding:5px 0;gap:6px;width:100%; }
+  .hn-bar-item{ padding:3px 0;gap:5px;width:100%; }
   .hn-bar-text{ font-size:12.5px; }
   /* Mobile: hide items 2 and 3 — single headline keeps bar tight */
   .hn-bar-item:nth-child(2),.hn-bar-item:nth-child(3){ display:none; }
@@ -655,7 +655,7 @@ h1.wm-inner,
 
 @media(max-width:679px){
   /* THE LATEST: slim on mobile, show only 1 item */
-  .hn-bar-top{ padding:6px 14px 6px 14px; }
+  .hn-bar-top{ padding:4px 14px 4px 14px; }
   .hn-bar-item:nth-child(n+2){ display:none; }
   .hn-bar-date{ display:none; }
   /* Lead story: match story-row look on mobile */
@@ -1804,6 +1804,13 @@ h2.ml-title{
   transition:opacity .12s;
 }
 a:hover .ext-arrow{ opacity:.85; }
+/* ── LL-CARD-LINK arrow override: match link text size, no superscript ── */
+.ll-card-link .ext-arrow{
+  font-size:1em;
+  vertical-align:baseline;
+  margin-left:2px;
+  opacity:.7;
+}
 </style>
 <script>if('scrollRestoration'in history)history.scrollRestoration='manual';</script>
 </head>
