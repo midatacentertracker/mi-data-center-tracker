@@ -54,20 +54,22 @@
     </a>`).join("");
 
   const latest = data.latest_developments || [];
-  $("#latest-grid").innerHTML = latest.length
-    ? latest.map((item, index) => `
-      <article class="story-card ${index === 0 ? "story-card-lead" : ""}">
-        <a href="${safeUrl(item.source_url)}" target="_blank" rel="noopener">
-          <div class="story-meta">
-            <span>${escapeHtml(item.topic)}</span>
-            <span>${escapeHtml(item.region)}</span>
-          </div>
-          <h3>${escapeHtml(item.headline)} ${external}</h3>
-          ${index < 3 ? `<p>${escapeHtml(item.summary)}</p>` : ""}
-          <footer><span>${escapeHtml(item.source_name)}</span><time datetime="${escapeHtml(item.published_date)}">${dateLabel(item.published_date)}</time></footer>
-        </a>
-      </article>`).join("")
-    : emptyState("No verified headlines loaded", "The tracker will not publish placeholder headlines.");
+  if ($("#latest-grid")) {
+    $("#latest-grid").innerHTML = latest.length
+      ? latest.map((item, index) => `
+        <article class="story-card ${index === 0 ? "story-card-lead" : ""}">
+          <a href="${safeUrl(item.source_url)}" target="_blank" rel="noopener">
+            <div class="story-meta">
+              <span>${escapeHtml(item.topic)}</span>
+              <span>${escapeHtml(item.region)}</span>
+            </div>
+            <h3>${escapeHtml(item.headline)} ${external}</h3>
+            ${index < 3 ? `<p>${escapeHtml(item.summary)}</p>` : ""}
+            <footer><span>${escapeHtml(item.source_name)}</span><time datetime="${escapeHtml(item.published_date)}">${dateLabel(item.published_date)}</time></footer>
+          </a>
+        </article>`).join("")
+      : emptyState("No verified headlines loaded", "The tracker will not publish placeholder headlines.");
+  }
 
   const meetings = data.meetings || [];
   $("#meeting-list").innerHTML = meetings.length
