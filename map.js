@@ -10,7 +10,7 @@
 
   async function loadMapData() {
     try {
-      const res = await fetch("map-data.json?v=20260629o", { cache: "no-store" });
+      const res = await fetch("map-data.json?v=20260629p", { cache: "no-store" });
       if (!res.ok) throw new Error(`map-data.json HTTP ${res.status}`);
       const json = await res.json();
       if (!json.map_points?.length) throw new Error("map-data.json has no map_points");
@@ -502,12 +502,12 @@
     let activeMarker = null, activePointName = null, activeRegion = initRegion;
     const filtersEl = $("#map-filters"), layersEl = $("#map-layers"), boundariesEl = $("#map-boundaries"), overlaysEl = $("#map-overlays"), dirEl = $("#map-directory"), storiesEl = $("#map-stories");
     const statuses = [...new Set(points.map(p => p.status))].sort();
-    const LOWER_PENINSULA_BOUNDS = L.latLngBounds([41.68, -87.52], [45.78, -82.02]);
+    const LOWER_PENINSULA_BOUNDS = L.latLngBounds([41.72, -87.38], [45.68, -82.12]);
 
     function fitLowerPeninsula({ duration } = {}) {
       const opts = isMobile()
-        ? { paddingTopLeft: [72, 28], paddingBottomRight: [96, 28], maxZoom: 8 }
-        : { paddingTopLeft: [56, 360], paddingBottomRight: [56, 56], maxZoom: 8 };
+        ? { paddingTopLeft: [118, 24], paddingBottomRight: [100, 24], maxZoom: 7 }
+        : { paddingTopLeft: [112, 340], paddingBottomRight: [64, 64], maxZoom: 7 };
       if (duration != null) map.flyToBounds(LOWER_PENINSULA_BOUNDS, { ...opts, duration });
       else map.fitBounds(LOWER_PENINSULA_BOUNDS, opts);
     }
@@ -538,8 +538,9 @@
       ribbon.innerHTML = defs.map((d, i) => {
         const val = counts[d.value_key] ?? 0;
         const suffix = d.suffix || "";
-        const accent = i === 0 ? " stat-box--accent" : "";
-        return `<div class="stat-box${accent}"><strong>${val}${suffix}</strong><span>${esc(d.label)}</span></div>`;
+        const accent = i === 0 ? " stat-inline--accent" : "";
+        const sep = i < defs.length - 1 ? `<span class="stat-sep" aria-hidden="true">|</span>` : "";
+        return `<span class="stat-inline${accent}"><strong>${val}${suffix}</strong>${esc(d.label)}</span>${sep}`;
       }).join("");
     }
 
@@ -684,7 +685,6 @@
         if (isMobile()) openMobilePanel("layers");
         if (on) activeLayers.add(id); else activeLayers.delete(id);
         refreshMarkers();
-        if (!isMobile()) fitAll();
       });
     }
 
@@ -744,7 +744,7 @@
         const checked = !initFilters || initFilters.has(s);
         return `<label class="${checked ? "" : "off"}"><input type="checkbox" value="${esc(s)}" ${checked ? "checked" : ""}><span class="filter-dot" style="background:${STATUS_COLORS[s]||"#cf102d"}"></span><span class="filter-name">${esc(s)}</span><span class="filter-count">${points.filter(p=>p.status===s).length}</span></label>`;
       }).join("");
-      filtersEl.addEventListener("change", () => { refreshMarkers(); fitAll(); });
+      filtersEl.addEventListener("change", () => { refreshMarkers(); });
     }
 
     if (storiesEl && stories.length) {
@@ -827,12 +827,18 @@
       clearSelection();
       map.closePopup();
       refreshMarkers();
-      if (fit) fitLowerPeninsula({ duration: 0.7 });
+      if (!isMobile()) switchPanelTab("layers");
+      else toggleMobilePanel(false);
+      history.replaceState(null, "", location.pathname);
+      if (fit) {
+        map.invalidateSize();
+        fitLowerPeninsula({ duration: 0.7 });
+      }
     }
 
     $("#show-all")?.addEventListener("click", () => resetMapView());
 
-    $("#map-reset")?.addEventListener("click", () => resetMapView());
+    $$("#map-reset, #map-reset-top").forEach(btn => btn.addEventListener("click", () => resetMapView()));
 
     document.addEventListener("keydown", e => {
       if (e.target.matches("input, textarea, select")) return;
@@ -842,7 +848,7 @@
 
     $$(".region-chip").forEach(chip => {
       chip.classList.toggle("active", chip.dataset.region === activeRegion);
-      chip.addEventListener("click", () => { activeRegion = chip.dataset.region; $$(".region-chip").forEach(c => c.classList.toggle("active", c.dataset.region === activeRegion)); refreshMarkers(); fitAll(); });
+      chip.addEventListener("click", () => { activeRegion = chip.dataset.region; $$(".region-chip").forEach(c => c.classList.toggle("active", c.dataset.region === activeRegion)); refreshMarkers(); });
     });
 
     $$(".panel-tab").forEach(tab => {
@@ -951,7 +957,12 @@
     if (ext) { const link = $("#external-map-link"); if (link) { link.href = ext.url; link.textContent = ext.label; link.hidden = false; } }
 
     refreshMarkers();
-    if (!initStory && !initPoint) fitLowerPeninsula();
+    const applyInitialView = () => {
+      map.invalidateSize();
+      if (!initStory && !initPoint) fitLowerPeninsula();
+    };
+    applyInitialView();
+    requestAnimationFrame(applyInitialView);
     if (initStory) openStory(initStory);
     else if (initPoint && markerMap.has(initPoint)) selectPoint(initPoint);
   }
