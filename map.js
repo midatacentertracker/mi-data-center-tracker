@@ -14,7 +14,7 @@
 
   async function loadMapData() {
     try {
-      const res = await fetch("map-data.json?v=20260705b", { cache: "no-store" });
+      const res = await fetch("map-data.json?v=20260706c", { cache: "no-store" });
       if (!res.ok) throw new Error(`map-data.json HTTP ${res.status}`);
       const json = await res.json();
       if (!json.map_points?.length) throw new Error("map-data.json has no map_points");
@@ -1167,7 +1167,11 @@
       const visible = points.filter(pointVisible);
       visible.forEach(p => markerLayer.addLayer(markerMap.get(p.name)));
       const countEl = $("#panel-record-count");
-      if (countEl) countEl.textContent = `${visible.length} / ${points.length}`;
+      if (countEl) {
+        countEl.textContent = isMobile()
+          ? `${visible.length} of ${points.length} sites on map`
+          : `${visible.length} / ${points.length}`;
+      }
       if (dirEl) {
         dirEl.innerHTML = visible.length
           ? [...visible].sort((a, b) => a.municipality.localeCompare(b.municipality)).map(p =>
@@ -1542,12 +1546,7 @@
     });
     $("#map-mob-scrim")?.addEventListener("click", closeMobMenu);
 
-    $("#map-open-panel")?.addEventListener("click", () => {
-      closeMobMenu();
-      openMobilePanel("layers");
-    });
-
-    $$("#map-locate-mob, #map-share-mob, #map-legend-mob").forEach(btn => {
+    $$("#map-locate-mob, #map-share-mob, #map-legend-mob, #map-reset-mob").forEach(btn => {
       btn.addEventListener("click", closeMobMenu);
     });
 
