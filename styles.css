@@ -187,44 +187,17 @@ a:focus-visible, button:focus-visible, input:focus-visible, [tabindex]:focus-vis
   display: none;
   flex-shrink: 0;
   margin-right: 16px;
+  width: min(168px, 46vw);
+  height: 44px;
+  overflow: hidden;
   line-height: 0;
   text-decoration: none;
   -webkit-tap-highlight-color: transparent;
 }
-.nav-wordmark-lockup {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 0;
-  min-width: 0;
-  padding: 1px 0;
-}
-.nav-wordmark-top {
-  display: block;
-  font-family: var(--display);
-  font-size: 1.05rem;
-  font-weight: 900;
-  line-height: .92;
-  letter-spacing: .03em;
-  text-transform: uppercase;
-  color: #fff;
-}
-.nav-wordmark-rule {
+.nav-wordmark img {
   display: block;
   width: 100%;
-  height: 2px;
-  margin: 3px 0 4px;
-  background: var(--red);
-}
-.nav-wordmark-sub {
-  display: block;
-  font-family: var(--sans);
-  font-size: .46rem;
-  font-weight: 800;
-  line-height: 1.05;
-  letter-spacing: .14em;
-  text-transform: uppercase;
-  color: rgba(255,255,255,.82);
+  height: auto;
 }
 .nav-links {
   display: flex;
@@ -1280,12 +1253,9 @@ main, .site-footer { max-width: var(--max); margin: 0 auto; background: var(--pa
     margin-right: 0;
     flex: 1;
     min-width: 0;
+    width: min(168px, 46vw);
+    height: 44px;
   }
-  .nav-wordmark-lockup {
-    width: min(190px, 54vw);
-  }
-  .nav-wordmark-top { font-size: 1rem; }
-  .nav-wordmark-sub { font-size: .44rem; }
   .nav-site-name { display: none; }
   .nav-links { display: none; }
   .nav-briefing { display: none; }
@@ -1308,12 +1278,9 @@ main, .site-footer { max-width: var(--max); margin: 0 auto; background: var(--pa
     transform: translateX(-50%);
     flex: 0;
     margin: 0;
+    width: min(176px, 54vw);
+    height: 44px;
   }
-  .nav-wordmark-lockup {
-    width: min(200px, 58vw);
-  }
-  .nav-wordmark-top { font-size: 1.02rem; }
-  .nav-wordmark-sub { font-size: .45rem; }
   .masthead { border-top-width: 2px; min-height: 140px; }
   .masthead-video {
     inset: 0;
