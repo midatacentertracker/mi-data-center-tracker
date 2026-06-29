@@ -14,7 +14,7 @@
 
   async function loadMapData() {
     try {
-      const res = await fetch("map-data.json?v=20260701j", { cache: "no-store" });
+      const res = await fetch("map-data.json?v=20260701k", { cache: "no-store" });
       if (!res.ok) throw new Error(`map-data.json HTTP ${res.status}`);
       const json = await res.json();
       if (!json.map_points?.length) throw new Error("map-data.json has no map_points");
@@ -360,12 +360,14 @@
     async function ensureBoundaryLayer(meta) {
       if (boundaryGroups[meta.id] || boundaryLoading[meta.id]) return boundaryLoading[meta.id];
       boundaryLoading[meta.id] = loadBoundaryGeo(meta).then(geo => {
+        const passive = meta.id === "counties";
         const group = L.geoJSON(geo, {
           style: boundaryStyle(meta),
-          interactive: true,
+          interactive: !passive,
           onEachFeature: (feature, layer) => {
+            if (passive) return;
             const props = feature.properties || {};
-            if (meta.id === "congressional" || meta.id === "counties") {
+            if (meta.id === "congressional") {
               layer.bindPopup(makeBoundaryPopup(props, meta), { maxWidth: 280, className: "tracker-popup" });
               layer.bindTooltip(props.name || props.label || meta.label, {
                 className: "boundary-tip",
