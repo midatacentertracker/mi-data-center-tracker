@@ -338,6 +338,63 @@
       white-space: nowrap;
       font-variant-numeric: tabular-nums;
     }
+    .utility-stat-num--compact {
+      font-size: .92rem;
+      letter-spacing: -.01em;
+    }
+    .context-strip {
+      background: #0d0f14;
+      border-bottom: 1px solid #1e2128;
+    }
+    .context-strip-inner {
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 9px 28px 10px;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      align-items: start;
+      gap: 12px 14px;
+    }
+    .context-strip-label {
+      font-size: .46rem;
+      font-weight: 900;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: #cf102d;
+      white-space: nowrap;
+      padding-top: 2px;
+    }
+    .context-strip-fact {
+      margin: 0;
+      font-size: .68rem;
+      line-height: 1.45;
+      color: #a8adb8;
+      font-weight: 550;
+      opacity: 0;
+      transform: translateY(4px);
+      transition: opacity .45s ease, transform .45s ease;
+    }
+    .context-strip-fact.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .context-strip-fact cite {
+      display: inline;
+      font-style: normal;
+      font-size: .58rem;
+      font-weight: 700;
+      letter-spacing: .04em;
+      color: #6d7380;
+      margin-left: .35em;
+    }
+    .context-strip-fact cite a {
+      color: #ff6b82;
+      text-decoration: none;
+      border-bottom: 1px solid rgba(207,16,45,.28);
+    }
+    .context-strip-fact cite a:hover {
+      border-bottom-color: #cf102d;
+    }
     .edition-date {
       margin: 0 0 14px;
       font-family: Georgia, "Times New Roman", Times, serif;
@@ -568,6 +625,15 @@
         border-top: 0;
       }
       .utility-edition-date { font-size: .52rem; letter-spacing: .08em; }
+      .utility-stat-num--compact { font-size: .82rem; }
+      .context-strip-inner {
+        grid-template-columns: 1fr;
+        gap: 4px;
+        padding: 8px 16px 9px;
+      }
+      .context-strip-label { padding-top: 0; }
+      .context-strip-fact { font-size: .6rem; line-height: 1.42; }
+      .context-strip-fact cite { display: block; margin: 4px 0 0; }
 
       /* Intro — copy then compact map card */
       .home-intro {
@@ -1310,6 +1376,13 @@
     </div>
   </div>
 
+  <div class="context-strip" id="context-strip" aria-live="polite">
+    <div class="context-strip-inner">
+      <span class="context-strip-label">By the numbers</span>
+      <p class="context-strip-fact" id="context-strip-fact"></p>
+    </div>
+  </div>
+
   <aside class="sponsor-avail sponsor-avail--strip" aria-label="Homepage sponsorship availability">
     <a class="sponsor-avail-frame" href="mailto:andy@fortlauderdalesignal.com?subject=Michigan%20Data%20Center%20Tracker%20%E2%80%94%20Homepage%20sponsorship">
       <span class="sponsor-avail-label">Sponsor<br>avail</span>
@@ -1597,13 +1670,13 @@
     </div>
   </footer>
 
-  <script src="home-stats.js?v=20260703f"></script>
+  <script src="home-stats.js?v=20260703h"></script>
   <script src="home-map-preview.js?v=20260703g"></script>
   <script src="content-data.js?v=20260701x"></script>
   <script src="app.js?v=20260703e"></script>
   <script>
     (function () {
-      const MAP_VERSION = "20260701w";
+      const MAP_VERSION = "20260703h";
 
       function setText(id, value) {
         const el = document.getElementById(id);
@@ -1620,7 +1693,8 @@
         HomeStats.applyEditionDate();
         if (mapData) {
           const counts = HomeStats.computeStats(mapData);
-          HomeStats.mountUtilityStats(counts);
+          HomeStats.mountUtilityStats(counts, { industryStats: mapData.industry_stats || [] });
+          HomeStats.mountContextFacts(mapData.context_facts || []);
           HomeMapPreview.init({ mapData, mapVersion: MAP_VERSION });
         } else {
           HomeMapPreview.init({ mapVersion: MAP_VERSION });

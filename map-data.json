@@ -1847,12 +1847,148 @@
     {
       "label": "Subscribe",
       "href": "index.html#briefing",
-      "desc": "Weekly briefing"
+      "desc": "Email alerts"
     },
     {
       "label": "Capitol watch",
       "href": "index.html#capitol",
       "desc": "Legislation & policy"
+    }
+  ],
+  "industry_stats": [
+    {
+      "value": "4%",
+      "label": "U.S. grid share (2024)",
+      "column": 0,
+      "source": "Pew Research / IEA",
+      "source_url": "https://www.pewresearch.org/short-reads/2024/11/22/what-we-know-about-data-centers-and-their-impact-on-the-us-power-grid/"
+    },
+    {
+      "value": "2×+",
+      "label": "U.S. demand by 2030",
+      "column": 0,
+      "source": "IEA",
+      "source_url": "https://www.iea.org/energy-system/buildings/data-centres-and-data-transmission-networks"
+    },
+    {
+      "value": "4,200+",
+      "label": "U.S. data centers",
+      "column": 0,
+      "source": "Statista",
+      "source_url": "https://www.statista.com/statistics/1228433/number-of-data-centers-in-the-united-states/"
+    },
+    {
+      "value": "1,000",
+      "label": "TWh globally by 2030",
+      "column": 0,
+      "source": "IEA",
+      "source_url": "https://www.iea.org/energy-system/buildings/data-centres-and-data-transmission-networks"
+    },
+    {
+      "value": "5M",
+      "label": "Gal/day — large DC cooling",
+      "column": 1,
+      "source": "EESI",
+      "source_url": "https://www.eesi.org/papers/view/fact-sheet-data-centers-and-water-consumption"
+    },
+    {
+      "value": "300K",
+      "label": "Gal/day — hyperscale avg",
+      "column": 1,
+      "source": "Industry estimates",
+      "source_url": "https://www.eesi.org/papers/view/fact-sheet-data-centers-and-water-consumption"
+    },
+    {
+      "value": "17B",
+      "label": "U.S. gal water (2023)",
+      "column": 1,
+      "source": "EESI",
+      "source_url": "https://www.eesi.org/papers/view/fact-sheet-data-centers-and-water-consumption"
+    },
+    {
+      "value": "66%",
+      "label": "New builds in water stress",
+      "column": 2,
+      "source": "Industry reports",
+      "source_url": "https://www.eesi.org/papers/view/fact-sheet-data-centers-and-water-consumption"
+    },
+    {
+      "value": "74K",
+      "label": "Virginia jobs / year",
+      "column": 2,
+      "source": "VEDP",
+      "source_url": "https://www.vedp.org/industry/data-centers"
+    },
+    {
+      "value": "50%",
+      "label": "AI workloads by 2030 (est.)",
+      "column": 2,
+      "source": "JLL",
+      "source_url": "https://www.us.jll.com/en/trends-and-insights/research/data-center-outlook"
+    },
+    {
+      "value": "$70B",
+      "label": "U.S. build spend / quarter",
+      "column": 2,
+      "source": "Industry forecasts",
+      "source_url": "https://www.us.jll.com/en/trends-and-insights/research/data-center-outlook"
+    }
+  ],
+  "context_facts": [
+    {
+      "text": "U.S. data centers consumed roughly 4% of total U.S. electricity in 2024, with demand expected to more than double by 2030.",
+      "source": "Pew Research / IEA",
+      "source_url": "https://www.pewresearch.org/short-reads/2024/11/22/what-we-know-about-data-centers-and-their-impact-on-the-us-power-grid/"
+    },
+    {
+      "text": "A single large data center can use up to 5 million gallons of water per day for cooling.",
+      "source": "EESI",
+      "source_url": "https://www.eesi.org/papers/view/fact-sheet-data-centers-and-water-consumption"
+    },
+    {
+      "text": "Global data center electricity use is projected to reach nearly 1,000 TWh by 2030 — roughly Japan's annual usage today.",
+      "source": "IEA",
+      "source_url": "https://www.iea.org/energy-system/buildings/data-centres-and-data-transmission-networks"
+    },
+    {
+      "text": "The U.S. has more than 4,200 data centers — more than any other country.",
+      "source": "Statista",
+      "source_url": "https://www.statista.com/statistics/1228433/number-of-data-centers-in-the-united-states/"
+    },
+    {
+      "text": "Data centers in Virginia alone support roughly 74,000 jobs annually.",
+      "source": "VEDP",
+      "source_url": "https://www.vedp.org/industry/data-centers"
+    },
+    {
+      "text": "A typical hyperscale data center uses about 300,000 gallons of water per day — roughly 1,000 average U.S. households.",
+      "source": "Industry estimates",
+      "source_url": "https://www.eesi.org/papers/view/fact-sheet-data-centers-and-water-consumption"
+    },
+    {
+      "text": "In 2023, U.S. data centers directly consumed an estimated 17 billion gallons of water.",
+      "source": "EESI",
+      "source_url": "https://www.eesi.org/papers/view/fact-sheet-data-centers-and-water-consumption"
+    },
+    {
+      "text": "Some individual AI model training runs have used as much electricity as hundreds of U.S. households use in a year.",
+      "source": "Industry research",
+      "source_url": "https://www.iea.org/energy-system/buildings/data-centres-and-data-transmission-networks"
+    },
+    {
+      "text": "U.S. data center construction spending is projected to average over $70 billion per quarter from 2025–2028.",
+      "source": "JLL",
+      "source_url": "https://www.us.jll.com/en/trends-and-insights/research/data-center-outlook"
+    },
+    {
+      "text": "Roughly 66% of new U.S. data centers built since 2022 are in areas already experiencing high water stress.",
+      "source": "Industry reports",
+      "source_url": "https://www.eesi.org/papers/view/fact-sheet-data-centers-and-water-consumption"
+    },
+    {
+      "text": "AI-related workloads could represent up to half of data center energy use by 2030, per industry forecasts.",
+      "source": "JLL",
+      "source_url": "https://www.us.jll.com/en/trends-and-insights/research/data-center-outlook"
     }
   ],
   "sponsors": {

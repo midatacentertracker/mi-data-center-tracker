@@ -14,7 +14,7 @@
 
   async function loadMapData() {
     try {
-      const res = await fetch("map-data.json?v=20260701t", { cache: "no-store" });
+      const res = await fetch("map-data.json?v=20260703h", { cache: "no-store" });
       if (!res.ok) throw new Error(`map-data.json HTTP ${res.status}`);
       const json = await res.json();
       if (!json.map_points?.length) throw new Error("map-data.json has no map_points");
@@ -826,6 +826,36 @@
         const sep = i < defs.length - 1 ? `<span class="stat-sep" aria-hidden="true">|</span>` : "";
         return `<span class="stat-inline${accent}"><strong>${val}${suffix}</strong>${esc(d.label)}</span>${sep}`;
       }).join("");
+      mountMapIndustryRotator(data.industry_stats || []);
+    }
+
+    let mapIndustryTimer = null;
+
+    function mountMapIndustryRotator(stats) {
+      const ribbon = $("#map-stats-ribbon");
+      if (!ribbon || !stats.length) return;
+      if (mapIndustryTimer) {
+        window.clearInterval(mapIndustryTimer);
+        mapIndustryTimer = null;
+      }
+      ribbon.insertAdjacentHTML("beforeend", `<span class="stat-sep stat-sep--industry" aria-hidden="true">|</span><span class="stat-inline stat-inline--industry" id="map-industry-stat" aria-live="polite"></span>`);
+      const slot = $("#map-industry-stat");
+      if (!slot) return;
+      let index = 0;
+      const paint = () => {
+        const stat = stats[index];
+        if (!stat) return;
+        slot.innerHTML = `<strong>${esc(stat.value)}</strong>${esc(stat.label)}`;
+        if (stat.source) {
+          slot.title = stat.source_url ? `${stat.label} — Source: ${stat.source}` : stat.source;
+        }
+      };
+      paint();
+      if (stats.length < 2 || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+      mapIndustryTimer = window.setInterval(() => {
+        index = (index + 1) % stats.length;
+        paint();
+      }, 7000);
     }
 
     const SPONSOR_INQUIRE_SUBJECT = "Sponsorship Inquiry – Michigan Data Center Map";

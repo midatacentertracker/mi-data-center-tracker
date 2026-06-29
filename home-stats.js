@@ -44,39 +44,65 @@
     };
   }
 
-  function buildUtilityRotations(counts) {
-    const dedupe = items => {
-      const seen = new Set();
-      return items.filter(item => {
-        if (!item || item.value <= 0) return false;
-        const key = `${item.value}|${item.label}`;
-        if (seen.has(key)) return false;
-        seen.add(key);
-        return true;
+  function statItemValid(item) {
+    if (!item || !item.label) return false;
+    const value = item.value;
+    if (value === undefined || value === null || value === "") return false;
+    if (typeof value === "number" && value <= 0) return false;
+    return true;
+  }
+
+  function dedupeStatItems(items) {
+    const seen = new Set();
+    return items.filter(item => {
+      if (!statItemValid(item)) return false;
+      const key = `${item.value}|${item.label}`;
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+  }
+
+  function isNumericStatValue(value) {
+    return /^[\d,]+$/.test(String(value).replace(/\+/g, ""));
+  }
+
+  function buildUtilityRotations(counts, industryStats = []) {
+    const industryByColumn = [[], [], []];
+    industryStats.forEach(stat => {
+      const col = Math.min(2, Math.max(0, Number(stat.column) || 0));
+      industryByColumn[col].push({
+        value: stat.value,
+        label: stat.label,
+        source: stat.source || "",
+        source_url: stat.source_url || ""
       });
-    };
+    });
 
     return [
-      dedupe([
+      dedupeStatItems([
         { value: counts.total, label: "On map now" },
         { value: counts.all_records, label: "Sourced records" },
         { value: counts.generation, label: "Generation nodes" },
         { value: counts.meetings, label: "Public hearings" },
         { value: counts.transmission, label: "Grid proposals" },
-        { value: counts.policy, label: "Policy signals" }
+        { value: counts.policy, label: "Policy signals" },
+        ...industryByColumn[0]
       ]),
-      dedupe([
+      dedupeStatItems([
         { value: counts.projects, label: "Data center sites" },
         { value: counts.proposed, label: "Proposed" },
         { value: counts.under_construction, label: "Under construction" },
         { value: counts.approved, label: "Approved" },
-        { value: counts.project_counties, label: "Counties tracked" }
+        { value: counts.project_counties, label: "Counties tracked" },
+        ...industryByColumn[1]
       ]),
-      dedupe([
+      dedupeStatItems([
         { value: counts.moratoria, label: "Moratoria" },
         { value: counts.moratoria_counties, label: "Communities paused" },
         { value: counts.transmission_lines, label: "Grid corridors" },
-        { value: counts.policy, label: "Capitol watch" }
+        { value: counts.policy, label: "Capitol watch" },
+        ...industryByColumn[2]
       ])
     ].filter(column => column.length > 0);
   }
@@ -128,16 +154,27 @@
       }
 
       el.classList.add("utility-stat--zap");
-      const len = nextValue.length;
-      let flickers = 0;
-      el._utilityFlicker = window.setInterval(() => {
-        num.textContent = scrambleDigits(len);
-        flickers += 1;
-        if (flickers >= 6) {
-          window.clearInterval(el._utilityFlicker);
-          el._utilityFlicker = null;
-        }
-      }, 30);
+      num.classList.toggle("utility-stat-num--compact", nextValue.length > 4);
+      if (item.source) {
+        const title = item.source_url
+          ? `${nextLabel} — Source: ${item.source}`
+          : `${nextLabel} — ${item.source}`;
+        el.setAttribute("title", title);
+      } else {
+        el.removeAttribute("title");
+      }
+      if (isNumericStatValue(nextValue)) {
+        const len = nextValue.replace(/,/g, "").length;
+        let flickers = 0;
+        el._utilityFlicker = window.setInterval(() => {
+          num.textContent = scrambleDigits(len);
+          flickers += 1;
+          if (flickers >= 6) {
+            window.clearInterval(el._utilityFlicker);
+            el._utilityFlicker = null;
+          }
+        }, 30);
+      }
 
       el._utilitySwap = window.setTimeout(() => {
         if (el._utilityFlicker) {
@@ -196,8 +233,71 @@
     return { stop };
   }
 
-  function mountUtilityStats(counts, root = document) {
-    const rotations = buildUtilityRotations(counts);
+  function mountContextFacts(facts, root = document, options = {}) {
+    const strip = root.getElementById("context-strip");
+    const factEl = root.getElementById("context-strip-fact");
+    if (!strip || !factEl) return null;
+    if (!facts.length) {
+      strip.hidden = true;
+      return null;
+    }
+    strip.hidden = false;
+
+    const interval = options.interval || 8500;
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    let index = 0;
+    let timer = null;
+
+    const esc = (value = "") => String(value)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+
+    const render = fact => {
+      const cite = fact.source
+        ? fact.source_url
+          ? `<cite><a href="${esc(fact.source_url)}" target="_blank" rel="noopener">${esc(fact.source)}</a></cite>`
+          : `<cite>${esc(fact.source)}</cite>`
+        : "";
+      factEl.innerHTML = `${esc(fact.text)} ${cite}`.trim();
+    };
+
+    const stop = () => {
+      if (timer) {
+        window.clearInterval(timer);
+        timer = null;
+      }
+    };
+
+    const start = () => {
+      stop();
+      if (reducedMotion.matches || facts.length < 2) return;
+      timer = window.setInterval(() => {
+        index = (index + 1) % facts.length;
+        factEl.classList.remove("is-visible");
+        window.setTimeout(() => {
+          render(facts[index]);
+          factEl.classList.add("is-visible");
+        }, 280);
+      }, interval);
+    };
+
+    render(facts[0]);
+    factEl.classList.add("is-visible");
+    start();
+    reducedMotion.addEventListener("change", start);
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) stop();
+      else start();
+    });
+
+    return { stop };
+  }
+
+  function mountUtilityStats(counts, options = {}, root = document) {
+    const industryStats = options.industryStats || [];
+    const rotations = buildUtilityRotations(counts, industryStats);
     const slots = [
       root.getElementById("utility-stat-0"),
       root.getElementById("utility-stat-1"),
@@ -278,6 +378,7 @@
     getDefaultLayers,
     computeStats,
     buildUtilityRotations,
+    mountContextFacts,
     mountUtilityStats,
     startUtilityStatRotator,
     formatUpdated,
