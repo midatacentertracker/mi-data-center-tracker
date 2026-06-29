@@ -154,6 +154,7 @@
       });
   }
 
+  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
   const regionNames = {
     statewide: "Your top stories",
     metro_detroit: "Metro Detroit / SE Michigan",
@@ -161,16 +162,103 @@
     mid_michigan: "Mid-Michigan",
     northern_michigan: "Northern Michigan"
   };
+  const regionTabLabels = {
+    statewide: "Top stories",
+    metro_detroit: "Metro Detroit",
+    west_michigan: "West Michigan",
+    mid_michigan: "Mid-Michigan",
+    northern_michigan: "Northern Mich."
+  };
+  const slideBase = "assets/across-michigan-slides/";
   const regionVisuals = {
-    statewide: { image: "pictured-rocks.jpg", label: "Your top stories", caption: "One state, many local decisions" },
-    metro_detroit: { image: "detroit.jpg", label: "Metro Detroit / SE Michigan", caption: "Detroit, Ann Arbor and Southeast Michigan" },
-    west_michigan: { image: "grand-rapids.jpg", label: "West Michigan", caption: "Grand Rapids, Holland, lakeshore, Kalamazoo and Battle Creek" },
-    mid_michigan: { image: "michigan night view.jpg", label: "Mid-Michigan", caption: "Lansing, Jackson, Mount Pleasant and the Tri-Cities" },
-    northern_michigan: { image: "mackinac-bridge.jpg", label: "Northern Michigan", caption: "Cadillac, Houghton Lake, Traverse City, Mackinac City and the U.P." }
+    statewide: {
+      slides: [
+        `${slideBase}pictured-rocks.jpg`,
+        `${slideBase}mackinac-bridge.jpg`,
+        `${slideBase}03-grand-ledge-water-town.jpg`,
+        `${slideBase}grand-rapids.jpg`,
+        `${slideBase}06-capitol-wide.jpg`,
+        `${slideBase}05-jackson-downtown.jpg`,
+        `${slideBase}detroit.jpg`,
+        `${slideBase}04-lansing-skyline.jpg`,
+        `${slideBase}07-capitol-dome.jpg`
+      ],
+      image: `${slideBase}pictured-rocks.jpg`,
+      caption: "One state, many local decisions"
+    },
+    metro_detroit: {
+      slides: [`${slideBase}detroit.jpg`, `${slideBase}06-capitol-wide.jpg`],
+      image: `${slideBase}detroit.jpg`,
+      caption: "Detroit, Ann Arbor and Southeast Michigan"
+    },
+    west_michigan: {
+      slides: [`${slideBase}grand-rapids.jpg`, `${slideBase}03-grand-ledge-water-town.jpg`],
+      image: `${slideBase}grand-rapids.jpg`,
+      caption: "Grand Rapids, Holland, lakeshore, Kalamazoo and Battle Creek"
+    },
+    mid_michigan: {
+      slides: [
+        `${slideBase}04-lansing-skyline.jpg`,
+        `${slideBase}07-capitol-dome.jpg`,
+        `${slideBase}05-jackson-downtown.jpg`,
+        `${slideBase}06-capitol-wide.jpg`
+      ],
+      image: `${slideBase}04-lansing-skyline.jpg`,
+      caption: "Lansing, Jackson, Mount Pleasant and the Tri-Cities"
+    },
+    northern_michigan: {
+      slides: [
+        `${slideBase}mackinac-bridge.jpg`,
+        `${slideBase}pictured-rocks.jpg`,
+        `${slideBase}03-grand-ledge-water-town.jpg`
+      ],
+      image: `${slideBase}mackinac-bridge.jpg`,
+      caption: "Cadillac, Houghton Lake, Traverse City, Mackinac City and the U.P."
+    }
   };
   const regional = data.regional_watch || {};
   const tabs = Object.keys(regionNames);
-  $("#region-tabs").innerHTML = tabs.map((key, i) => `<button id="region-tab-${key}" type="button" role="tab" data-region="${key}" aria-controls="region-panel" aria-selected="${i === 0}" tabindex="${i === 0 ? "0" : "-1"}">${regionNames[key]}</button>`).join("");
+  $("#region-tabs").innerHTML = tabs.map((key, i) => {
+    const label = regionTabLabels[key];
+    const full = regionNames[key];
+    return `<button id="region-tab-${key}" type="button" role="tab" data-region="${key}" aria-controls="region-panel" aria-selected="${i === 0}" tabindex="${i === 0 ? "0" : "-1"}" title="${escapeHtml(full)}" aria-label="${escapeHtml(full)}">${escapeHtml(label)}</button>`;
+  }).join("");
+
+  let regionSlideshowTimer = null;
+  const stopRegionSlideshow = () => {
+    if (regionSlideshowTimer) {
+      clearInterval(regionSlideshowTimer);
+      regionSlideshowTimer = null;
+    }
+  };
+  const startRegionSlideshow = container => {
+    stopRegionSlideshow();
+    if (!container || reducedMotion.matches) return;
+    const slides = $$(".region-visual-slide", container);
+    if (slides.length < 2) return;
+    let index = 0;
+    slides.forEach((slide, i) => slide.classList.toggle("is-active", i === 0));
+    regionSlideshowTimer = setInterval(() => {
+      slides[index].classList.remove("is-active");
+      index = (index + 1) % slides.length;
+      slides[index].classList.add("is-active");
+    }, 4500);
+  };
+  const renderRegionVisual = visual => {
+    if (visual.slides?.length) {
+      const slideMarkup = visual.slides.map((src, i) =>
+        `<img class="region-visual-slide${i === 0 ? " is-active" : ""}" src="${escapeHtml(src)}" alt="" loading="${i === 0 ? "eager" : "lazy"}" decoding="async" aria-hidden="true">`
+      ).join("");
+      return `<div class="region-visual region-visual--slideshow">
+          <div class="region-visual-slides" aria-hidden="true">${slideMarkup}</div>
+          <div class="region-visual-scrim" aria-hidden="true"></div>
+          <strong>${escapeHtml(visual.caption)}</strong>
+        </div>`;
+    }
+    return `<div class="region-visual" style="--region-image:url('${escapeHtml(visual.image)}')">
+        <strong>${escapeHtml(visual.caption)}</strong>
+      </div>`;
+  };
 
   function renderRegion(key) {
     $$("#region-tabs button").forEach(btn => {
@@ -182,24 +270,15 @@
     const indexes = regional[key] || [];
     const items = indexes.map(index => latest[index]).filter(Boolean);
     const visual = regionVisuals[key];
-    const isMobile = window.matchMedia("(max-width: 900px)").matches;
-    const visualCard = (key === "statewide" && !isMobile)
-      ? `<div class="region-visual region-visual-video">
-          <video autoplay muted loop playsinline preload="auto" aria-hidden="true">
-            <source src="across-michigan-hero-web.mp4" type="video/mp4">
-          </video>
-          <strong>${escapeHtml(visual.caption)}</strong>
-        </div>`
-      : `<div class="region-visual" style="--region-image:url('${escapeHtml(visual.image)}')">
-          <strong>${escapeHtml(visual.caption)}</strong>
-        </div>`;
-    $("#region-panel").innerHTML = visualCard + (items.length
+    stopRegionSlideshow();
+    $("#region-panel").innerHTML = renderRegionVisual(visual) + (items.length
       ? items.map(item => `<a href="${safeUrl(item.source_url)}" target="_blank" rel="noopener">
           <span class="region-topic">${escapeHtml(item.region)}</span>
           <strong>${escapeHtml(item.headline)}</strong>
           <small>${escapeHtml(item.source_name)} · ${dateLabel(item.published_date)} ${external}</small>
         </a>`).join("")
       : emptyState(`No verified ${regionNames[key]} item loaded`, "This region remains visible so a future verified update drops into the same layout."));
+    startRegionSlideshow($(".region-visual--slideshow", $("#region-panel")));
   }
   $("#region-tabs").addEventListener("click", event => {
     const button = event.target.closest("button[data-region]");

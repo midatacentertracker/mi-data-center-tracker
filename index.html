@@ -19,7 +19,7 @@
   <meta name="twitter:image" content="social-card.png">
   <link rel="icon" href="favicon.png" type="image/png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
-  <link rel="stylesheet" href="styles.css?v=20260701w">
+  <link rel="stylesheet" href="styles.css?v=20260701x">
   <style>
     /* ── IMPROVEMENTS v20 ─────────────────────────────────────────────── */
 
@@ -341,11 +341,18 @@
       .story-card a { padding: 18px 16px !important; }
       .story-card:not(.story-card-lead) a { min-height: 0 !important; }
 
-      /* Region tabs — more readable */
+      /* Region tabs — all visible in wrapped grid */
+      .region-tabs {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+      }
       .region-tabs button {
-        min-height: 48px !important;
-        font-size: .64rem !important;
-        padding: 10px 6px !important;
+        min-height: 44px !important;
+        font-size: .54rem !important;
+        padding: 8px 6px !important;
+        white-space: normal !important;
+      }
+      .region-tabs button:last-child:nth-child(odd) {
+        grid-column: 1 / -1 !important;
       }
 
       /* Public cards — reduce padding on mobile */
@@ -1133,8 +1140,8 @@
   </footer>
 
   <script src="home-stats.js?v=20260701w"></script>
-  <script src="content-data.js?v=202606282355"></script>
-  <script src="app.js?v=202606282355"></script>
+  <script src="content-data.js?v=20260701x"></script>
+  <script src="app.js?v=20260701x"></script>
   <script>
     (function () {
       const MAP_VERSION = "20260701w";
