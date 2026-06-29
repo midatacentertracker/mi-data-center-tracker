@@ -274,31 +274,23 @@ main, .site-footer { max-width: var(--max); margin: 0 auto; background: var(--pa
 .section-meetings { padding: 0; }
 .meeting-banner {
   position: relative;
-  min-height: 190px;
   display: flex;
-  align-items: end;
-  justify-content: space-between;
-  gap: 30px;
-  padding: 36px 42px;
+  align-items: center;
+  gap: 16px;
+  padding: 18px 42px;
   color: #fff;
   overflow: hidden;
-  background: #101116 url("capitol-poster.jpg") right center/52% auto no-repeat;
+  background: #0b0b0d url("capitol-poster.jpg") right center/cover no-repeat;
+  border-bottom: 2px solid var(--red);
 }
-.meeting-video {
-  position: absolute;
-  inset: 0 0 0 auto;
-  width: 52%;
-  height: 100%;
-  object-fit: cover;
-  object-position: 50% 45%;
-}
+.meeting-video { display: none; }
 .meeting-video-scrim {
   position: absolute;
   inset: 0;
-  background: linear-gradient(90deg, rgba(10,10,12,.96) 0%, rgba(10,10,12,.78) 38%, rgba(10,10,12,.16) 80%, rgba(10,10,12,.03));
+  background: linear-gradient(90deg, rgba(10,10,12,.97) 0%, rgba(10,10,12,.85) 50%, rgba(10,10,12,.4) 100%);
 }
 .meeting-banner > div:not(.meeting-video-scrim), .meeting-banner > p { position: relative; z-index: 2; }
-.meeting-banner p { max-width: 460px; margin: 0; color: #e2e3e6; font-size: .9rem; }
+.meeting-banner p { display: none; }
 .meeting-list { background: #fff; }
 .meeting-card {
   display: grid;
@@ -525,8 +517,8 @@ main, .site-footer { max-width: var(--max); margin: 0 auto; background: var(--pa
   .story-card-lead h3 { font-size: 1.6rem; }
   .story-card a { min-height: 0; padding: 22px; }
   .story-card:not(.story-card-lead) a { min-height: 255px; }
-  .meeting-banner { min-height: 220px; display: block; padding: 34px 18px; }
-  .meeting-banner p { margin-top: 15px; }
+  .meeting-banner { padding: 14px 18px; }
+  .meeting-banner p { display: none; }
   .meeting-card { grid-template-columns: 85px 1fr; gap: 15px; padding: 22px 18px; }
   .meeting-actions { grid-column: 1 / -1; flex-wrap: wrap; }
   .editorial-note { grid-template-columns: 1fr; }
