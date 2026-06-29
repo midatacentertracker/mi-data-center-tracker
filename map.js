@@ -14,7 +14,7 @@
 
   async function loadMapData() {
     try {
-      const res = await fetch("map-data.json?v=20260701g", { cache: "no-store" });
+      const res = await fetch("map-data.json?v=20260701h", { cache: "no-store" });
       if (!res.ok) throw new Error(`map-data.json HTTP ${res.status}`);
       const json = await res.json();
       if (!json.map_points?.length) throw new Error("map-data.json has no map_points");
@@ -211,23 +211,87 @@
     const defaultOverlays = new Set(overlayLayersMeta.filter(o => o.default_on).map(o => o.id));
     let activeOverlays = initOverlays?.size ? initOverlays : new Set(defaultOverlays);
 
-    const darkTile = L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", { maxZoom: 19, attribution: '&copy; OSM &copy; CARTO' });
-    const dayTile = L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png", { maxZoom: 19, attribution: '&copy; OSM &copy; CARTO' });
-    const satTile = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", { maxZoom: 19, attribution: '&copy; Esri' });
+    const CARTO_ATTR = '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/">CARTO</a>';
+    const cartoOpts = { subdomains: "abcd", maxZoom: 20, attribution: CARTO_ATTR };
 
     const map = L.map("map", { zoomControl: false, scrollWheelZoom: true }).setView([43.4, -85.0], 7);
     L.control.zoom({ position: "bottomright" }).addTo(map);
 
-    let currentMode = ["dark","day","sat"].includes(initMode) ? initMode : "dark";
+    const mapLabelPane = map.createPane("mapLabelPane");
+    mapLabelPane.style.zIndex = 450;
+    mapLabelPane.style.pointerEvents = "none";
+
+    const darkBase = L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png", cartoOpts);
+    const darkLabels = L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager_only_labels/{z}/{x}/{y}{r}.png", {
+      ...cartoOpts,
+      pane: "mapLabelPane",
+      opacity: 0.82,
+      attribution: ""
+    });
+    const dayTile = L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png", cartoOpts);
+    const satBase = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", {
+      maxZoom: 19,
+      attribution: "&copy; Esri"
+    });
+    const satRoads = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Transportation/MapServer/tile/{z}/{y}/{x}", {
+      maxZoom: 19,
+      pane: "mapLabelPane",
+      opacity: 0.72,
+      attribution: ""
+    });
+    const satPlaces = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}", {
+      maxZoom: 19,
+      pane: "mapLabelPane",
+      opacity: 0.85,
+      attribution: ""
+    });
+
+    const basemapSets = {
+      dark: [darkBase, darkLabels],
+      day: [dayTile],
+      sat: [satBase, satRoads, satPlaces]
+    };
+    const allBasemapLayers = [...new Set(Object.values(basemapSets).flat())];
+
+    function labelOpacityForZoom(z, mode) {
+      if (mode === "dark") {
+        if (z >= 12) return 0.98;
+        if (z >= 10) return 0.93;
+        if (z >= 8) return 0.86;
+        return 0.68;
+      }
+      if (mode === "sat") {
+        if (z >= 12) return 0.95;
+        if (z >= 9) return 0.88;
+        return 0.72;
+      }
+      return 1;
+    }
+
+    function applyBasemapLabelOpacity() {
+      const z = map.getZoom();
+      if (currentMode === "dark") darkLabels.setOpacity(labelOpacityForZoom(z, "dark"));
+      if (currentMode === "sat") {
+        satRoads.setOpacity(z >= 11 ? 0.88 : z >= 9 ? 0.78 : 0.62);
+        satPlaces.setOpacity(labelOpacityForZoom(z, "sat"));
+      }
+    }
+
+    let currentMode = ["dark", "day", "sat"].includes(initMode) ? initMode : "dark";
     const setTileMode = mode => {
-      [darkTile, dayTile, satTile].forEach(t => { try { map.removeLayer(t); } catch (_) {} });
-      if (mode === "day") dayTile.addTo(map);
-      else if (mode === "sat") satTile.addTo(map);
-      else darkTile.addTo(map);
+      allBasemapLayers.forEach(t => { try { map.removeLayer(t); } catch (_) {} });
+      (basemapSets[mode] || basemapSets.dark).forEach(t => t.addTo(map));
       currentMode = mode;
+      const mapEl = document.getElementById("map");
+      if (mapEl) {
+        mapEl.classList.toggle("map-basemap-dark", mode === "dark");
+        mapEl.classList.toggle("map-basemap-sat", mode === "sat");
+      }
       $$(".tile-btn").forEach(b => b.classList.toggle("active", b.dataset.mode === mode));
+      applyBasemapLabelOpacity();
     };
     setTileMode(currentMode);
+    map.on("zoomend", applyBasemapLabelOpacity);
     $$(".tile-btn").forEach(b => b.addEventListener("click", () => {
       setTileMode(b.dataset.mode);
       analytics.track("basemap_change", { mode: b.dataset.mode });

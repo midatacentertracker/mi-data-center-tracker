@@ -76,6 +76,12 @@
     }
     #map.leaflet-dragging { cursor: grabbing; }
     .leaflet-container { background: #10131a; outline: none; font-family: var(--sans); }
+    #map.map-basemap-dark .leaflet-tile-pane {
+      filter: contrast(1.14) brightness(1.06);
+    }
+    #map.map-basemap-sat .leaflet-tile-pane {
+      filter: contrast(1.06) saturate(1.08);
+    }
     .leaflet-control-attribution {
       background: rgba(11,11,13,0.75) !important;
       color: var(--ink-muted) !important;
@@ -1912,7 +1918,7 @@
   <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js" crossorigin=""></script>
   <!-- Optional: set data-plausible-domain on <body> and uncomment for Plausible -->
   <!-- <script defer data-domain="midatacentertracker.com" src="https://plausible.io/js/script.js"></script> -->
-  <script src="map-analytics.js?v=20260701g"></script>
-  <script src="map.js?v=20260701g" defer></script>
+  <script src="map-analytics.js?v=20260701h"></script>
+  <script src="map.js?v=20260701h" defer></script>
 </body>
 </html>
