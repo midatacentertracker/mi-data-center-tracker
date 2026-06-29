@@ -756,18 +756,80 @@
       }).join("");
     }
 
+    const SPONSOR_INQUIRE_SUBJECT = "Sponsorship Inquiry – Michigan Data Center Map";
+
+    function sponsorInquireUrl() {
+      const custom = data.sponsors?.inquire_url;
+      if (custom) return safeUrl(custom);
+      return `mailto:info@michigandatacentertracker.com?subject=${encodeURIComponent(SPONSOR_INQUIRE_SUBJECT)}`;
+    }
+
+    function sponsorPartnerCard(partner, tier, tierLabel) {
+      const mod = tier === "presenting" ? " sponsor-partner--presenting" : " sponsor-partner--supporting";
+      const filled = partner.status === "filled" && partner.logo_url;
+      const logo = filled
+        ? `<img class="sponsor-partner-logo" src="${esc(partner.logo_url)}" alt="${esc(partner.name)}">`
+        : `<div class="sponsor-logo-placeholder" aria-hidden="true"><span>Logo</span></div>`;
+      const desc = partner.description || partner.tagline || "";
+      return `<a class="sponsor-partner${mod}" href="${sponsorInquireUrl()}" title="Sponsorship inquiry — ${esc(tierLabel)}">
+        <span class="sponsor-partner-tier">${esc(tierLabel)}</span>
+        ${logo}
+        <span class="sponsor-partner-name">${esc(partner.name)}</span>
+        <span class="sponsor-partner-desc">${esc(desc)}</span>
+        <span class="sponsor-partner-cta">Inquire →</span>
+      </a>`;
+    }
+
+    function normalizeSponsors(s) {
+      if (s.presenting || s.supporting) {
+        return {
+          presenting: s.presenting,
+          supporting: (s.supporting || []).slice(0, 3)
+        };
+      }
+      const slots = s.slots || [];
+      return {
+        presenting: slots.find(slot => slot.tier === "presenting" || slot.highlight) || null,
+        supporting: slots.filter(slot => slot.tier === "supporting" || (!slot.highlight && slot.tier !== "presenting")).slice(0, 3)
+      };
+    }
+
     function renderSponsors() {
       const el = $("#map-sponsors");
       const s = data.sponsors;
       if (!el || !s) return;
-      const slots = (s.slots || []).map(slot => {
-        const hero = slot.highlight ? " sponsor-slot--hero" : "";
-        const filled = slot.status === "filled" && slot.logo_url;
-        return `<div class="sponsor-slot${hero}">${filled
-          ? `<img src="${esc(slot.logo_url)}" alt="${esc(slot.name)}" style="max-height:36px;margin-bottom:6px">`
-          : `<div class="sponsor-slot-tier">${esc(slot.tier)}</div><div class="sponsor-slot-name">${esc(slot.name)}</div><div class="sponsor-slot-tag">${esc(slot.tagline)}</div>`}</div>`;
-      }).join("");
-      el.innerHTML = `<div class="sponsor-head">Partners</div><div class="sponsor-slots">${slots}</div><a class="sponsor-inquire" href="${safeUrl(s.inquire_url)}">${esc(s.inquire_label || "Inquire")}</a>`;
+      const { presenting, supporting } = normalizeSponsors(s);
+      const title = s.section_title || "Sponsorship & Partners";
+      const lead = s.section_lead || s.subhead || "Premium placement for organizations reaching communities tracking Michigan data centers.";
+      const presentingCard = presenting
+        ? sponsorPartnerCard(presenting, "presenting", "Presenting partner")
+        : sponsorPartnerCard(
+          { status: "available", name: "Presenting partner", description: "Featured logo · map visibility · newsletter mention" },
+          "presenting",
+          "Presenting partner"
+        );
+      const supportingCards = (supporting.length ? supporting : [
+        { status: "available", name: "Supporting partner", description: "Sidebar recognition · category exclusivity" },
+        { status: "available", name: "Supporting partner", description: "Sidebar recognition · regional targeting" },
+        { status: "available", name: "Supporting partner", description: "Sidebar recognition · event tie-ins" }
+      ]).map(partner => sponsorPartnerCard(partner, "supporting", "Supporting partner")).join("");
+      el.innerHTML = `<div class="sponsor-section-head">
+          <span class="sponsor-section-title">${esc(title)}</span>
+          <p class="sponsor-section-lead">${esc(lead)}</p>
+        </div>
+        <div class="sponsor-partner-stack">${presentingCard}</div>
+        <div class="sponsor-supporting-label">Supporting partners</div>
+        <div class="sponsor-supporting-grid">${supportingCards}</div>`;
+    }
+
+    function renderTopbarSponsor() {
+      const el = $("#map-support-line");
+      const top = data.sponsors?.topbar;
+      if (!el) return;
+      const name = top?.partner_name || "Partner placement available";
+      el.href = sponsorInquireUrl();
+      el.innerHTML = `Supported by <strong>${esc(name)}</strong>`;
+      el.hidden = top?.hidden === true;
     }
 
     function renderSiteLinks() {
@@ -888,6 +950,7 @@
     }
 
     renderSponsors();
+    renderTopbarSponsor();
     renderSiteLinks();
     renderLiveMapLinks();
     renderLegend();

@@ -1856,34 +1856,32 @@
     }
   ],
   "sponsors": {
-    "headline": "Partner with Michigan's definitive map",
-    "subhead": "Premium placement for law firms, utilities, economic development & civic orgs reaching communities tracking data centers.",
-    "inquire_url": "mailto:info@michigandatacentertracker.com?subject=Map%20sponsorship%20inquiry",
-    "inquire_label": "Sponsorship inquiries",
-    "slots": [
+    "section_title": "Sponsorship & Partners",
+    "section_lead": "Premium placement for law firms, utilities, economic development & civic orgs reaching communities tracking data centers.",
+    "inquire_url": "mailto:info@michigandatacentertracker.com?subject=Sponsorship%20Inquiry%20%E2%80%93%20Michigan%20Data%20Center%20Map",
+    "topbar": {
+      "partner_name": "Partner placement available"
+    },
+    "presenting": {
+      "status": "available",
+      "name": "Presenting partner",
+      "description": "Featured logo · map visibility · newsletter mention"
+    },
+    "supporting": [
       {
-        "tier": "presenting",
-        "status": "available",
-        "name": "Presenting partner",
-        "tagline": "Logo on map · sidebar feature · newsletter mention",
-        "cta_label": "Reserve slot",
-        "highlight": true
-      },
-      {
-        "tier": "supporting",
         "status": "available",
         "name": "Supporting partner",
-        "tagline": "Sidebar recognition · category exclusivity",
-        "cta_label": "Learn more",
-        "highlight": false
+        "description": "Sidebar recognition · category exclusivity"
       },
       {
-        "tier": "supporting",
         "status": "available",
         "name": "Supporting partner",
-        "tagline": "Sidebar recognition · regional targeting",
-        "cta_label": "Learn more",
-        "highlight": false
+        "description": "Sidebar recognition · regional targeting"
+      },
+      {
+        "status": "available",
+        "name": "Supporting partner",
+        "description": "Sidebar recognition · event tie-ins"
       }
     ]
   }
