@@ -189,12 +189,7 @@
       flex-shrink: 0;
       gap: 5px;
     }
-    .utility-updated-dot {
-      width: 5px; height: 5px;
-      border-radius: 50%;
-      background: #22c55e;
-      animation: pulse-dot 2s infinite;
-    }
+    .utility-updated-dot { display: none !important; }
     @keyframes pulse-dot {
       0%, 100% { opacity: 1; }
       50% { opacity: .35; }
@@ -441,10 +436,10 @@
 
     /* ── TICKER BAR ─────────────────────────────────────────────────── */
     .ticker-bar {
-      background: #f5f6f8;
-      border-bottom: 1px solid #dfe2e8;
+      background: #0b0b0d;
+      border-bottom: 1px solid #1e2026;
       overflow: hidden;
-      height: 36px;
+      height: 32px;
     }
     .ticker-inner {
       max-width: var(--max);
@@ -458,7 +453,11 @@
       inset: 0;
       display: flex;
       align-items: center;
-      font-size: .72rem;
+      justify-content: center;
+      font-size: .58rem;
+      font-weight: 800;
+      letter-spacing: .16em;
+      text-transform: uppercase;
       color: #555965;
       gap: 6px;
       opacity: 0;
