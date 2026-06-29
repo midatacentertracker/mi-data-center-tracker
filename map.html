@@ -566,9 +566,18 @@
   <script>
     fetch("data.json?v=20260628")
       .then(r => r.json())
-      .then(d => { window.TRACKER_DATA = d; })
-      .catch(() => { window.TRACKER_DATA = {}; });
+      .then(d => {
+        window.TRACKER_DATA = d;
+        const s = document.createElement("script");
+        s.src = "map.js?v=20260628";
+        document.body.appendChild(s);
+      })
+      .catch(() => {
+        window.TRACKER_DATA = {};
+        const s = document.createElement("script");
+        s.src = "map.js?v=20260628";
+        document.body.appendChild(s);
+      });
   </script>
-  <script src="map.js?v=20260628"></script>
 </body>
 </html>
