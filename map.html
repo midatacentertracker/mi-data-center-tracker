@@ -1521,8 +1521,8 @@
         max-height: min(88dvh, 780px);
         z-index: 700;
       }
-      .map-panel.open ~ .map-hud {
-        opacity: 0;
+      .map-shell:has(.map-panel.open) .map-hud {
+        visibility: hidden;
         pointer-events: none;
       }
       .panel-grab,
@@ -1789,7 +1789,7 @@
   <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js" crossorigin=""></script>
   <!-- Optional: set data-plausible-domain on <body> and uncomment for Plausible -->
   <!-- <script defer data-domain="midatacentertracker.com" src="https://plausible.io/js/script.js"></script> -->
-  <script src="map-analytics.js?v=20260630e"></script>
-  <script src="map.js?v=20260630e" defer></script>
+  <script src="map-analytics.js?v=20260630f"></script>
+  <script src="map.js?v=20260630f" defer></script>
 </body>
 </html>
