@@ -744,7 +744,7 @@ main, .site-footer { max-width: var(--max); margin: 0 auto; background: var(--pa
   .commercial-strip { grid-template-columns: 1fr; }
   /* Nav: collapse to hamburger bar */
   .primary-nav { position: sticky; top: 0; z-index: 100; background: #0b0b0d; }
-  .primary-nav-inner { height: 52px; padding: 0 16px; display: flex; align-items: center; gap: 12px; }
+  .primary-nav-inner { height: 48px; padding: 0 12px; display: flex; align-items: center; gap: 8px; }
   .menu-button { display: grid; width: 48px; height: 48px; gap: 5px; }
   .nav-wordmark { display: none; }
   .nav-site-name { display: block; }

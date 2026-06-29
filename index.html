@@ -19,7 +19,7 @@
   <meta name="twitter:image" content="social-card.png">
   <link rel="icon" href="favicon.png" type="image/png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
-  <link rel="stylesheet" href="styles.css?v=20260701t">
+  <link rel="stylesheet" href="styles.css?v=20260701u">
   <style>
     /* ── IMPROVEMENTS v20 ─────────────────────────────────────────────── */
 
@@ -403,46 +403,95 @@
         border-top: 1px solid #222429;
       }
 
-      /* Map-first on mobile */
+      /* Intro — copy then compact map card */
       .home-intro-inner {
         display: flex;
         flex-direction: column;
-        gap: 16px;
-        padding: 14px 16px 0;
+        gap: 12px;
+        padding: 16px 16px 0;
       }
-      .home-intro-map { order: -1; max-width: none; }
       .home-intro-copy h2 {
-        font-size: clamp(1.25rem, 6.5vw, 1.55rem) !important;
+        margin: 2px 0 0;
+        font-size: clamp(1.1rem, 5.8vw, 1.4rem) !important;
+        line-height: 1.04 !important;
       }
-      .home-intro-lead { font-size: .86rem; margin-bottom: 10px; }
-
-      /* What's next — stacked, tappable rows */
-      .home-whats-next .key-meetings-inner {
-        flex-direction: column;
+      .home-intro-lead { display: none; }
+      .home-intro-verify {
+        margin-top: 8px;
+        font-size: .56rem;
+        line-height: 1.45;
+      }
+      .home-intro-map { max-width: none; }
+      .home-map-shell {
+        box-shadow: 0 4px 14px rgba(23,27,35,.05);
+      }
+      .home-map-live,
+      .home-map-preview-meta { display: none; }
+      .home-map-preview {
+        aspect-ratio: 2.2 / 1;
+        max-height: 200px;
+      }
+      .home-map-preview img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: 50% 42%;
+      }
+      .home-map-preview-overlay {
+        background: linear-gradient(180deg, rgba(255,255,255,.02) 35%, rgba(17,20,26,.42));
+      }
+      .home-map-preview-action {
+        justify-content: flex-end;
         align-items: stretch;
-        padding: 0;
-        min-height: 0;
+        padding: 12px;
+        gap: 0;
+      }
+      .home-map-preview-action .button {
+        width: 100%;
+        min-height: 44px;
+        font-size: .62rem;
+      }
+
+      /* What's next — one urgent row */
+      .home-whats-next .key-meetings-inner {
+        flex-direction: row;
+        flex-wrap: nowrap;
+        align-items: center;
+        padding: 0 12px;
+        min-height: 46px;
+        gap: 0;
       }
       .home-whats-next .km-label {
-        padding: 10px 16px;
-        border-right: 0;
-        border-bottom: 1px solid #1e2028;
+        padding: 0 10px 0 4px;
+        border-right: 1px solid #1e2028;
+        border-bottom: 0;
+        font-size: .54rem;
       }
-      .home-whats-next .km-items { flex-direction: column; }
-      .home-whats-next .km-divider { display: none; }
-      .home-whats-next .km-item {
-        padding: 13px 16px;
-        min-height: 48px;
-        border-bottom: 1px solid #1e2028;
+      .home-whats-next .km-items { flex-direction: row; flex: 1; min-width: 0; }
+      .home-whats-next .km-item:not(.km-item--next) { display: none; }
+      .home-whats-next .km-item--next {
+        flex: 1;
+        min-width: 0;
+        padding: 0 10px;
+        min-height: 46px;
+        border-bottom: 0;
+        background: transparent;
+        box-shadow: none;
       }
-      .home-whats-next .km-item--next { box-shadow: inset 4px 0 0 var(--red); }
+      .home-whats-next .km-item--next .km-title {
+        color: #d8dbe3;
+        font-size: .64rem;
+      }
       .home-whats-next .km-all {
-        padding: 12px 16px;
-        border-left: 0;
-        justify-content: center;
-        min-height: 44px;
+        padding: 0 0 0 10px;
+        border-left: 1px solid #1e2028;
+        min-height: 46px;
+        font-size: .54rem;
         color: #ff5c73;
       }
+
+      .nav-site-name { display: none !important; }
+      .sticky-cta { font-size: .64rem; padding-top: 11px; padding-bottom: calc(11px + env(safe-area-inset-bottom, 0px)); }
 
       .regions-section { padding-top: 28px !important; }
       body { padding-bottom: calc(56px + env(safe-area-inset-bottom, 0px)); }
@@ -709,13 +758,7 @@
         margin: 0 auto;
       }
     }
-    @media (max-width: 620px) {
-      .home-map-preview-action .button {
-        width: min(100%, 260px);
-        min-height: 44px;
-        font-size: .64rem;
-      }
-    }
+
 
     .regions-section { padding-top: 40px !important; }
 
@@ -1037,12 +1080,12 @@
     </div>
   </footer>
 
-  <script src="home-stats.js?v=20260701t"></script>
+  <script src="home-stats.js?v=20260701u"></script>
   <script src="content-data.js?v=202606282355"></script>
   <script src="app.js?v=202606282355"></script>
   <script>
     (function () {
-      const MAP_VERSION = "20260701t";
+      const MAP_VERSION = "20260701u";
 
       function setText(id, value) {
         const el = document.getElementById(id);
