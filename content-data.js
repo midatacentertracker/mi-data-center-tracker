@@ -1,5 +1,5 @@
 window.TRACKER_DATA = {
-  updated_at: "2026-06-28T19:10:00-04:00",
+  updated_at: "2026-06-29T12:00:00-04:00",
   newsletter: {
     form_action: ""
   },
@@ -9,14 +9,14 @@ window.TRACKER_DATA = {
   status: [
     {
       label: "Sites in the statewide picture",
-      value: "16+",
+      value: "19+",
       detail: "Operating, planned, proposed or under development",
       source_name: "Cleanview",
       source_url: "https://cleanview.co/data-centers/michigan"
     },
     {
       label: "Local pauses",
-      value: "~50",
+      value: "32+",
       detail: "Communities reported with temporary moratoria",
       source_name: "Michigan Public",
       source_url: "https://www.michiganpublic.org/environment-climate-change/2026-06-10/as-data-centers-expand-in-michigan-so-do-environmental-and-economic-concerns"
