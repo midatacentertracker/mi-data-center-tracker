@@ -31,7 +31,7 @@
       --panel: rgba(11,11,13,0.88);
       --display: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
       --sans: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      --topbar-h: 64px;
+      --topbar-h: 68px;
       --chrome-stats-h: 42px;
       --chrome-lakes-h: 28px;
       --chrome-h: calc(var(--chrome-stats-h) + var(--chrome-lakes-h));
@@ -292,25 +292,6 @@
       flex-shrink: 0;
     }
 
-    .panel-badge {
-      display: inline-flex;
-      margin-top: 8px;
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--ink-muted);
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      padding: 5px 10px;
-    }
-    .panel-tagline {
-      font-size: 12px;
-      line-height: 1.45;
-      color: var(--ink-muted);
-      margin-top: 6px;
-    }
-
     .panel-sponsor {
       padding: 10px 12px;
       border-top: 1px solid var(--line);
@@ -427,13 +408,16 @@
     .topbar-breadcrumb {
       display: flex;
       align-items: center;
-      gap: 8px;
-      font-size: 11px;
+      gap: 10px;
+      font-size: 12px;
       font-weight: 600;
       color: var(--ink-muted);
       min-width: 0;
       flex: 1;
-      padding-left: 4px;
+      padding-left: 18px;
+      margin-left: 2px;
+      border-left: 1px solid var(--line);
+      letter-spacing: 0.02em;
     }
     .topbar-breadcrumb a {
       color: var(--ink-dim);
@@ -481,12 +465,12 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 16px;
-      padding: 0 20px;
+      gap: 20px;
+      padding: 0 24px;
       padding-top: env(safe-area-inset-top, 0px);
       background: #0b0b0d;
-      border-bottom: 2px solid var(--red);
-      box-shadow: 0 6px 24px rgba(0,0,0,0.32);
+      border-bottom: 2px solid rgba(207,16,45,0.88);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.28);
     }
     .map-topbar-brand {
       display: flex;
@@ -495,19 +479,20 @@
       color: inherit;
       flex-shrink: 0;
       min-width: 0;
+      padding: 4px 0;
     }
     .map-topbar-brand img {
       display: block;
-      height: 48px;
+      height: 54px;
       width: auto;
-      max-width: min(240px, 54vw);
+      max-width: min(280px, 52vw);
       object-fit: contain;
       object-position: left center;
     }
     .map-topbar-actions {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
       flex-shrink: 0;
       margin-left: auto;
     }
@@ -522,7 +507,7 @@
     }
     .nav-link {
       color: var(--ink-dim);
-      padding: 7px 10px;
+      padding: 8px 12px;
       border: 1px solid transparent;
     }
     .nav-link:hover { color: var(--ink); background: rgba(255,255,255,0.05); }
@@ -530,7 +515,7 @@
       color: #fff;
       background: var(--red);
       border: 1px solid var(--red);
-      padding: 7px 12px;
+      padding: 8px 14px;
     }
     .nav-cta:hover { background: var(--red-dark); border-color: var(--red-dark); }
     .topbar-icon-btn {
@@ -614,7 +599,7 @@
       align-items: center;
       justify-content: space-between;
       gap: 10px;
-      margin-bottom: 10px;
+      margin-bottom: 0;
     }
     .panel-chevron {
       display: none;
@@ -1565,15 +1550,15 @@
     @media (max-width: 768px) {
       .map-topbar {
         height: auto;
-        min-height: 52px;
-        padding: 8px 12px;
-        padding-top: calc(8px + env(safe-area-inset-top, 0px));
+        min-height: 60px;
+        gap: 12px;
+        padding: 10px 16px;
+        padding-top: calc(10px + env(safe-area-inset-top, 0px));
       }
       .map-topbar-brand img {
-        height: 32px;
-        max-width: min(150px, 48vw);
+        height: 44px;
+        max-width: min(230px, 68vw);
       }
-      .map-topbar-kicker { display: none; }
       .nav-link--desktop { display: none !important; }
       .nav-cta {
         min-height: 40px;
@@ -1711,8 +1696,7 @@
   <div class="map-shell">
     <header class="map-topbar">
       <a class="map-topbar-brand" href="index.html" aria-label="Michigan Data Center Tracker home">
-        <img src="brand-logo-light.png" alt="Michigan Data Center Tracker" width="168" height="36">
-        <span class="map-topbar-kicker">Live map</span>
+        <img src="brand-logo-light.png" alt="Michigan Data Center Tracker" width="280" height="54">
       </a>
       <nav class="topbar-breadcrumb" aria-label="Breadcrumb">
         <a href="index.html">Tracker</a>
@@ -1745,8 +1729,6 @@
           <span class="panel-count" id="panel-record-count">Loading…</span>
           <span class="panel-chevron" id="panel-chevron" aria-hidden="true">⌃</span>
         </div>
-        <p class="panel-tagline" id="panel-tagline" hidden></p>
-        <div class="panel-badge" id="panel-badge" hidden></div>
         <span id="map-updated" hidden></span>
       </div>
 
@@ -1859,8 +1841,6 @@
 
     <div class="map-legend" id="map-legend" hidden></div>
 
-    <div class="map-grain" aria-hidden="true"></div>
-    <div class="map-vignette" aria-hidden="true"></div>
     <main id="map" aria-label="Interactive map of Michigan data center records"></main>
   </div>
 
@@ -1868,7 +1848,7 @@
   <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js" crossorigin=""></script>
   <!-- Optional: set data-plausible-domain on <body> and uncomment for Plausible -->
   <!-- <script defer data-domain="midatacentertracker.com" src="https://plausible.io/js/script.js"></script> -->
-  <script src="map-analytics.js?v=20260701b"></script>
-  <script src="map.js?v=20260701b" defer></script>
+  <script src="map-analytics.js?v=20260701d"></script>
+  <script src="map.js?v=20260701d" defer></script>
 </body>
 </html>
