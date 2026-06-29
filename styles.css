@@ -95,15 +95,14 @@ a:focus-visible, button:focus-visible, input:focus-visible, [tabindex]:focus-vis
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: 50% 20%;
+  object-position: 50% 55%;
   filter: brightness(1.2) saturate(1.08) contrast(.98);
 }
 .masthead-scrim {
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(90deg, rgba(7,7,9,.72) 0%, rgba(7,7,9,.38) 35%, rgba(7,7,9,.08) 70%, rgba(7,7,9,.02) 100%),
-    linear-gradient(0deg, rgba(7,7,9,.28), transparent 52%);
+    linear-gradient(180deg, rgba(7,7,9,.45) 0%, rgba(7,7,9,.15) 40%, rgba(7,7,9,.5) 100%);
 }
 .masthead-inner {
   position: relative;
@@ -278,11 +277,11 @@ main, .site-footer { max-width: var(--max); margin: 0 auto; background: var(--pa
   display: flex;
   align-items: center;
   gap: 16px;
-  padding: 18px 42px;
+  padding: 12px 42px;
   color: #fff;
   overflow: hidden;
   background: #0b0b0d url("capitol-poster.jpg") right center/cover no-repeat;
-  border-bottom: 2px solid var(--red);
+  border-bottom: 1px solid #1e2026;
 }
 .meeting-video { display: none; }
 .meeting-video-scrim {
