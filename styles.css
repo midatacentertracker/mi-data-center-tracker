@@ -184,14 +184,20 @@ a:focus-visible, button:focus-visible, input:focus-visible, [tabindex]:focus-vis
   white-space: nowrap;
 }
 .nav-wordmark {
-  display: block;
+  display: none;
   width: 140px;
-  height: 36px;
+  height: 34px;
   flex-shrink: 0;
-  margin-right: 24px;
+  margin-right: 16px;
   overflow: hidden;
 }
-.nav-wordmark img { display: block; width: 140px; height: auto; }
+.nav-wordmark img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: left center;
+}
 .nav-links {
   display: flex;
   align-items: stretch;
@@ -825,17 +831,12 @@ main, .site-footer { max-width: var(--max); margin: 0 auto; background: var(--pa
   .menu-button { display: grid; width: 48px; height: 48px; gap: 5px; }
   .nav-wordmark {
     display: block !important;
-    width: 118px;
-    height: 28px;
-    margin-right: 4px;
+    width: min(188px, 52vw);
+    height: 36px;
+    margin-right: 6px;
     flex-shrink: 0;
   }
-  .nav-wordmark img {
-    width: 118px;
-    max-height: 28px;
-    object-fit: contain;
-    object-position: left center;
-  }
+  .primary-nav-inner { height: 52px; }
   .nav-site-name { display: none; }
   .nav-links { display: none; }
   .nav-briefing { display: none; }
