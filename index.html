@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="theme-color" content="#e9edf2">
+  <meta name="theme-color" content="#0b0b0d">
   <title>Michigan Data Center Tracker | Independent public-source tracking</title>
   <meta name="description" content="Independent, nonpartisan tracking of Michigan data center projects, public meetings, local moratoria, energy, water and policy.">
   <link rel="canonical" href="">
@@ -19,9 +19,49 @@
   <meta name="twitter:image" content="social-card.png">
   <link rel="icon" href="favicon.png" type="image/png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
-  <link rel="stylesheet" href="styles.css?v=20260703r">
+  <link rel="stylesheet" href="styles.css?v=20260703u">
   <style>
-    /* ── IMPROVEMENTS v20 ─────────────────────────────────────────────── */
+    /* ── IMPROVEMENTS v21 — map-first homepage ───────────────────────── */
+
+    body { background: #0b0b0d; padding-bottom: 0; }
+    main, .site-footer { background: var(--paper); }
+
+    /* Hide clutter: video masthead, status rail, inline sponsors, context ticker */
+    .masthead,
+    .status-rail,
+    .context-strip,
+    .sponsor-avail--strip,
+    .sponsor-avail--section { display: none !important; }
+
+    /* Larger nav logo — visible on all breakpoints */
+    .primary-nav-inner {
+      height: 56px;
+      padding: 0 20px;
+      gap: 4px;
+    }
+    .nav-wordmark {
+      display: flex !important;
+      align-items: center;
+      flex-shrink: 0;
+      width: min(200px, 46vw);
+      height: 44px;
+      margin-right: 10px;
+      overflow: visible;
+    }
+    .nav-wordmark img {
+      width: auto;
+      max-width: 100%;
+      height: 44px;
+      object-fit: contain;
+      object-position: left center;
+    }
+    .nav-site-name { display: none !important; }
+    @media (min-width: 901px) {
+      .primary-nav-inner { height: 60px; padding: 0 28px; }
+      .nav-wordmark { width: min(300px, 26vw); height: 50px; margin-right: 18px; }
+      .nav-wordmark img { height: 50px; }
+      .nav-links a { font-size: .68rem; padding: 0 12px; }
+    }
 
     /* 1. Hide Tracker Status rail entirely */
     .status-rail { display: none !important; }
@@ -659,36 +699,8 @@
     .home-intro-alerts { display: none; }
     .home-map-heading-short { display: none; }
 
-    /* ── DESKTOP: restore full hero height, shift video right to show lighthouse ── */
-    @media (min-width: 901px) {
-      .masthead-video { object-position: 60% 42% !important; }
-    }
-
     /* ── COMPACT FOLD (phones + narrow tablets, ≤ 900px) ─────────────── */
     @media (max-width: 900px) {
-      .masthead { min-height: 100px !important; }
-      .masthead-inner { display: none !important; }
-      .masthead-video { object-position: 62% 36% !important; }
-
-      .context-strip { display: none !important; }
-      .utility-edition { display: none; }
-      .sponsor-avail--strip { display: none; }
-
-      .utility-strip { border-top-width: 1px; }
-      .utility-strip-inner {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        overflow-x: visible;
-        padding: 8px 12px 6px;
-        gap: 0;
-      }
-      .utility-stat {
-        padding: 6px 4px;
-        border-right: 0;
-      }
-      .utility-stat-num { font-size: 1.15rem; }
-      .utility-stat-label { font-size: .48rem; letter-spacing: .08em; }
-
       .nav-briefing { display: none !important; }
       .nav-alerts-mobile {
         display: inline-flex;
@@ -707,38 +719,18 @@
       }
       .nav-alerts-mobile:hover { background: #a80d24; }
 
-      .home-intro::before {
-        background: linear-gradient(
-          180deg,
-          rgba(8, 9, 12, .86) 0%,
-          rgba(8, 9, 12, .58) 38%,
-          rgba(8, 9, 12, .24) 72%,
-          rgba(8, 9, 12, .12) 100%
-        );
-      }
-      .home-intro-inner {
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-        padding: 12px 16px 6px;
-      }
-      .home-intro-copy .eyebrow-live { display: none; }
-      .home-intro-copy h2 {
-        margin: 0;
-        font-size: clamp(1rem, 4.5vw, 1.2rem) !important;
-        line-height: 1.05 !important;
-        color: #fff !important;
-      }
       .home-map-heading-long { display: none; }
       .home-map-heading-short { display: inline; }
-      .home-intro-lead,
-      .home-intro-verify,
-      .home-intro-alerts { display: none !important; }
+      .home-intro-copy .eyebrow-live { display: none; }
       .home-map-preview-chip-text span { display: none; }
-      .home-map-preview {
-        aspect-ratio: 5 / 3;
-        max-height: 260px;
+      .home-intro-inner {
+        grid-template-areas:
+          "map"
+          "copy"
+          "meta";
+        padding-top: 10px;
       }
+      .home-intro-lead { display: none; }
     }
 
     /* ── MOBILE OVERRIDES (≤ 620px) ──────────────────────────────────── */
@@ -995,14 +987,10 @@
       pointer-events: auto;
     }
 
-    /* ── Homepage intro + compact map (night lights backdrop) ───────── */
+    /* ── Homepage hero — map centerpiece ─────────────────────────────── */
     .home-intro {
       position: relative;
-      background-color: #0a0c10;
-      background-image: url("assets/michigan-night-lights.jpg");
-      background-position: center 58%;
-      background-size: cover;
-      background-repeat: no-repeat;
+      background: #0b0b0d;
       border-bottom: 1px solid #1a1f28;
       overflow: hidden;
     }
@@ -1010,14 +998,9 @@
       content: "";
       position: absolute;
       inset: 0;
-      background: linear-gradient(
-        102deg,
-        rgba(8, 9, 12, .92) 0%,
-        rgba(8, 9, 12, .78) 34%,
-        rgba(8, 9, 12, .42) 56%,
-        rgba(8, 9, 12, .16) 76%,
-        rgba(8, 9, 12, .08) 100%
-      );
+      background:
+        radial-gradient(ellipse 90% 55% at 50% -8%, rgba(207,16,45,.14), transparent 58%),
+        radial-gradient(ellipse 70% 40% at 80% 100%, rgba(23,59,98,.22), transparent 55%);
       pointer-events: none;
     }
     .home-intro-inner {
@@ -1025,12 +1008,19 @@
       z-index: 1;
       max-width: var(--max);
       margin: 0 auto;
-      padding: 28px 42px 24px;
+      padding: 20px 28px 18px;
       display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(260px, 36%);
-      gap: 20px 40px;
-      align-items: center;
+      grid-template-columns: 1fr;
+      grid-template-areas:
+        "copy"
+        "map"
+        "meta";
+      gap: 16px;
+      align-items: stretch;
     }
+    .home-intro-head { grid-area: copy; }
+    .home-intro-map { grid-area: map; }
+    .home-intro-meta { grid-area: meta; display: grid; gap: 14px; }
     .eyebrow-live {
       display: inline-flex;
       align-items: center;
@@ -1050,29 +1040,74 @@
       50% { box-shadow: 0 0 0 7px rgba(207,16,45,0); opacity: .85; }
     }
     .home-intro-copy h2 {
-      margin: 4px 0 10px;
+      margin: 6px 0 8px;
       font-family: var(--display);
-      font-size: clamp(1.35rem, 2.2vw, 1.95rem);
-      line-height: .96;
+      font-size: clamp(1.5rem, 3.2vw, 2.35rem);
+      line-height: .94;
       letter-spacing: .015em;
       text-transform: uppercase;
       color: #fff;
     }
     .home-intro-lead {
-      margin: 0 0 12px;
-      max-width: 42ch;
-      font-size: .9rem;
-      line-height: 1.48;
-      color: rgba(255, 255, 255, .78);
+      margin: 0;
+      max-width: 52ch;
+      font-size: .92rem;
+      line-height: 1.5;
+      color: rgba(255, 255, 255, .72);
     }
     .home-intro-verify {
       margin: 0;
+      font-size: .62rem;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, .5);
+    }
+    .home-intro-actions {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px 16px;
+    }
+    .home-intro-open {
+      min-height: 44px;
+      padding: 12px 22px;
+      font-size: .72rem;
+      letter-spacing: .12em;
+      box-shadow: 0 10px 28px rgba(207,16,45,.35);
+    }
+    .home-intro-alerts-link {
       font-size: .66rem;
       font-weight: 800;
-      letter-spacing: .06em;
+      letter-spacing: .1em;
       text-transform: uppercase;
-      color: rgba(255, 255, 255, .58);
+      color: #ff6b82;
+      text-decoration: none;
+      border-bottom: 1px solid rgba(255,107,130,.35);
     }
+    .home-intro-alerts-link:hover { color: #fff; border-bottom-color: #fff; }
+    .home-intro-meta .utility-strip {
+      background: rgba(255,255,255,.03);
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 2px;
+    }
+    .home-intro-meta .utility-strip-inner {
+      max-width: none;
+      padding: 0;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+    }
+    .home-intro-meta .utility-stat {
+      padding: 12px 10px;
+      border-right: 1px solid rgba(255,255,255,.06);
+    }
+    .home-intro-meta .utility-stat:last-child { border-right: 0; }
+    .home-intro-meta .utility-edition { display: none; }
+    .home-intro-meta .utility-stat-num {
+      font-size: clamp(1.1rem, 2.4vw, 1.45rem);
+      color: #ff5c73;
+    }
+    .home-intro-meta .utility-stat-label { color: #8b919e; }
     .home-intro-verify a {
       color: var(--red);
       text-decoration: none;
@@ -1080,16 +1115,18 @@
     }
     .home-intro-verify a:hover { border-bottom-color: var(--red); }
     .home-intro-map {
-      justify-self: end;
       width: 100%;
-      max-width: 380px;
+      max-width: none;
     }
     .home-map-shell {
       position: relative;
-      border: 1px solid rgba(255, 255, 255, .22);
-      box-shadow: 0 16px 40px rgba(0, 0, 0, .42);
-      background: #fff;
+      border: 1px solid rgba(255, 255, 255, .14);
+      box-shadow:
+        0 28px 70px rgba(0, 0, 0, .55),
+        0 0 0 1px rgba(207, 16, 45, .12);
+      background: #c8d6e6;
       overflow: hidden;
+      border-radius: 2px;
     }
     .home-map-live {
       position: absolute;
@@ -1124,7 +1161,11 @@
       color: inherit;
       -webkit-tap-highlight-color: transparent;
       touch-action: manipulation;
-      aspect-ratio: 1200 / 720;
+      aspect-ratio: 16 / 9;
+      min-height: 220px;
+    }
+    @media (min-width: 901px) {
+      .home-map-preview { min-height: 380px; aspect-ratio: 16 / 9; }
     }
     .home-map-preview-slides {
       position: absolute;
@@ -1332,26 +1373,28 @@
     }
 
     @media (max-width: 900px) {
-      .masthead-inner { display: none !important; }
       .home-intro-inner {
-        display: flex;
-        flex-direction: column;
+        padding: 14px 16px 10px;
         gap: 12px;
-        padding: 16px 16px 8px;
       }
       .home-intro-copy h2 {
-        margin: 2px 0 0;
-        font-size: clamp(1.1rem, 4.5vw, 1.45rem) !important;
-        line-height: 1.04 !important;
+        margin: 2px 0 4px;
+        font-size: clamp(1.15rem, 5vw, 1.5rem) !important;
+        line-height: 1.02 !important;
       }
-      .home-intro-lead { display: none; }
-      .home-intro-verify { margin-top: 8px; font-size: .56rem; }
-      .home-intro-map { max-width: none; }
+      .home-intro-lead { font-size: .82rem; }
+      .home-intro-verify { display: none; }
+      .home-intro-actions { gap: 8px; }
+      .home-intro-open { flex: 1; min-width: 0; }
       .home-map-live { display: none; }
       .home-map-preview {
         aspect-ratio: 5 / 3;
-        max-height: 260px;
+        min-height: 0;
+        max-height: none;
       }
+      .home-intro-meta .utility-stat { padding: 10px 6px; }
+      .home-intro-meta .utility-stat-num { font-size: 1.05rem; }
+      .home-intro-meta .utility-stat-label { font-size: .46rem; }
       .home-map-preview-chip { padding: 8px 10px 10px; }
       .home-map-preview-dock { gap: 8px; padding: 7px 8px 8px; }
       .home-map-preview-layer { font-size: .34rem; }
@@ -1391,7 +1434,48 @@
     }
 
 
-    .regions-section { padding-top: 40px !important; }
+    .regions-section { padding-top: 36px !important; }
+    .regions-radar { display: none !important; }
+    .regions-stage { padding-top: 0 !important; }
+    .section-heading h2 { letter-spacing: -.01em; }
+
+    /* Footer — clean wordmark, no unreadable slogan image */
+    .footer-brand {
+      display: block;
+      font-family: var(--display);
+      font-size: clamp(1.1rem, 2.4vw, 1.45rem);
+      font-weight: 400;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      color: #fff;
+      line-height: 1.05;
+      text-decoration: none;
+    }
+    .footer-brand:hover { color: #ff6b82; }
+    .footer-tag {
+      margin: 6px 0 0;
+      font-size: .68rem;
+      font-weight: 600;
+      letter-spacing: .04em;
+      color: #8b919e;
+    }
+    .footer-updated {
+      margin: 0;
+      font-family: var(--sans);
+      font-size: .66rem;
+      font-weight: 700;
+      font-style: normal;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      color: #6d7380;
+    }
+    .footer-copy {
+      margin: 0;
+      font-size: .66rem;
+      color: #6d7380;
+    }
+    .footer-wordmark { display: none !important; }
+    .footer-edition { display: none !important; }
 
     .home-whats-next {
       border-top: 3px solid var(--red);
@@ -1491,11 +1575,9 @@
       <div class="nav-links">
         <a href="map.html">Map</a>
         <a href="#regions">Stories</a>
-        <a href="#public-monitor">Monitor</a>
         <a href="#meetings">Meetings</a>
         <a href="#learn">Learn</a>
         <a href="methodology.html">Methodology</a>
-        <a href="#sponsorship">Sponsor</a>
       </div>
       <a class="live-map-link" href="map.html"><span class="live-dot"></span>Live map</a>
       <a class="nav-alerts-mobile" href="#briefing">Alerts</a>
@@ -1503,65 +1585,17 @@
     </div>
   </nav>
 
-  <header class="masthead">
-    <h1 class="sr-only">Michigan Data Center Tracker</h1>
-    <video class="masthead-video" src="header.mp4" autoplay muted loop playsinline preload="metadata" aria-hidden="true"></video>
-    <div class="masthead-scrim"></div>
-    <div class="masthead-inner">
-      <div class="wordmark">
-        <img src="brand-logo-light.png" alt="Michigan Data Center Tracker">
-      </div>
-    </div>
-  </header>
-
-
-  <!-- At-a-glance utility strip -->
-  <div class="utility-strip" id="utility-strip">
-    <div class="utility-strip-inner">
-      <div class="utility-stat" id="utility-stat-0" aria-live="polite">
-        <span class="utility-stat-num" id="stat-on-map">—</span>
-        <span class="utility-stat-label" id="stat-on-map-label">On map now</span>
-      </div>
-      <div class="utility-stat" id="utility-stat-1" aria-live="polite">
-        <span class="utility-stat-num" id="stat-sites">—</span>
-        <span class="utility-stat-label" id="stat-sites-label">Data center sites</span>
-      </div>
-      <div class="utility-stat" id="utility-stat-2" aria-live="polite">
-        <span class="utility-stat-num" id="stat-moratoria">—</span>
-        <span class="utility-stat-label" id="stat-moratoria-label">Moratoria</span>
-      </div>
-      <div class="utility-edition" aria-label="Today's date">
-        <span class="utility-edition-live" aria-hidden="true"></span>
-        <time class="utility-edition-date" id="utility-timestamp"></time>
-      </div>
-    </div>
-  </div>
-
-  <div class="context-strip" id="context-strip" aria-live="polite">
-    <div class="context-strip-inner">
-      <span class="context-strip-label">By the numbers</span>
-      <p class="context-strip-fact" id="context-strip-fact"></p>
-    </div>
-  </div>
-
-  <aside class="sponsor-avail sponsor-avail--strip" aria-label="Homepage sponsorship availability">
-    <a class="sponsor-avail-frame" href="mailto:andy@fortlauderdalesignal.com?subject=Michigan%20Data%20Center%20Tracker%20%E2%80%94%20Homepage%20sponsorship">
-      <span class="sponsor-avail-label">Sponsor<br>avail</span>
-      <span class="sponsor-avail-copy">Homepage leaderboard · Reach Michigan readers tracking data center build-out.</span>
-      <span class="sponsor-avail-cta">Advertise here</span>
-      <span class="sponsor-avail-slot" aria-hidden="true"></span>
-    </a>
-  </aside>
+  <h1 class="sr-only">Michigan Data Center Tracker</h1>
 
   <section class="home-intro" id="live-map" aria-labelledby="home-map-heading">
     <div class="home-intro-inner">
-      <div class="home-intro-copy">
-        <span class="eyebrow eyebrow-live"><span class="live-pip" aria-hidden="true"></span>Live intelligence map</span>
-        <h2 id="home-map-heading"><span class="home-map-heading-long">Michigan's build-out, mapped in real time.</span><span class="home-map-heading-short">Michigan, mapped live.</span></h2>
-        <p class="home-intro-lead">Public-source sites and moratoria across the lower peninsula — updated as filings and meeting records publish.</p>
-        <p class="home-intro-verify">Independent · Aggregated · Nonpartisan · <a href="methodology.html">Methodology →</a></p>
-        <a class="home-intro-alerts" href="#briefing">Stay alerted — sign up free</a>
-      </div>
+      <header class="home-intro-head">
+        <div class="home-intro-copy">
+          <span class="eyebrow eyebrow-live"><span class="live-pip" aria-hidden="true"></span>Live intelligence map</span>
+          <h2 id="home-map-heading"><span class="home-map-heading-long">Michigan's build-out, mapped in real time.</span><span class="home-map-heading-short">Michigan, mapped live.</span></h2>
+          <p class="home-intro-lead">Public-source sites, moratoria, and hearings across the lower peninsula — updated as records publish.</p>
+        </div>
+      </header>
       <div class="home-intro-map">
         <div class="home-map-shell">
           <span class="home-map-live" aria-hidden="true"><span class="live-pip"></span>Live</span>
@@ -1577,6 +1611,33 @@
               </div>
             </div>
           </a>
+        </div>
+      </div>
+      <div class="home-intro-meta">
+        <div class="utility-strip" id="utility-strip" aria-label="Map statistics">
+          <div class="utility-strip-inner">
+            <div class="utility-stat" id="utility-stat-0" aria-live="polite">
+              <span class="utility-stat-num" id="stat-on-map">—</span>
+              <span class="utility-stat-label" id="stat-on-map-label">On map now</span>
+            </div>
+            <div class="utility-stat" id="utility-stat-1" aria-live="polite">
+              <span class="utility-stat-num" id="stat-sites">—</span>
+              <span class="utility-stat-label" id="stat-sites-label">Data center sites</span>
+            </div>
+            <div class="utility-stat" id="utility-stat-2" aria-live="polite">
+              <span class="utility-stat-num" id="stat-moratoria">—</span>
+              <span class="utility-stat-label" id="stat-moratoria-label">Moratoria</span>
+            </div>
+            <div class="utility-edition" aria-label="Today's date">
+              <span class="utility-edition-live" aria-hidden="true"></span>
+              <time class="utility-edition-date" id="utility-timestamp"></time>
+            </div>
+          </div>
+        </div>
+        <div class="home-intro-actions">
+          <a class="button button-red home-intro-open" href="map.html">Open full map</a>
+          <a class="home-intro-alerts-link" href="#briefing">Get email alerts</a>
+          <p class="home-intro-verify">Independent · Nonpartisan · <a href="methodology.html">Methodology →</a></p>
         </div>
       </div>
     </div>
@@ -1853,27 +1914,29 @@
 
   <footer class="site-footer">
     <div class="footer-top">
-      <div>
-        <a class="footer-wordmark" href="index.html">
-          <img src="brand-logo-light.png" alt="Michigan Data Center Tracker — Independent, Aggregated, Nonpartisan">
-        </a>
+      <div class="footer-brand-block">
+        <a class="footer-brand" href="index.html">Michigan Data Center Tracker</a>
+        <p class="footer-tag">Independent public-source tracking</p>
       </div>
       <nav aria-label="Footer navigation">
-        <a href="#live-map">Live map</a>
+        <a href="map.html">Live map</a>
+        <a href="#regions">Stories</a>
+        <a href="#meetings">Meetings</a>
+        <a href="#learn">Learn</a>
         <a href="methodology.html">Methodology</a>
         <a href="privacy.html">Privacy</a>
         <a href="#explain">Ask a question</a>
         <a href="mailto:michigandatacentertracker@gmail.com?subject=Tracker%20tip">Submit a tip</a>
-        <a href="mailto:andy@fortlauderdalesignal.com?subject=Michigan%20Data%20Center%20Tracker%20Sponsorship">Sponsor</a>
-        <a href="mailto:andy@fortlauderdalesignal.com?subject=Michigan%20Data%20Center%20Tracker">Contact</a>
+        <a href="#sponsorship">Sponsor</a>
       </nav>
     </div>
     <div class="footer-bottom">
-      <time class="footer-edition" id="footer-updated"></time>
+      <p class="footer-copy">© 2026 Michigan Data Center Tracker</p>
+      <time class="footer-updated" id="footer-updated"></time>
     </div>
   </footer>
 
-  <script src="home-stats.js?v=20260703n"></script>
+  <script src="home-stats.js?v=20260703u"></script>
   <script src="home-map-preview.js?v=20260703t"></script>
   <script src="content-data.js?v=20260703r"></script>
   <script src="app.js?v=20260703r"></script>
