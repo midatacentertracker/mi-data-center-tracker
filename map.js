@@ -10,7 +10,7 @@
 
   async function loadMapData() {
     try {
-      const res = await fetch("map-data.json?v=20260629k", { cache: "no-store" });
+      const res = await fetch("map-data.json?v=20260629l", { cache: "no-store" });
       if (!res.ok) throw new Error(`map-data.json HTTP ${res.status}`);
       const json = await res.json();
       if (!json.map_points?.length) throw new Error("map-data.json has no map_points");
@@ -61,7 +61,32 @@
       const swatch = line
         ? `class="layer-swatch layer-swatch--line" style="color:${color}"`
         : `class="layer-swatch" style="background:${color}"`;
-      return `<label class="layer-row ${on ? "" : "off"}" title="${esc(desc || label)}"><span ${swatch}></span><span class="layer-name">${esc(label)}</span><span class="layer-count">${count || ""}</span><span class="layer-switch" aria-hidden="true"></span><input type="checkbox" value="${escAttr(id)}" ${on ? "checked" : ""}></label>`;
+      return `<button type="button" class="layer-row ${on ? "on" : "off"}" data-layer="${escAttr(id)}" aria-pressed="${on ? "true" : "false"}" title="${esc(desc || label)}"><span ${swatch}></span><span class="layer-name">${esc(label)}</span><span class="layer-count">${count || ""}</span><span class="layer-check" aria-hidden="true"></span></button>`;
+    }
+
+    function setLayerRow(btn, on) {
+      if (!btn) return;
+      btn.classList.toggle("on", on);
+      btn.classList.toggle("off", !on);
+      btn.setAttribute("aria-pressed", on ? "true" : "false");
+    }
+
+    function setLayerRowById(container, id, on) {
+      setLayerRow(container?.querySelector(`[data-layer="${escAttr(id)}"]`), on);
+    }
+
+    function bindLayerList(container, onToggle) {
+      if (!container) return;
+      container.addEventListener("click", e => {
+        const btn = e.target.closest(".layer-row");
+        if (!btn || !container.contains(btn)) return;
+        e.preventDefault();
+        e.stopPropagation();
+        const id = btn.dataset.layer;
+        const on = btn.getAttribute("aria-pressed") !== "true";
+        setLayerRow(btn, on);
+        onToggle(id, on, btn);
+      });
     }
 
     function isMobile() {
@@ -278,8 +303,7 @@
       }).catch(err => {
         console.warn("[map] boundary load failed", meta.id, err);
         activeBoundaries.delete(meta.id);
-        const inp = document.querySelector(`#map-boundaries input[value="${escAttr(meta.id)}"]`);
-        if (inp) { inp.checked = false; inp.closest("label")?.classList.add("off"); }
+        setLayerRowById(boundariesEl, meta.id, false);
       }).finally(() => { delete boundaryLoading[meta.id]; });
       return boundaryLoading[meta.id];
     }
@@ -381,8 +405,7 @@
       }).catch(err => {
         console.warn("[map] overlay load failed", meta.id, err);
         activeOverlays.delete(meta.id);
-        const inp = document.querySelector(`#map-overlays input[value="${escAttr(meta.id)}"]`);
-        if (inp) { inp.checked = false; inp.closest("label")?.classList.add("off"); }
+        setLayerRowById(overlaysEl, meta.id, false);
       }).finally(() => { delete overlayLoading[meta.id]; });
       return overlayLoading[meta.id];
     }
@@ -472,8 +495,8 @@
       ribbon.innerHTML = defs.map((d, i) => {
         const val = counts[d.value_key] ?? 0;
         const suffix = d.suffix || "";
-        const accent = i === 0 ? " stat-pill--accent" : "";
-        return `<div class="stat-pill${accent}"><strong>${val}${suffix}</strong><span>${esc(d.label)}</span></div>`;
+        const accent = i === 0 ? " stat-box--accent" : "";
+        return `<div class="stat-box${accent}"><strong>${val}${suffix}</strong><span>${esc(d.label)}</span></div>`;
       }).join("");
     }
 
@@ -619,11 +642,9 @@
         const on = activeLayers.has(l.id);
         return layerRow({ id: l.id, label: l.label, desc: l.description, color: l.color, count: n, on });
       }).join("");
-      layersEl.addEventListener("change", e => {
-        if (!e.target.matches("input")) return;
+      bindLayerList(layersEl, (id, on) => {
         if (isMobile()) openMobilePanel("layers");
-        if (e.target.checked) activeLayers.add(e.target.value); else activeLayers.delete(e.target.value);
-        e.target.closest("label")?.classList.toggle("off", !e.target.checked);
+        if (on) activeLayers.add(id); else activeLayers.delete(id);
         refreshMarkers();
         if (!isMobile()) fitAll();
       });
@@ -635,12 +656,11 @@
         const count = b.id === "townships" ? "1,240" : b.id === "congressional" ? "13" : "";
         return layerRow({ id: b.id, label: b.label, desc: b.description, color: b.color, count, on, line: true });
       }).join("");
-      boundariesEl.addEventListener("change", e => {
-        if (!e.target.matches("input")) return;
+      bindLayerList(boundariesEl, (id, on) => {
         if (isMobile()) openMobilePanel("layers");
-        const meta = boundaryLayersMeta.find(b => b.id === e.target.value);
+        const meta = boundaryLayersMeta.find(b => b.id === id);
         if (!meta) return;
-        if (e.target.checked) {
+        if (on) {
           activeBoundaries.add(meta.id);
           ensureBoundaryLayer(meta);
           if (meta.min_zoom && map.getZoom() < meta.min_zoom) {
@@ -649,7 +669,6 @@
         } else {
           activeBoundaries.delete(meta.id);
         }
-        e.target.closest("label")?.classList.toggle("off", !e.target.checked);
         refreshBoundaries();
       });
       boundaryLayersMeta.filter(b => activeBoundaries.has(b.id)).forEach(b => ensureBoundaryLayer(b));
@@ -663,12 +682,11 @@
         const count = overlayCounts[o.id] || "";
         return layerRow({ id: o.id, label: o.label, desc: o.description, color: o.color, count, on, line: true });
       }).join("");
-      overlaysEl.addEventListener("change", e => {
-        if (!e.target.matches("input")) return;
+      bindLayerList(overlaysEl, (id, on) => {
         if (isMobile()) openMobilePanel("layers");
-        const meta = overlayLayersMeta.find(o => o.id === e.target.value);
+        const meta = overlayLayersMeta.find(o => o.id === id);
         if (!meta) return;
-        if (e.target.checked) {
+        if (on) {
           activeOverlays.add(meta.id);
           ensureOverlayLayer(meta);
           if (meta.min_zoom && map.getZoom() < meta.min_zoom) {
@@ -677,7 +695,6 @@
         } else {
           activeOverlays.delete(meta.id);
         }
-        e.target.closest("label")?.classList.toggle("off", !e.target.checked);
         refreshOverlays();
       });
       overlayLayersMeta.filter(o => activeOverlays.has(o.id)).forEach(o => ensureOverlayLayer(o));
@@ -710,8 +727,7 @@
           if (!meta) return;
           activeOverlays.add(oid);
           ensureOverlayLayer(meta);
-          const inp = overlaysEl?.querySelector(`input[value="${oid}"]`);
-          if (inp) { inp.checked = true; inp.closest("label")?.classList.remove("off"); }
+          setLayerRowById(overlaysEl, oid, true);
         });
         setTimeout(refreshOverlays, 400);
       }
@@ -760,24 +776,12 @@
       activeLayers = new Set(layersMeta.filter(l => l.default_on !== false).map(l => l.id));
       if (!activeLayers.size) ["projects", "moratoria", "meetings", "transmission", "policy", "generation"].forEach(id => activeLayers.add(id));
       $$("#map-filters input").forEach(i => { i.checked = true; i.closest("label")?.classList.remove("off"); });
-      $$("#map-layers input").forEach(i => {
-        const on = activeLayers.has(i.value);
-        i.checked = on;
-        i.closest("label")?.classList.toggle("off", !on);
-      });
+      layersEl?.querySelectorAll(".layer-row").forEach(btn => setLayerRow(btn, activeLayers.has(btn.dataset.layer)));
       activeBoundaries = new Set(boundaryLayersMeta.filter(b => b.default_on).map(b => b.id));
-      $$("#map-boundaries input").forEach(i => {
-        const on = activeBoundaries.has(i.value);
-        i.checked = on;
-        i.closest("label")?.classList.toggle("off", !on);
-      });
+      boundariesEl?.querySelectorAll(".layer-row").forEach(btn => setLayerRow(btn, activeBoundaries.has(btn.dataset.layer)));
       refreshBoundaries();
       activeOverlays = new Set(overlayLayersMeta.filter(o => o.default_on).map(o => o.id));
-      $$("#map-overlays input").forEach(i => {
-        const on = activeOverlays.has(i.value);
-        i.checked = on;
-        i.closest("label")?.classList.toggle("off", !on);
-      });
+      overlaysEl?.querySelectorAll(".layer-row").forEach(btn => setLayerRow(btn, activeOverlays.has(btn.dataset.layer)));
       refreshOverlays();
       $$(".region-chip").forEach(c => c.classList.toggle("active", c.dataset.region === "all"));
       const storyPanel = $("#story-detail");
@@ -900,9 +904,7 @@
         openMobilePanel("list");
       }
     });
-    $$(".panel-pane, .panel-tabs, .panel-body").forEach(el => {
-      el.addEventListener("click", e => e.stopPropagation());
-    });
+
     window.addEventListener("resize", updateMobilePanelUi);
     updateMobilePanelUi();
 
