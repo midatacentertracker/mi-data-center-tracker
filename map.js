@@ -10,7 +10,7 @@
 
   async function loadMapData() {
     try {
-      const res = await fetch("map-data.json?v=20260629i", { cache: "no-store" });
+      const res = await fetch("map-data.json?v=20260629j", { cache: "no-store" });
       if (!res.ok) throw new Error(`map-data.json HTTP ${res.status}`);
       const json = await res.json();
       if (!json.map_points?.length) throw new Error("map-data.json has no map_points");
@@ -56,6 +56,22 @@
         return "#";
       }
     };
+
+    function layerRow({ id, label, desc, color, count, on, line }) {
+      const swatch = line
+        ? `class="layer-swatch layer-swatch--line" style="color:${color}"`
+        : `class="layer-swatch" style="background:${color}"`;
+      return `<label class="layer-row ${on ? "" : "off"}" title="${esc(desc || label)}"><span ${swatch}></span><span class="layer-name">${esc(label)}</span><span class="layer-count">${count || ""}</span><span class="layer-switch" aria-hidden="true"></span><input type="checkbox" value="${escAttr(id)}" ${on ? "checked" : ""}></label>`;
+    }
+
+    function switchPanelTab(tabId) {
+      $$(".panel-tab").forEach(t => {
+        const on = t.dataset.tab === tabId;
+        t.classList.toggle("active", on);
+        t.setAttribute("aria-selected", on ? "true" : "false");
+      });
+      $$(".panel-pane").forEach(p => { p.hidden = p.id !== `pane-${tabId}`; });
+    }
 
     const LAYER_COLORS = Object.fromEntries(layersMeta.map(l => [l.id, l.color]));
     const LAYER_LABELS = Object.fromEntries(layersMeta.map(l => [l.id, l.label]));
@@ -443,7 +459,7 @@
           ? `<img src="${esc(slot.logo_url)}" alt="${esc(slot.name)}" style="max-height:36px;margin-bottom:6px">`
           : `<div class="sponsor-slot-tier">${esc(slot.tier)}</div><div class="sponsor-slot-name">${esc(slot.name)}</div><div class="sponsor-slot-tag">${esc(slot.tagline)}</div>`}</div>`;
       }).join("");
-      el.innerHTML = `<div class="sponsor-head">Sponsorship</div><div class="sponsor-title">${esc(s.headline)}</div><p class="sponsor-sub">${esc(s.subhead)}</p><div class="sponsor-slots">${slots}</div><a class="sponsor-inquire" href="${safeUrl(s.inquire_url)}">${esc(s.inquire_label || "Inquire")}</a>`;
+      el.innerHTML = `<div class="sponsor-head">Partners</div><div class="sponsor-slots">${slots}</div><a class="sponsor-inquire" href="${safeUrl(s.inquire_url)}">${esc(s.inquire_label || "Inquire")}</a>`;
     }
 
     function renderSiteLinks() {
@@ -542,7 +558,7 @@
       const visible = points.filter(pointVisible);
       visible.forEach(p => markerLayer.addLayer(markerMap.get(p.name)));
       const countEl = $("#panel-record-count");
-      if (countEl) countEl.textContent = `${visible.length} of ${points.length} records shown`;
+      if (countEl) countEl.textContent = `${visible.length} / ${points.length}`;
       if (dirEl) {
         dirEl.innerHTML = visible.length
           ? [...visible].sort((a, b) => a.municipality.localeCompare(b.municipality)).map(p =>
@@ -572,7 +588,7 @@
       layersEl.innerHTML = layersMeta.map(l => {
         const n = points.filter(p => p.layer === l.id).length;
         const on = activeLayers.has(l.id);
-        return `<label class="layer-toggle ${on ? "" : "off"}"><input type="checkbox" value="${esc(l.id)}" ${on ? "checked" : ""}><span class="layer-swatch" style="background:${l.color}"></span><span class="layer-copy"><span class="layer-name">${esc(l.label)}</span><span class="layer-desc">${esc(l.description)}</span></span><span class="layer-count">${n}</span></label>`;
+        return layerRow({ id: l.id, label: l.label, desc: l.description, color: l.color, count: n, on });
       }).join("");
       layersEl.addEventListener("change", e => {
         if (!e.target.matches("input")) return;
@@ -587,7 +603,7 @@
       boundariesEl.innerHTML = boundaryLayersMeta.map(b => {
         const on = activeBoundaries.has(b.id);
         const count = b.id === "townships" ? "1,240" : b.id === "congressional" ? "13" : "";
-        return `<label class="layer-toggle ${on ? "" : "off"}"><input type="checkbox" value="${esc(b.id)}" ${on ? "checked" : ""}><span class="layer-swatch layer-swatch--line" style="color:${b.color}"></span><span class="layer-copy"><span class="layer-name">${esc(b.label)}</span><span class="layer-desc">${esc(b.description)}</span></span><span class="layer-count">${count}</span></label>`;
+        return layerRow({ id: b.id, label: b.label, desc: b.description, color: b.color, count, on, line: true });
       }).join("");
       boundariesEl.addEventListener("change", e => {
         if (!e.target.matches("input")) return;
@@ -614,8 +630,8 @@
       overlaysEl.innerHTML = overlayLayersMeta.map(o => {
         const on = activeOverlays.has(o.id);
         const count = overlayCounts[o.id] || "";
-        return `<label class="layer-toggle ${on ? "" : "off"}"><input type="checkbox" value="${esc(o.id)}" ${on ? "checked" : ""}><span class="layer-swatch layer-swatch--line" style="color:${o.color}"></span><span class="layer-copy"><span class="layer-name">${esc(o.label)}</span><span class="layer-desc">${esc(o.description)}</span></span><span class="layer-count">${count}</span></label>`;
-      }).join("") + `<p class="overlay-hint">Michigan has 500,000+ private wells in EGLE's Wellogic registry — this map shows major public supplies & aquifer zones.</p>`;
+        return layerRow({ id: o.id, label: o.label, desc: o.description, color: o.color, count, on, line: true });
+      }).join("");
       overlaysEl.addEventListener("change", e => {
         if (!e.target.matches("input")) return;
         const meta = overlayLayersMeta.find(o => o.id === e.target.value);
@@ -654,6 +670,7 @@
       if (!story) return;
       const panel = $("#story-detail");
       if (panel) { panel.hidden = false; panel.innerHTML = `<div class="story-detail-kicker">${esc(story.kicker)}</div><h3>${esc(story.title)}</h3><p>${esc(story.summary)}</p><div class="story-detail-actions"><a href="${safeUrl(story.source_url)}" target="_blank" rel="noopener">${esc(story.source_name)} ↗</a></div>`; }
+      switchPanelTab("layers");
       if (story.id === "power-water-nexus") {
         ["transmission_grid", "aquifers"].forEach(oid => {
           const meta = overlayLayersMeta.find(o => o.id === oid);
@@ -700,6 +717,7 @@
       renderSelectedRecord(p);
       $$(".map-directory button").forEach(b => b.classList.toggle("active", b.dataset.point === name));
       if (fly) { map.flyTo(marker.getLatLng(), Math.max(map.getZoom(), 10), { duration: 0.6 }); setTimeout(() => marker.openPopup(), 500); }
+      switchPanelTab("list");
       syncUrl();
     }
 
@@ -753,6 +771,8 @@
       chip.addEventListener("click", () => { activeRegion = chip.dataset.region; $$(".region-chip").forEach(c => c.classList.toggle("active", c.dataset.region === activeRegion)); refreshMarkers(); fitAll(); });
     });
 
+    $$(".panel-tab").forEach(tab => tab.addEventListener("click", () => switchPanelTab(tab.dataset.tab)));
+
     dirEl?.addEventListener("click", e => { const btn = e.target.closest("button[data-point]"); if (btn) selectPoint(btn.dataset.point); });
 
     const searchEl = $("#map-search"), searchResults = $("#search-results");
@@ -764,7 +784,7 @@
         searchResults.hidden = !matches.length;
         searchResults.innerHTML = matches.map(p => `<button type="button" data-point="${esc(p.name)}"><span class="dir-dot" style="background:${pointColor(p)}"></span><span><strong>${esc(p.name)}</strong><small>${esc(p.municipality)}</small></span></button>`).join("");
       });
-      searchResults.addEventListener("click", e => { const btn = e.target.closest("button[data-point]"); if (btn) { selectPoint(btn.dataset.point); searchEl.value = ""; searchResults.hidden = true; } });
+      searchResults.addEventListener("click", e => { const btn = e.target.closest("button[data-point]"); if (btn) { selectPoint(btn.dataset.point); searchEl.value = ""; searchResults.hidden = true; switchPanelTab("list"); } });
     }
 
     function haversineMi(lat1, lng1, lat2, lng2) {
