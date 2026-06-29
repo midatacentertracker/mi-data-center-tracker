@@ -13,10 +13,26 @@
       return "#";
     }
   };
-  const dateLabel = value => {
+  const dateLabel = (value, relative = false) => {
     if (!value) return "";
-    return new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric", year: "numeric" })
-      .format(new Date(`${value}T12:00:00`));
+    const d = new Date(value.includes("T") ? value : `${value}T12:00:00`);
+    if (relative) {
+      const diffMs = Date.now() - d.getTime();
+      const diffMin = Math.floor(diffMs / 60000);
+      const diffHr = Math.floor(diffMs / 3600000);
+      const diffDay = Math.floor(diffMs / 86400000);
+      if (diffMin < 60) return diffMin <= 1 ? "Just now" : `${diffMin} min ago`;
+      if (diffHr < 24) return diffHr === 1 ? "1 hour ago" : `${diffHr} hours ago`;
+      if (diffDay === 1) return "Yesterday";
+      if (diffDay < 7) return `${diffDay} days ago`;
+    }
+    return new Intl.DateTimeFormat("en-US", { month: "long", day: "numeric" })
+      .format(d);
+  };
+  const isNew = value => {
+    if (!value) return false;
+    const d = new Date(value.includes("T") ? value : `${value}T12:00:00`);
+    return (Date.now() - d.getTime()) < 72 * 3600000; // within 3 days
   };
   const updatedLabel = value => {
     if (!value) return "Update time unavailable";
@@ -101,16 +117,21 @@
     $("#public-grid").innerHTML = `
       <p class="public-disclaimer">Summaries are written by the tracker based on public posts and statements. Not verbatim quotes.</p>
       ${posts.slice(0, 6).map(post => `<a class="public-card" href="${safeUrl(post.post_url)}" target="_blank" rel="noopener">
+        ${isNew(post.posted_at) ? `<span class="new-badge">New</span>` : ""}
         <div class="public-source">
           <strong>${escapeHtml(post.account_name)}</strong>
           <span class="public-tag ${platformClass(post.platform_type)}">${escapeHtml(post.platform)}</span>
         </div>
         <p>${escapeHtml(post.text)}</p>
-        <footer><time>${escapeHtml(post.posted_at)}</time>${external}</footer>
+        <footer><time datetime="${escapeHtml(post.posted_at)}">${dateLabel(post.posted_at, true)}</time></footer>
       </a>`).join("")}`;
     labelExternalLinks();
   };
   renderPublicSources(data.public_sources || []);
+  const pubUpdatedEl = document.getElementById("public-updated-time");
+  if (pubUpdatedEl && data.updated_at) {
+    pubUpdatedEl.textContent = dateLabel(data.updated_at, true);
+  }
 
   const feedUrl = data.feeds?.public_monitor_url;
   if (feedUrl) {
