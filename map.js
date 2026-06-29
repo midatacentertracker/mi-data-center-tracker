@@ -10,7 +10,7 @@
 
   async function loadMapData() {
     try {
-      const res = await fetch("map-data.json?v=20260630a", { cache: "no-store" });
+      const res = await fetch("map-data.json?v=20260630b", { cache: "no-store" });
       if (!res.ok) throw new Error(`map-data.json HTTP ${res.status}`);
       const json = await res.json();
       if (!json.map_points?.length) throw new Error("map-data.json has no map_points");
@@ -57,6 +57,17 @@
       }
     };
 
+    const analytics = window.MapAnalytics || {
+      init: () => {},
+      track: () => {},
+      recordAttention: () => {}
+    };
+    analytics.init({
+      plausibleDomain: document.body?.dataset?.plausibleDomain || "",
+      endpoint: document.body?.dataset?.analyticsEndpoint || "",
+      debug: location.search.includes("analytics=1")
+    });
+
     function layerRow({ id, label, desc, color, count, on, line }) {
       const swatch = line
         ? `class="layer-swatch layer-swatch--line" style="color:${color}"`
@@ -100,6 +111,7 @@
         t.setAttribute("aria-selected", on ? "true" : "false");
       });
       $$(".panel-pane").forEach(p => { p.hidden = p.id !== `pane-${tabId}`; });
+      analytics.track("tab_view", { tab: tabId });
     }
 
     function updateMobilePanelUi() {
@@ -208,7 +220,10 @@
       $$(".tile-btn").forEach(b => b.classList.toggle("active", b.dataset.mode === mode));
     };
     setTileMode(currentMode);
-    $$(".tile-btn").forEach(b => b.addEventListener("click", () => setTileMode(b.dataset.mode)));
+    $$(".tile-btn").forEach(b => b.addEventListener("click", () => {
+      setTileMode(b.dataset.mode);
+      analytics.track("basemap_change", { mode: b.dataset.mode });
+    }));
 
     const boundaryLayer = L.geoJSON(null, { style: { color: "#cf102d", weight: 2, opacity: 0.55, fillColor: "#cf102d", fillOpacity: 0.04 }, interactive: false }).addTo(map);
     fetch("https://raw.githubusercontent.com/PublicaMundi/MappingAPI/master/data/geojson/us-states.json")
@@ -218,8 +233,8 @@
 
     const boundaryGroups = {}, boundaryLabelGroups = {}, boundaryCache = {}, boundaryLoading = {};
     const overlayGroups = {}, overlayCache = {}, overlayLoading = {};
-    const GEO_VERSION = "20260630a";
-    const WATER_VERSION = "20260630a";
+    const GEO_VERSION = "20260630b";
+    const WATER_VERSION = "20260630b";
     const lakeLevelsMeta = data.lake_levels || [];
     const liveMapLinks = data.live_map_links || [];
     const liveWater = {
@@ -508,12 +523,60 @@
 
     const dateLabel = value => value ? new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric", year: "numeric" }).format(new Date(`${value}T12:00:00`)) : "";
 
+    function recordPhase(p) {
+      const status = String(p?.status || "");
+      const layer = p?.layer || "projects";
+      if (layer === "meetings") return "Public process";
+      if (layer === "moratoria") return "Local restriction";
+      if (layer === "policy") return "Policy signal";
+      if (layer === "transmission") return "Grid corridor";
+      if (layer === "generation") return "Power generation";
+      const map = {
+        "Under construction": "Building",
+        "Proposed": "Early stage",
+        "Under review": "Under review",
+        "Conditionally approved": "Approved with conditions",
+        "Approved": "Approved",
+        "Operational": "Operating",
+        "Moratorium": "Moratorium",
+        "Utility pause": "Utility pause",
+        "Rejected by planning commission": "Rejected",
+        "Withdrawn": "Withdrawn",
+        "Under appeal": "Appeal",
+        "Public meeting": "Public meeting",
+        "Public signal": "Public signal"
+      };
+      return map[status] || status || "Tracked";
+    }
+
+    function recordNextActions(p) {
+      const actions = [];
+      const layer = p?.layer || "";
+      const status = String(p?.status || "");
+      const when = p?.verified_date ? dateLabel(p.verified_date) : "";
+      if (layer === "meetings" && when) actions.push(`Next public step: ${when}`);
+      else if (layer === "meetings") actions.push("Open the source for agenda and meeting details.");
+      if (layer === "moratoria" || status === "Moratorium") actions.push("Watch for township board votes and ordinance updates.");
+      if (status === "Proposed" || status === "Under review") actions.push("Track planning commission and zoning hearings.");
+      if (status === "Under construction") actions.push("Monitor construction permits and utility filings.");
+      if (status === "Rejected by planning commission" || status === "Under appeal") actions.push("Follow appeals, pauses, or revised applications.");
+      if (layer === "transmission") actions.push("Review MPSC dockets and corridor route updates.");
+      if (layer === "policy") actions.push("Follow capitol hearings and agency rulemaking.");
+      if (!actions.length && p?.note) actions.push("Read the source for the latest public update.");
+      return actions.slice(0, 2);
+    }
+
     function makePopup(p) {
       const c = pointColor(p);
       const dateStr = p.verified_date ? dateLabel(p.verified_date) : "";
       const ownerLabel = p.layer === "generation" ? "Operator" : "Developer";
       const capacityLabel = p.layer === "generation" ? "Capacity" : "Scale";
-      return `<div class="map-popup"><div class="pop-header" style="--status:${c}"><span class="pop-status">${esc(layerLabel(p))} · ${esc(p.status)}</span><div class="pop-name">${esc(p.name)}</div><div class="pop-location">${esc(p.municipality)}, ${esc(p.county)} County</div></div><div class="pop-body">${p.developer ? `<div class="pop-row"><span class="pop-label">${ownerLabel}</span><span class="pop-val">${esc(p.developer)}</span></div>` : ""}${p.power_mw ? `<div class="pop-row"><span class="pop-label">${capacityLabel}</span><span class="pop-val">${esc(p.power_mw)} MW</span></div>` : ""}${dateStr ? `<div class="pop-row"><span class="pop-label">Verified</span><span class="pop-val">${dateStr}</span></div>` : ""}${p.note ? `<p class="pop-note">${esc(p.note)}</p>` : ""}</div><div class="pop-footer"><a class="pop-source" href="${safeUrl(p.source_url)}" target="_blank" rel="noopener">${esc(p.source_name || "Source")} ↗</a></div></div>`;
+      const phase = recordPhase(p);
+      const actions = recordNextActions(p);
+      const actionHtml = actions.length
+        ? `<div class="pop-actions"><div class="pop-actions-title">What to watch</div><ul>${actions.map(a => `<li>${esc(a)}</li>`).join("")}</ul></div>`
+        : "";
+      return `<div class="map-popup"><div class="pop-header" style="--status:${c}"><span class="pop-status">${esc(layerLabel(p))}</span><div class="pop-phase">${esc(phase)}</div><div class="pop-name">${esc(p.name)}</div><div class="pop-location">${esc(p.municipality)}, ${esc(p.county)} County</div><div class="pop-status-pill" style="--status:${c}">${esc(p.status)}</div></div><div class="pop-body">${p.developer ? `<div class="pop-row"><span class="pop-label">${ownerLabel}</span><span class="pop-val">${esc(p.developer)}</span></div>` : ""}${p.power_mw ? `<div class="pop-row"><span class="pop-label">${capacityLabel}</span><span class="pop-val">${esc(p.power_mw)} MW</span></div>` : ""}${dateStr ? `<div class="pop-row"><span class="pop-label">Last verified</span><span class="pop-val">${dateStr}</span></div>` : ""}${p.confidence ? `<div class="pop-row"><span class="pop-label">Confidence</span><span class="pop-val">${esc(p.confidence)}</span></div>` : ""}${p.note ? `<p class="pop-note">${esc(p.note)}</p>` : ""}${actionHtml}</div><div class="pop-footer"><a class="pop-source" href="${safeUrl(p.source_url)}" target="_blank" rel="noopener">${esc(p.source_name || "Source")} ↗</a></div></div>`;
     }
 
     function makeLinePopup(line) {
@@ -833,6 +896,7 @@
       bindLayerList(layersEl, (id, on) => {
         if (isMobile()) openMobilePanel("layers");
         if (on) activeLayers.add(id); else activeLayers.delete(id);
+        analytics.track("layer_toggle", { group: "records", layer: id, on });
         refreshMarkers();
       });
     }
@@ -856,6 +920,7 @@
         } else {
           activeBoundaries.delete(meta.id);
         }
+        analytics.track("layer_toggle", { group: "boundaries", layer: id, on });
         refreshBoundaries();
       });
       boundaryLayersMeta.filter(b => activeBoundaries.has(b.id)).forEach(b => ensureBoundaryLayer(b));
@@ -890,6 +955,7 @@
         } else {
           activeOverlays.delete(meta.id);
         }
+        analytics.track("layer_toggle", { group: "overlays", layer: id, on });
         refreshOverlays();
       });
       overlayLayersMeta.filter(o => activeOverlays.has(o.id)).forEach(o => ensureOverlayLayer(o));
@@ -901,7 +967,11 @@
         const checked = !initFilters || initFilters.has(s);
         return `<label class="${checked ? "" : "off"}"><input type="checkbox" value="${esc(s)}" ${checked ? "checked" : ""}><span class="filter-dot" style="background:${STATUS_COLORS[s]||"#cf102d"}"></span><span class="filter-name">${esc(s)}</span><span class="filter-count">${points.filter(p=>p.status===s).length}</span></label>`;
       }).join("");
-      filtersEl.addEventListener("change", () => { refreshMarkers(); });
+      filtersEl.addEventListener("change", e => {
+        const input = e.target.closest("input");
+        if (input) analytics.track("filter_change", { type: "status", value: input.value, on: input.checked });
+        refreshMarkers();
+      });
     }
 
     if (storiesEl && stories.length) {
@@ -935,10 +1005,21 @@
       if (!p) { panel.hidden = true; panel.innerHTML = ""; return; }
       const c = pointColor(p);
       const dateStr = p.verified_date ? dateLabel(p.verified_date) : "";
+      const phase = recordPhase(p);
+      const actions = recordNextActions(p);
       panel.hidden = false;
       const ownerLabel = p.layer === "generation" ? "Operator" : "Developer";
       const capacityLabel = p.layer === "generation" ? "Capacity" : "Scale";
-      panel.innerHTML = `<div class="selected-kicker">${esc(layerLabel(p))}</div><div class="selected-status" style="color:${c}">${esc(p.status)}</div><div class="selected-name">${esc(p.name)}</div><div class="selected-meta">${esc(p.municipality)}, ${esc(p.county)} County</div>${p.developer ? `<div class="selected-detail"><span>${ownerLabel}</span>${esc(p.developer)}</div>` : ""}${p.power_mw ? `<div class="selected-detail"><span>${capacityLabel}</span>${esc(p.power_mw)} MW</div>` : ""}${dateStr ? `<div class="selected-detail"><span>Verified</span>${dateStr}</div>` : ""}${p.note ? `<div class="selected-detail" style="margin-top:6px">${esc(p.note)}</div>` : ""}<a class="selected-link" href="${safeUrl(p.source_url)}" target="_blank" rel="noopener">${esc(p.source_name || "Source")} ↗</a>`;
+      const facts = [
+        p.developer ? `<div class="record-fact"><span>${ownerLabel}</span><strong>${esc(p.developer)}</strong></div>` : "",
+        p.power_mw ? `<div class="record-fact"><span>${capacityLabel}</span><strong>${esc(p.power_mw)} MW</strong></div>` : "",
+        dateStr ? `<div class="record-fact"><span>Last verified</span><strong>${dateStr}</strong></div>` : "",
+        p.confidence ? `<div class="record-fact"><span>Confidence</span><strong>${esc(p.confidence)}</strong></div>` : ""
+      ].filter(Boolean).join("");
+      const actionHtml = actions.length
+        ? `<div class="record-actions"><div class="record-actions-title">What to watch</div><ul>${actions.map(a => `<li>${esc(a)}</li>`).join("")}</ul></div>`
+        : "";
+      panel.innerHTML = `<div class="record-card" style="--status:${c}"><div class="record-card-top"><span class="record-type">${esc(layerLabel(p))}</span><span class="record-phase">${esc(phase)}</span></div><div class="record-status">${esc(p.status)}</div><h2 class="record-name">${esc(p.name)}</h2><div class="record-meta">${esc(p.municipality)}, ${esc(p.county)} County</div>${facts ? `<div class="record-facts">${facts}</div>` : ""}${p.note ? `<p class="record-note">${esc(p.note)}</p>` : ""}${actionHtml}<div class="record-card-foot"><a class="selected-link" href="${safeUrl(p.source_url)}" target="_blank" rel="noopener">${esc(p.source_name || "Source")} ↗</a></div></div>`;
     }
 
     function clearSelection() {
@@ -959,6 +1040,7 @@
       activeMarker = marker; activePointName = name;
       marker.setIcon(makeIcon(pointColor(p), true, p.layer, p.status));
       renderSelectedRecord(p);
+      analytics.recordAttention(p.name, p.name, p.layer, p.status);
       $$(".map-directory button").forEach(b => b.classList.toggle("active", b.dataset.point === name));
       if (fly) { map.flyTo(marker.getLatLng(), Math.max(map.getZoom(), 10), { duration: 0.6 }); setTimeout(() => marker.openPopup(), 500); }
       if (isMobile()) openMobilePanel("list");
@@ -991,6 +1073,7 @@
         map.invalidateSize();
         fitLowerPeninsula({ duration: 0.7 });
       }
+      analytics.track("map_reset");
     }
 
     $("#show-all")?.addEventListener("click", () => resetMapView());
@@ -1005,7 +1088,12 @@
 
     $$(".region-chip").forEach(chip => {
       chip.classList.toggle("active", chip.dataset.region === activeRegion);
-      chip.addEventListener("click", () => { activeRegion = chip.dataset.region; $$(".region-chip").forEach(c => c.classList.toggle("active", c.dataset.region === activeRegion)); refreshMarkers(); });
+      chip.addEventListener("click", () => {
+        activeRegion = chip.dataset.region;
+        $$(".region-chip").forEach(c => c.classList.toggle("active", c.dataset.region === activeRegion));
+        analytics.track("filter_change", { type: "region", value: activeRegion });
+        refreshMarkers();
+      });
     });
 
     $$(".panel-tab").forEach(tab => {
@@ -1024,6 +1112,7 @@
         const q = searchEl.value.trim().toLowerCase();
         if (q.length < 2) { searchResults.hidden = true; searchResults.innerHTML = ""; return; }
         const matches = points.filter(p => pointVisible(p) && [p.name,p.municipality,p.county,p.developer||""].some(v => v.toLowerCase().includes(q))).slice(0, 10);
+        if (q.length >= 2) analytics.track("search", { query_length: q.length, results: matches.length });
         searchResults.hidden = !matches.length;
         searchResults.innerHTML = matches.map(p => `<button type="button" data-point="${esc(p.name)}"><span class="dir-dot" style="background:${pointColor(p)}"></span><span><strong>${esc(p.name)}</strong><small>${esc(p.municipality)}</small></span></button>`).join("");
       });
@@ -1056,7 +1145,7 @@
       }, { enableHighAccuracy: false, timeout: 12000 });
     }
 
-    $("#map-locate")?.addEventListener("click", locateNearMe);
+    $("#map-locate")?.addEventListener("click", () => { analytics.track("locate_near_me"); locateNearMe(); });
 
     async function shareMapView() {
       const url = location.href;
@@ -1076,7 +1165,7 @@
       }
     }
 
-    $("#map-share")?.addEventListener("click", shareMapView);
+    $("#map-share")?.addEventListener("click", () => { analytics.track("share"); shareMapView(); });
 
     const legendEl = $("#map-legend"), legendToggle = $("#map-legend-toggle");
     legendToggle?.addEventListener("click", () => {
