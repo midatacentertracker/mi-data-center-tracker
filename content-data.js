@@ -104,7 +104,7 @@ window.TRACKER_DATA = {
   meetings: [
     {
       title: "Wixom Planning Commission — Public Hearing on Data Center Zoning Ordinance",
-      body: "Public hearing on proposed zoning amendments to define data centers and set performance standards for water usage, noise, and other impacts across IRO, OS-1, M-1, and M-2 districts. One of the first Michigan communities to move from moratorium to permanent rules.",
+      body: "Public hearing on proposed zoning amendments to define data centers and set performance standards for water usage, noise, and other impacts. One of the first Michigan communities moving from moratorium to permanent rules.",
       government_body: "Wixom Planning Commission",
       county: "Oakland",
       start: "2026-06-29T19:00:00-04:00",
@@ -114,19 +114,30 @@ window.TRACKER_DATA = {
       source_url: "https://www.wixomgov.org/departments/construction-development-services-building/data-center-moratorium-ordinance"
     },
     {
-      title: "Saline Township Regular Board Meeting",
-      body: "Regular township board meeting. Monitor for updates on the Related Digital / 'The Barn' project — the highest-profile active data center development in Michigan. Construction traffic, permits, advisory committee reports, and IFEC applications may surface here. Streaming unconfirmed; check township website day-of.",
-      government_body: "Saline Township Board",
-      county: "Washtenaw",
-      start: "2026-07-08T19:00:00-04:00",
-      location: "Saline Township Hall · 5731 Braun Road, Saline MI 48176",
-      agenda_url: "https://salinetownship.org/meeting-agendas.php",
+      title: "Big Rapids Township Regular Board Meeting",
+      body: "Regular township board meeting. Big Rapids Township enacted a one-year data center moratorium in early 2026. Monitor for ordinance updates, moratorium extension discussions, or developer inquiries.",
+      government_body: "Big Rapids Township Board",
+      county: "Mecosta",
+      start: "2026-07-07T18:00:00-04:00",
+      location: "Big Rapids Township Hall · 14212 Northland Dr, Big Rapids MI 49307",
+      agenda_url: "https://bigrapidstownship.com/",
       watch_url: "",
-      source_url: "https://salinetownship.org/meeting-agendas-archive.php"
+      source_url: "https://www.bigrapidsnews.com/news/article/big-rapids-township-michigan-enacts-temporary-21938856.php"
+    },
+    {
+      title: "Lyon Township Regular Board Meeting",
+      body: "Regular township board meeting. Lyon Township is in a high-growth Oakland County corridor with active land development pressure. Monitor for any zoning or data center-related agenda items.",
+      government_body: "Lyon Township Board",
+      county: "Oakland",
+      start: "2026-07-07T19:00:00-04:00",
+      location: "Lyon Township Hall · 58800 Grand River Ave, New Hudson MI 48165",
+      agenda_url: "https://lyontownship.org/government/board-of-trustees/",
+      watch_url: "",
+      source_url: "https://lyontownship.org/government/board-of-trustees/"
     },
     {
       title: "Pittsfield Charter Township Planning Commission",
-      body: "Regular planning commission meeting. Pittsfield has been working on a data center zoning ordinance; check the posted agenda for data center-related items as the meeting date approaches.",
+      body: "Regular planning commission meeting. Pittsfield has been actively drafting a data center zoning ordinance — check the posted agenda for data center items as the date approaches.",
       government_body: "Pittsfield Charter Township Planning Commission",
       county: "Washtenaw",
       start: "2026-07-07T19:00:00-04:00",
@@ -136,15 +147,48 @@ window.TRACKER_DATA = {
       source_url: "https://pittsfield-mi.gov/bc/planning-commission/"
     },
     {
-      title: "Statewide monitoring — regular board and commission meetings",
-      body: "Many Michigan communities with active moratoriums or ordinance work hold regular board and planning commission meetings in early July. The tracker is monitoring Oakland, Washtenaw, Monroe, and Livingston counties for data center-specific agenda items. Confirmed hearings will be added as they are scheduled.",
-      government_body: "Multiple jurisdictions",
-      county: "Statewide",
-      start: "2026-07-06T18:00:00-04:00",
-      location: "Various locations — see individual municipal websites",
-      agenda_url: "",
+      title: "Saline Township Regular Board Meeting",
+      body: "Regular township board meeting. Monitor for updates on the Related Digital / 'The Barn' project — the highest-profile active data center development in Michigan. Construction traffic, permits, and advisory committee reports may surface here.",
+      government_body: "Saline Township Board",
+      county: "Washtenaw",
+      start: "2026-07-08T19:00:00-04:00",
+      location: "Saline Township Hall · 5731 Braun Road, Saline MI 48176",
+      agenda_url: "https://salinetownship.org/meeting-agendas.php",
       watch_url: "",
-      source_url: "https://midatacentertracker.github.io/mi-data-center-tracker/"
+      source_url: "https://salinetownship.org/meeting-agendas-archive.php"
+    },
+    {
+      title: "Stronach Township Regular Board Meeting",
+      body: "Regular township board meeting. Stronach Township (Manistee County) approved a six-month data center moratorium through December 2026. Monitor for ordinance drafting progress or developer activity.",
+      government_body: "Stronach Township Board",
+      county: "Manistee",
+      start: "2026-07-08T18:00:00-04:00",
+      location: "Stronach Township Hall · 2506 Stronach Rd, Manistee MI 49660",
+      agenda_url: "https://www.manisteecounty.net/",
+      watch_url: "",
+      source_url: "https://www.manisteenews.com/news/article/stronach-township-approves-six-month-data-center-22301704.php"
+    },
+    {
+      title: "Lenox Township Regular Board Meeting",
+      body: "Regular township board meeting. Lenox Township (Macomb County) enacted an early moratorium on data centers. Monitor for ordinance development updates or permit activity.",
+      government_body: "Lenox Township Board",
+      county: "Macomb",
+      start: "2026-07-09T19:00:00-04:00",
+      location: "Lenox Township Hall · 66675 25 Mile Rd, Ray MI 48096",
+      agenda_url: "https://www.lenox-twp.com/",
+      watch_url: "",
+      source_url: "https://www.lenox-twp.com/"
+    },
+    {
+      title: "Michigan Public Service Commission — Open Meeting",
+      body: "Regular MPSC open meeting. The commission oversees large-load electric service agreements that govern data center power contracts. Monitor agenda for large-load filings, rate cases, or data center transmission items.",
+      government_body: "Michigan Public Service Commission",
+      county: "Ingham",
+      start: "2026-07-10T09:30:00-04:00",
+      location: "MPSC Offices · 7109 W. Saginaw Hwy, Lansing MI 48917",
+      agenda_url: "https://www.michigan.gov/mpsc/commission/meetings",
+      watch_url: "https://www.michigan.gov/mpsc/commission/meetings",
+      source_url: "https://www.michigan.gov/mpsc/commission/meetings"
     }
   ],
   public_sources: [
