@@ -22,6 +22,7 @@ body {
   background: #e9edf2;
   font-family: var(--sans);
   line-height: 1.5;
+  padding-bottom: 34px;
 }
 body.drawer-open { overflow: hidden; }
 a { color: inherit; text-decoration: none; }
