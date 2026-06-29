@@ -10,7 +10,7 @@
 
   async function loadMapData() {
     try {
-      const res = await fetch("map-data.json?v=20260629f", { cache: "no-store" });
+      const res = await fetch("map-data.json?v=20260629g", { cache: "no-store" });
       if (!res.ok) throw new Error(`map-data.json HTTP ${res.status}`);
       const json = await res.json();
       if (!json.map_points?.length) throw new Error("map-data.json has no map_points");
@@ -70,9 +70,17 @@
       "Withdrawn": "#374151",
       "Under appeal": "#6b7280",
       "Public meeting": "#5b9cf5",
-      "Public signal": "#22a86a"
+      "Public signal": "#22a86a",
+      "Nuclear": "#c084fc",
+      "Coal": "#78716c",
+      "Natural gas": "#fb923c",
+      "Wind": "#22d3ee",
+      "Solar": "#facc15",
+      "Hydroelectric": "#60a5fa"
     };
-    const pointColor = p => LAYER_COLORS[p.layer] || STATUS_COLORS[p.status] || "#cf102d";
+    const pointColor = p => (p.layer === "generation" && STATUS_COLORS[p.status])
+      ? STATUS_COLORS[p.status]
+      : (LAYER_COLORS[p.layer] || STATUS_COLORS[p.status] || "#cf102d");
     const layerLabel = p => LAYER_LABELS[p.layer] || p.layer || "Record";
 
     const REGION_COUNTIES = {
@@ -99,7 +107,7 @@
     const initStory = params.get("story") || "";
 
     const defaultLayers = new Set(layersMeta.filter(l => l.default_on !== false).map(l => l.id));
-    if (!defaultLayers.size) ["projects","moratoria","meetings","transmission","policy"].forEach(id => defaultLayers.add(id));
+    if (!defaultLayers.size) ["projects","moratoria","meetings","transmission","policy","generation"].forEach(id => defaultLayers.add(id));
     let activeLayers = initLayers?.size ? initLayers : new Set(defaultLayers);
 
     const darkTile = L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", { maxZoom: 19, attribution: '&copy; OSM &copy; CARTO' });
@@ -127,15 +135,26 @@
       .then(geo => { const mi = geo.features.find(f => f.properties?.name === "Michigan"); if (mi) boundaryLayer.addData(mi); })
       .catch(() => {});
 
-    function makeIcon(color, active = false, layer = "projects") {
+    function makeIcon(color, active = false, layer = "projects", status = "") {
       const size = active ? 28 : 22;
       const shapes = {
         moratoria: `<rect x="5" y="3" width="14" height="14" rx="2" fill="${color}" stroke="#fff" stroke-width="1.5"/>`,
         meetings: `<circle cx="12" cy="10" r="7" fill="${color}" stroke="#fff" stroke-width="1.5"/>`,
         transmission: `<path d="M13 2L8 12h3.5l-1 10 7-12h-3.5L13 2z" fill="${color}" stroke="#fff" stroke-width="1.2"/>`,
-        policy: `<polygon points="12,2 15,9 22,9 16.5,13.5 18.5,21 12,17 5.5,21 7.5,13.5 2,9 9,9" fill="${color}" stroke="#fff" stroke-width="1.2"/>`
+        policy: `<polygon points="12,2 15,9 22,9 16.5,13.5 18.5,21 12,17 5.5,21 7.5,13.5 2,9 9,9" fill="${color}" stroke="#fff" stroke-width="1.2"/>`,
+        generation: `<rect x="4" y="8" width="16" height="10" rx="2" fill="${color}" stroke="#fff" stroke-width="1.3"/><rect x="10" y="3" width="4" height="6" fill="${color}" stroke="#fff" stroke-width="1.2"/>`
       };
-      const inner = shapes[layer] || `<path d="M12 2c-3.3 0-6 2.5-6 5.6 0 4.2 6 12.4 6 12.4s6-8.2 6-12.4C18 4.5 15.3 2 12 2z" fill="${color}" stroke="#fff" stroke-width="1.5"/><circle cx="12" cy="7.6" r="2.2" fill="#fff" fill-opacity=".9"/>`;
+      const genShapes = {
+        Nuclear: `<circle cx="12" cy="12" r="2.5" fill="${color}" stroke="#fff" stroke-width="1.2"/><ellipse cx="12" cy="12" rx="9" ry="3.5" fill="none" stroke="${color}" stroke-width="1.4"/><ellipse cx="12" cy="12" rx="9" ry="3.5" fill="none" stroke="${color}" stroke-width="1.4" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="9" ry="3.5" fill="none" stroke="${color}" stroke-width="1.4" transform="rotate(-60 12 12)"/>`,
+        Coal: `<rect x="6" y="10" width="12" height="9" rx="1.5" fill="${color}" stroke="#fff" stroke-width="1.2"/><path d="M9 10V6h6v4" fill="none" stroke="${color}" stroke-width="1.5"/><path d="M8 19v2M12 19v2M16 19v2" stroke="#fff" stroke-width="1.3"/>`,
+        "Natural gas": `<path d="M12 3c-2 4-5 6-5 10a5 5 0 0010 0c0-4-3-6-5-10z" fill="${color}" stroke="#fff" stroke-width="1.3"/>`,
+        Wind: `<path d="M12 4v16M12 12L6 18M12 12l6 6" stroke="${color}" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="12" r="2.5" fill="${color}" stroke="#fff" stroke-width="1.2"/>`,
+        Solar: `<circle cx="12" cy="12" r="4.5" fill="${color}" stroke="#fff" stroke-width="1.3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9L17 7M7 17l-2.1 2.1" stroke="${color}" stroke-width="1.5" stroke-linecap="round"/>`,
+        Hydroelectric: `<path d="M4 14c2-6 6-8 8-8s6 2 8 8H4z" fill="${color}" stroke="#fff" stroke-width="1.3"/><path d="M8 14c1-2 2.5-3 4-3s3 1 4 3" fill="none" stroke="#fff" stroke-width="1.2"/>`
+      };
+      let inner = shapes[layer];
+      if (layer === "generation" && genShapes[status]) inner = genShapes[status];
+      if (!inner) inner = `<path d="M12 2c-3.3 0-6 2.5-6 5.6 0 4.2 6 12.4 6 12.4s6-8.2 6-12.4C18 4.5 15.3 2 12 2z" fill="${color}" stroke="#fff" stroke-width="1.5"/><circle cx="12" cy="7.6" r="2.2" fill="#fff" fill-opacity=".9"/>`;
       return L.divIcon({ html: `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 24 24">${inner}</svg>`, className: active ? "map-pin map-pin--active" : "map-pin", iconSize: [size, size], iconAnchor: [size/2, size/2], popupAnchor: [0, -size/2] });
     }
 
@@ -144,7 +163,9 @@
     function makePopup(p) {
       const c = pointColor(p);
       const dateStr = p.verified_date ? dateLabel(p.verified_date) : "";
-      return `<div class="map-popup"><div class="pop-header" style="--status:${c}"><span class="pop-status">${esc(layerLabel(p))} · ${esc(p.status)}</span><div class="pop-name">${esc(p.name)}</div><div class="pop-location">${esc(p.municipality)}, ${esc(p.county)} County</div></div><div class="pop-body">${p.developer ? `<div class="pop-row"><span class="pop-label">Developer</span><span class="pop-val">${esc(p.developer)}</span></div>` : ""}${p.power_mw ? `<div class="pop-row"><span class="pop-label">Scale</span><span class="pop-val">${esc(p.power_mw)} MW</span></div>` : ""}${dateStr ? `<div class="pop-row"><span class="pop-label">Verified</span><span class="pop-val">${dateStr}</span></div>` : ""}${p.note ? `<p class="pop-note">${esc(p.note)}</p>` : ""}</div><div class="pop-footer"><a class="pop-source" href="${safeUrl(p.source_url)}" target="_blank" rel="noopener">${esc(p.source_name || "Source")} ↗</a></div></div>`;
+      const ownerLabel = p.layer === "generation" ? "Operator" : "Developer";
+      const capacityLabel = p.layer === "generation" ? "Capacity" : "Scale";
+      return `<div class="map-popup"><div class="pop-header" style="--status:${c}"><span class="pop-status">${esc(layerLabel(p))} · ${esc(p.status)}</span><div class="pop-name">${esc(p.name)}</div><div class="pop-location">${esc(p.municipality)}, ${esc(p.county)} County</div></div><div class="pop-body">${p.developer ? `<div class="pop-row"><span class="pop-label">${ownerLabel}</span><span class="pop-val">${esc(p.developer)}</span></div>` : ""}${p.power_mw ? `<div class="pop-row"><span class="pop-label">${capacityLabel}</span><span class="pop-val">${esc(p.power_mw)} MW</span></div>` : ""}${dateStr ? `<div class="pop-row"><span class="pop-label">Verified</span><span class="pop-val">${dateStr}</span></div>` : ""}${p.note ? `<p class="pop-note">${esc(p.note)}</p>` : ""}</div><div class="pop-footer"><a class="pop-source" href="${safeUrl(p.source_url)}" target="_blank" rel="noopener">${esc(p.source_name || "Source")} ↗</a></div></div>`;
     }
 
     function makeLinePopup(line) {
@@ -174,7 +195,8 @@
         transmission: (activeLayers.has("transmission") ? transmissionLines.length : 0) +
           pool.filter(p => p.layer === "transmission").length,
         meetings: pool.filter(p => p.layer === "meetings").length,
-        policy: pool.filter(p => p.layer === "policy").length
+        policy: pool.filter(p => p.layer === "policy").length,
+        generation: pool.filter(p => p.layer === "generation").length
       };
     }
 
@@ -221,7 +243,10 @@
         `<div class="legend-row"><span class="legend-swatch" style="background:${l.color}"></span>${esc(l.label)}</div>`
       ).join("");
       const txRow = `<div class="legend-row"><span class="legend-line"></span>Transmission corridors</div>`;
-      el.innerHTML = `<div class="map-legend-title">Legend</div>${rows}${txRow}`;
+      const genRows = ["Nuclear", "Coal", "Natural gas", "Wind", "Solar", "Hydroelectric"].map(s =>
+        `<div class="legend-row"><span class="legend-swatch" style="background:${STATUS_COLORS[s] || "#14b8a6"}"></span>${esc(s)}</div>`
+      ).join("");
+      el.innerHTML = `<div class="map-legend-title">Layers</div>${rows}${txRow}<div class="map-legend-title" style="margin-top:10px">Generation types</div>${genRows}`;
     }
 
     renderSponsors();
@@ -229,7 +254,7 @@
     renderLegend();
 
     points.forEach(p => {
-      const marker = L.marker([p.latitude, p.longitude], { icon: makeIcon(pointColor(p), false, p.layer), title: p.name });
+      const marker = L.marker([p.latitude, p.longitude], { icon: makeIcon(pointColor(p), false, p.layer, p.status), title: p.name });
       marker.bindPopup(makePopup(p), { maxWidth: 320, className: "tracker-popup" });
       marker.on("click", () => selectPoint(p.name, false));
       markerMap.set(p.name, marker);
@@ -352,13 +377,15 @@
       const c = pointColor(p);
       const dateStr = p.verified_date ? dateLabel(p.verified_date) : "";
       panel.hidden = false;
-      panel.innerHTML = `<div class="selected-kicker">${esc(layerLabel(p))}</div><div class="selected-status" style="color:${c}">${esc(p.status)}</div><div class="selected-name">${esc(p.name)}</div><div class="selected-meta">${esc(p.municipality)}, ${esc(p.county)} County</div>${p.developer ? `<div class="selected-detail"><span>Developer</span>${esc(p.developer)}</div>` : ""}${p.power_mw ? `<div class="selected-detail"><span>Scale</span>${esc(p.power_mw)} MW</div>` : ""}${dateStr ? `<div class="selected-detail"><span>Verified</span>${dateStr}</div>` : ""}${p.note ? `<div class="selected-detail" style="margin-top:6px">${esc(p.note)}</div>` : ""}<a class="selected-link" href="${safeUrl(p.source_url)}" target="_blank" rel="noopener">${esc(p.source_name || "Source")} ↗</a>`;
+      const ownerLabel = p.layer === "generation" ? "Operator" : "Developer";
+      const capacityLabel = p.layer === "generation" ? "Capacity" : "Scale";
+      panel.innerHTML = `<div class="selected-kicker">${esc(layerLabel(p))}</div><div class="selected-status" style="color:${c}">${esc(p.status)}</div><div class="selected-name">${esc(p.name)}</div><div class="selected-meta">${esc(p.municipality)}, ${esc(p.county)} County</div>${p.developer ? `<div class="selected-detail"><span>${ownerLabel}</span>${esc(p.developer)}</div>` : ""}${p.power_mw ? `<div class="selected-detail"><span>${capacityLabel}</span>${esc(p.power_mw)} MW</div>` : ""}${dateStr ? `<div class="selected-detail"><span>Verified</span>${dateStr}</div>` : ""}${p.note ? `<div class="selected-detail" style="margin-top:6px">${esc(p.note)}</div>` : ""}<a class="selected-link" href="${safeUrl(p.source_url)}" target="_blank" rel="noopener">${esc(p.source_name || "Source")} ↗</a>`;
     }
 
     function clearSelection() {
       if (activeMarker && activePointName) {
         const prev = pointByName.get(activePointName);
-        if (prev) activeMarker.setIcon(makeIcon(pointColor(prev), false, prev.layer));
+        if (prev) activeMarker.setIcon(makeIcon(pointColor(prev), false, prev.layer, prev.status));
       }
       activeMarker = null;
       activePointName = null;
@@ -369,9 +396,9 @@
     function selectPoint(name, fly = true) {
       const marker = markerMap.get(name), p = pointByName.get(name);
       if (!marker || !p) return;
-      if (activeMarker && activePointName) { const prev = pointByName.get(activePointName); if (prev) activeMarker.setIcon(makeIcon(pointColor(prev), false, prev.layer)); }
+      if (activeMarker && activePointName) { const prev = pointByName.get(activePointName); if (prev) activeMarker.setIcon(makeIcon(pointColor(prev), false, prev.layer, prev.status)); }
       activeMarker = marker; activePointName = name;
-      marker.setIcon(makeIcon(pointColor(p), true, p.layer));
+      marker.setIcon(makeIcon(pointColor(p), true, p.layer, p.status));
       renderSelectedRecord(p);
       $$(".map-directory button").forEach(b => b.classList.toggle("active", b.dataset.point === name));
       if (fly) { map.flyTo(marker.getLatLng(), Math.max(map.getZoom(), 10), { duration: 0.6 }); setTimeout(() => marker.openPopup(), 500); }
@@ -381,7 +408,7 @@
     function resetMapView({ fit = true } = {}) {
       activeRegion = "all";
       activeLayers = new Set(layersMeta.filter(l => l.default_on !== false).map(l => l.id));
-      if (!activeLayers.size) ["projects", "moratoria", "meetings", "transmission", "policy"].forEach(id => activeLayers.add(id));
+      if (!activeLayers.size) ["projects", "moratoria", "meetings", "transmission", "policy", "generation"].forEach(id => activeLayers.add(id));
       $$("#map-filters input").forEach(i => { i.checked = true; i.closest("label")?.classList.remove("off"); });
       $$("#map-layers input").forEach(i => {
         const on = activeLayers.has(i.value);
