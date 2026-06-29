@@ -403,24 +403,45 @@
   const video = $(".masthead-video");
   if (video && window.matchMedia("(prefers-reduced-motion: reduce)").matches) video.pause();
 
-  const mailchimpAction = data.newsletter?.form_action || "";
-  const mailchimpBotField = data.newsletter?.bot_field || "";
+  const newsletter = data.newsletter || {};
+  const mailchimpAction = newsletter.form_action || "";
+  const mailchimpBotFields = newsletter.bot_fields?.length
+    ? newsletter.bot_fields
+    : newsletter.bot_field
+      ? [newsletter.bot_field]
+      : [];
 
-  const ensureMailchimpBotField = form => {
-    if (!form || !mailchimpBotField || form.querySelector(`[name="${mailchimpBotField}"]`)) return;
+  const ensureMailchimpFields = (form, emailInput) => {
+    if (!form || !mailchimpAction) return;
+    const addHidden = (name, value) => {
+      if (!name || form.querySelector(`input[name="${name}"]`)) return;
+      const input = document.createElement("input");
+      input.type = "hidden";
+      input.name = name;
+      input.value = value;
+      form.append(input);
+    };
+    addHidden("u", newsletter.form_u || "");
+    addHidden("id", newsletter.form_id || "");
+    if (newsletter.email_field && emailInput) emailInput.name = newsletter.email_field;
+    if (!mailchimpBotFields.length || form.querySelector(".mc-bot-trap")) return;
     const trap = document.createElement("div");
+    trap.className = "mc-bot-trap";
     trap.setAttribute("aria-hidden", "true");
     trap.style.cssText = "position:absolute;left:-5000px;";
-    trap.innerHTML = `<input type="text" name="${mailchimpBotField}" tabindex="-1" value="" autocomplete="off">`;
+    trap.innerHTML = mailchimpBotFields.map(name =>
+      `<input type="text" name="${name}" tabindex="-1" value="" autocomplete="off">`
+    ).join("");
     form.append(trap);
   };
 
   const bindNewsletterForm = (form, emailId, messageId, onSuccess) => {
     if (!form) return;
     const message = messageId ? $(messageId) : null;
+    const emailInput = $(emailId);
     if (mailchimpAction) {
       form.action = mailchimpAction;
-      ensureMailchimpBotField(form);
+      ensureMailchimpFields(form, emailInput);
     }
     form.addEventListener("submit", event => {
       const email = $(emailId);

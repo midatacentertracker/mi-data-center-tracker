@@ -1,11 +1,11 @@
 window.TRACKER_DATA = {
   updated_at: "2026-06-29T12:00:00-04:00",
   newsletter: {
-    /* Mailchimp audience: MICHIGAN DATA CENTER TRACKER
-       Paste form action from Audience → Signup forms → Embedded forms → <form action="..."> */
-    form_action: "",
-    /* Honeypot field name from same embed, e.g. "b_abc123def" — stops bot signups */
-    bot_field: ""
+    form_action: "https://fortlauderdalesignal.us2.list-manage.com/subscribe/post",
+    form_u: "224e87bfc7d2cd51e4b2f70a4",
+    form_id: "9f42bf570e",
+    email_field: "MERGE0",
+    bot_fields: ["b_name", "b_email"]
   },
   feeds: {
     public_monitor_url: ""
