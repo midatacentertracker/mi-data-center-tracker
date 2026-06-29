@@ -310,6 +310,8 @@ main, .site-footer { max-width: var(--max); margin: 0 auto; background: var(--pa
 .meeting-actions { display: flex; align-items: center; gap: 6px; }
 .meeting-actions a { padding: 6px 10px; border: 1px solid var(--line); font-size: .62rem; font-weight: 900; text-transform: uppercase; letter-spacing: .06em; }
 .meeting-actions .watch { color: #fff; background: var(--red); border-color: var(--red); }
+.agenda-pending { font-size: .65rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: #b0b5c0; padding: 6px 0; }
+.meeting-section-note { font-size: .72rem; color: #8a909e; font-style: italic; padding: 10px 42px 14px; margin: 0; }
 .public-monitor { background: #f7f8fa; }
 .editorial-note {
   display: grid;
