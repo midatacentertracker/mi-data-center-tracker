@@ -17,53 +17,85 @@
 
   const SLIDE_DEFS = [
     {
-      id: "statewide",
-      label: "Statewide view",
-      kicker: "Projects · moratoria · hearings",
-      layers: ["projects", "moratoria", "meetings"],
-      href: "map.html"
-    },
-    {
       id: "metro",
       label: "Metro Detroit",
-      kicker: "Active proposals",
-      layers: ["projects"],
-      fit: p => p.longitude > -84.05 && p.latitude < 42.85,
-      minZoom: { w: 380, h: 240 },
-      href: "map.html?lat=42.35&lng=-83.55&zoom=9&layers=projects"
+      kicker: "Sites + moratoria layered",
+      layers: ["projects", "moratoria"],
+      fit: p => p.longitude > -84.15 && p.latitude > 42.0 && p.latitude < 42.85,
+      maxView: { w: 520, h: 360 },
+      href: "map.html?lat=42.35&lng=-83.55&zoom=9&layers=projects,moratoria"
     },
     {
-      id: "moratoria",
+      id: "moratoria-se",
       label: "Moratoria wave",
-      kicker: "Local pauses mapped",
-      layers: ["moratoria"],
-      href: "map.html?layers=moratoria"
+      kicker: "Pauses beside active proposals",
+      layers: ["moratoria", "projects"],
+      swatchLayer: "moratoria",
+      fit: p => p.longitude > -84.05 && p.latitude > 42.05 && p.latitude < 42.78,
+      maxView: { w: 440, h: 330 },
+      href: "map.html?lat=42.32&lng=-83.52&zoom=10&layers=moratoria,projects"
     },
     {
-      id: "generation",
-      label: "Power generation",
-      kicker: "Plants & grid nodes",
-      layers: ["generation"],
-      href: "map.html?layers=generation"
+      id: "west-mi",
+      label: "West Michigan",
+      kicker: "Grand Rapids-area pauses",
+      layers: ["moratoria", "projects"],
+      fit: p => p.longitude < -85.0 && p.latitude > 42.8,
+      maxView: { w: 480, h: 380 },
+      href: "map.html?lat=44.2&lng=-85.8&zoom=8&layers=moratoria,projects"
+    },
+    {
+      id: "hearings",
+      label: "Public hearings",
+      kicker: "Sessions + nearby sites",
+      layers: ["meetings", "projects"],
+      swatchLayer: "meetings",
+      fit: p => p.layer === "meetings" || (p.layer === "projects" && p.longitude > -84.2 && p.latitude < 42.85),
+      maxView: { w: 560, h: 340 },
+      href: "map.html?lat=42.4&lng=-83.7&zoom=9&layers=meetings,projects"
+    },
+    {
+      id: "capitol",
+      label: "Capitol watch",
+      kicker: "Policy · hearings · power",
+      layers: ["policy", "meetings", "generation"],
+      swatchLayer: "policy",
+      fit: p => p.layer === "policy" || p.layer === "meetings"
+        || (p.layer === "generation" && p.longitude > -85.0 && p.latitude > 42.55 && p.latitude < 42.95),
+      minView: { w: 360, h: 220 },
+      maxView: { w: 520, h: 360 },
+      href: "map.html?lat=42.73&lng=-84.55&zoom=10&layers=policy,meetings,generation"
     },
     {
       id: "grid",
-      label: "Power & grid",
-      kicker: "Transmission corridors",
-      layers: ["transmission"],
+      label: "Grid corridor",
+      kicker: "Transmission + power plants",
+      layers: ["transmission", "generation"],
+      swatchLayer: "transmission",
       lines: true,
-      fit: p => p.layer === "transmission" || (p.latitude > 42.62 && p.latitude < 42.82 && p.longitude > -85.1 && p.longitude < -83.8),
-      minZoom: { w: 420, h: 300 },
-      href: "map.html?layers=transmission"
+      fit: p => p.layer === "transmission"
+        || (p.layer === "generation" && p.longitude > -86.5 && p.latitude > 42.45 && p.latitude < 43.25),
+      minView: { w: 400, h: 240 },
+      maxView: { w: 580, h: 380 },
+      href: "map.html?lat=42.72&lng=-84.4&zoom=9&layers=transmission,generation"
     },
     {
-      id: "meetings",
-      label: "Public hearings",
-      kicker: "Upcoming sessions",
-      layers: ["meetings"],
-      fit: p => p.layer === "meetings",
-      minZoom: { w: 360, h: 260 },
-      href: "map.html?layers=meetings"
+      id: "baseload",
+      label: "Baseload power",
+      kicker: "Nuclear · coal · gas plants",
+      layers: ["generation"],
+      fit: p => p.layer === "generation" && p.longitude < -83.6 && p.latitude < 43.3,
+      maxView: { w: 620, h: 400 },
+      href: "map.html?lat=42.2&lng=-85.2&zoom=8&layers=generation"
+    },
+    {
+      id: "tracker",
+      label: "Lower Peninsula",
+      kicker: "Projects · moratoria · hearings",
+      layers: ["projects", "moratoria", "meetings"],
+      fit: p => p.latitude < 44.5,
+      maxView: { w: 820, h: 580 },
+      href: "map.html?layers=projects,moratoria,meetings"
     }
   ];
 
@@ -116,6 +148,14 @@
     return countyPromise;
   }
 
+  function clampViewBox(x, y, w, h) {
+    w = Math.max(180, Math.min(w, SVG_SIZE.w));
+    h = Math.max(140, Math.min(h, SVG_SIZE.h));
+    x = Math.max(0, Math.min(x, SVG_SIZE.w - w));
+    y = Math.max(0, Math.min(y, SVG_SIZE.h - h));
+    return { x, y, w, h };
+  }
+
   function computeView(points, slide) {
     const layers = new Set(slide.layers);
     const filtered = points.filter(p => {
@@ -129,10 +169,6 @@
     const xs = coords.map(c => c[0]);
     const ys = coords.map(c => c[1]);
 
-    if (slide.lines && !slide.fit) {
-      return { x: 0, y: 0, w: SVG_SIZE.w, h: SVG_SIZE.h, count: filtered.length };
-    }
-
     let minX = Math.min(...xs);
     let maxX = Math.max(...xs);
     let minY = Math.min(...ys);
@@ -140,30 +176,27 @@
 
     const spanX = Math.max(maxX - minX, 1);
     const spanY = Math.max(maxY - minY, 1);
-    const padX = Math.max(spanX * 0.22, 48);
-    const padY = Math.max(spanY * 0.22, 40);
+    const padX = Math.max(spanX * 0.12, 28);
+    const padY = Math.max(spanY * 0.12, 24);
 
     let w = spanX + padX * 2;
     let h = spanY + padY * 2;
-    if (slide.minZoom) {
-      w = Math.max(w, slide.minZoom.w);
-      h = Math.max(h, slide.minZoom.h);
+
+    if (slide.minView) {
+      w = Math.max(w, slide.minView.w);
+      h = Math.max(h, slide.minView.h);
+    }
+    if (slide.maxView) {
+      w = Math.min(w, slide.maxView.w);
+      h = Math.min(h, slide.maxView.h);
     }
 
     const cx = (minX + maxX) / 2;
     const cy = (minY + maxY) / 2;
-    let x = cx - w / 2;
-    let y = cy - h / 2;
-
-    x = Math.max(0, Math.min(x, SVG_SIZE.w - w));
-    y = Math.max(0, Math.min(y, SVG_SIZE.h - h));
-    w = Math.min(w, SVG_SIZE.w - x);
-    h = Math.min(h, SVG_SIZE.h - y);
-
-    return { x, y, w, h, count: filtered.length };
+    return { ...clampViewBox(cx - w / 2, cy - h / 2, w, h), count: filtered.length };
   }
 
-  function expandViewForLines(view, lines, minZoom) {
+  function expandViewForLines(view, lines, slide) {
     if (!lines?.length) return view;
     const pts = lines.flatMap(l => (l.coordinates || []).map(([lat, lng]) => project(lat, lng)));
     if (!pts.length) return view;
@@ -173,21 +206,23 @@
     const minY = Math.min(...ys, view.y);
     const maxX = Math.max(...xs, view.x + view.w);
     const maxY = Math.max(...ys, view.y + view.h);
-    const padX = 36;
-    const padY = 28;
-    let w = maxX - minX + padX * 2;
-    let h = maxY - minY + padY * 2;
-    if (minZoom) {
-      w = Math.max(w, minZoom.w);
-      h = Math.max(h, minZoom.h);
+    const spanX = Math.max(maxX - minX, 1);
+    const spanY = Math.max(maxY - minY, 1);
+    const padX = Math.max(spanX * 0.1, 24);
+    const padY = Math.max(spanY * 0.1, 20);
+    let w = spanX + padX * 2;
+    let h = spanY + padY * 2;
+    if (slide?.minView) {
+      w = Math.max(w, slide.minView.w);
+      h = Math.max(h, slide.minView.h);
+    }
+    if (slide?.maxView) {
+      w = Math.min(w, slide.maxView.w);
+      h = Math.min(h, slide.maxView.h);
     }
     const cx = (minX + maxX) / 2;
     const cy = (minY + maxY) / 2;
-    let x = Math.max(0, cx - w / 2);
-    let y = Math.max(0, cy - h / 2);
-    w = Math.min(w, SVG_SIZE.w - x);
-    h = Math.min(h, SVG_SIZE.h - y);
-    return { ...view, x, y, w, h };
+    return { ...view, ...clampViewBox(cx - w / 2, cy - h / 2, w, h) };
   }
 
   function buildSlides(data) {
@@ -197,23 +232,26 @@
 
     return SLIDE_DEFS.map(def => {
       let view = computeView(points, def);
-      if (def.lines) view = expandViewForLines(view, data.transmission_lines, def.minZoom);
-      if (!def.fit && !def.lines) {
-        view = { x: 0, y: 0, w: SVG_SIZE.w, h: SVG_SIZE.h, count: view.count };
-      }
+      if (def.lines) view = expandViewForLines(view, data.transmission_lines, def);
       return { ...def, view };
-    }).filter(slide => slide.count > 0 || slide.lines);
+    }).filter(slide => slide.view.count > 0 || slide.lines);
   }
 
-  function renderMarker(point, layers, focus) {
+  function markerSize(view) {
+    const scale = SVG_SIZE.w / Math.max(view.w, 200);
+    return Math.min(22, Math.max(13, Math.round(13 * Math.pow(scale, 0.35))));
+  }
+
+  function renderMarker(point, layers, focus, view) {
     if (!layers.has(point.layer || "projects")) return "";
     const [x, y] = project(point.latitude, point.longitude);
     const color = LAYER_COLORS[point.layer] || LAYER_COLORS.projects;
     const focused = focus
       && Math.abs(point.latitude - focus.lat) < 0.08
       && Math.abs(point.longitude - focus.lng) < 0.12;
-    const size = focused ? 20 : 16;
-    const glow = focused ? 13 : 10;
+    const base = markerSize(view);
+    const size = focused ? base + 4 : base;
+    const glow = focused ? base * 0.72 : base * 0.58;
     const inner = iconInner(point.layer, color, point.status);
     const cls = focused ? ' class="home-map-preview-pulse"' : "";
     return `<g transform="translate(${(x - size / 2).toFixed(1)} ${(y - size / 2).toFixed(1)})"${cls}>
@@ -241,12 +279,14 @@
     const points = (data.map_points || []).filter(
       p => Number.isFinite(p.latitude) && Number.isFinite(p.longitude)
     );
-    const pointMarkup = points.map(p => renderMarker(p, layers, slide.focus)).join("");
+    const pointMarkup = points.map(p => renderMarker(p, layers, slide.focus, view)).join("");
     const lineMarkup = slide.lines ? renderLines(data.transmission_lines, view) : "";
     const vb = `${view.x} ${view.y} ${view.w} ${view.h}`;
-    const tint = slide.id === "moratoria"
+    const tint = slide.layers.includes("moratoria") && !slide.layers.includes("projects")
       ? `<rect x="${view.x}" y="${view.y}" width="${view.w}" height="${view.h}" fill="rgba(212,160,23,.06)"/>`
-      : "";
+      : slide.layers.includes("moratoria") && slide.layers.includes("projects")
+        ? `<rect x="${view.x}" y="${view.y}" width="${view.w}" height="${view.h}" fill="rgba(207,16,45,.03)"/>`
+        : "";
 
     return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${vb}" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
 <defs>
@@ -265,7 +305,7 @@ ${tint}
   }
 
   function layerSwatch(slide) {
-    const layer = slide.layers[0] || "projects";
+    const layer = slide.swatchLayer || slide.layers[0] || "projects";
     const color = LAYER_COLORS[layer] || LAYER_COLORS.projects;
     const inner = iconInner(layer, color);
     return `<span class="home-map-preview-swatch home-map-preview-swatch--icon" style="color:${color}"><svg viewBox="0 0 24 24" aria-hidden="true">${inner}</svg></span>`;
