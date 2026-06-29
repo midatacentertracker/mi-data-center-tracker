@@ -570,17 +570,15 @@ main, .site-footer { max-width: var(--max); margin: 0 auto; background: var(--pa
 }
 .region-visual {
   position: relative;
-  min-height: 240px;
+  min-height: 300px;
   grid-row: span 2;
   display: flex;
   flex-direction: column;
-  justify-content: end;
+  justify-content: flex-end;
   overflow: hidden;
-  padding: 24px;
+  padding: 0;
   color: #fff;
-  background:
-    linear-gradient(0deg, rgba(7,8,10,.76), rgba(7,8,10,.02) 72%),
-    var(--region-image) center/cover;
+  background: #09090b var(--region-image) center/cover no-repeat;
   border-right: 1px solid var(--line);
   border-bottom: 1px solid var(--line);
 }
@@ -599,34 +597,86 @@ main, .site-footer { max-width: var(--max); margin: 0 auto; background: var(--pa
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center;
+  object-position: center 42%;
   opacity: 0;
-  transition: opacity 1.4s ease-in-out;
+  transform: scale(1.03);
+  transition: opacity 1.4s ease-in-out, transform 8s ease-out;
 }
 .region-visual-slide.is-active {
   opacity: 1;
+  transform: scale(1);
 }
 .region-visual-scrim {
   position: absolute;
   inset: 0;
-  background: linear-gradient(0deg, rgba(7,8,10,.76), rgba(7,8,10,.02) 72%);
   z-index: 1;
   pointer-events: none;
+  background:
+    linear-gradient(180deg, rgba(8,9,11,.18) 0%, rgba(8,9,11,.04) 38%, rgba(8,9,11,.52) 68%, rgba(8,9,11,.9) 100%);
 }
-.region-visual--slideshow strong {
+.region-visual-caption {
   position: relative;
   z-index: 2;
+  width: 100%;
+  padding: 16px 18px 18px 20px;
+  background: linear-gradient(90deg, rgba(10,10,12,.94) 0%, rgba(10,10,12,.78) 100%);
+  border-top: 1px solid rgba(255,255,255,.1);
+  border-left: 4px solid var(--red);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+.region-visual-kicker {
+  display: block;
+  margin-bottom: 5px;
+  color: #ff6b7f;
+  font-size: .58rem;
+  font-weight: 900;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+}
+.region-visual-title {
+  display: block;
+  margin: 0;
+  font-family: var(--display);
+  font-size: clamp(.92rem, 2.5vw, 1.2rem);
+  font-weight: 400;
+  line-height: 1.18;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+.region-visual-dots {
+  position: absolute;
+  z-index: 3;
+  top: 12px;
+  right: 12px;
+  display: flex;
+  gap: 6px;
+  padding: 6px 8px;
+  border-radius: 999px;
+  background: rgba(8,9,11,.55);
+  backdrop-filter: blur(4px);
+}
+.region-visual-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.35);
+  transition: background .25s, transform .25s;
+}
+.region-visual-dot.is-active {
+  background: var(--red);
+  transform: scale(1.15);
 }
 @media (prefers-reduced-motion: reduce) {
   .region-visual-slide {
     transition: none;
+    transform: none;
   }
 }
-.region-visual span { color: #ff5870; font-size: .66rem; font-weight: 900; letter-spacing: .12em; text-transform: uppercase; }
-.region-visual strong { margin-top: 4px; font-family: var(--display); font-size: 1.1rem; line-height: 1.1; text-transform: uppercase; }
 .region-topic { display: block; color: var(--red); font-size: .65rem; font-weight: 900; text-transform: uppercase; }
-.region-panel strong, .region-panel small { display: block; }
-.region-panel strong { margin: 9px 0 16px; line-height: 1.15; }
+.region-panel > a strong, .region-panel > a small { display: block; }
+.region-panel > a strong { margin: 9px 0 16px; line-height: 1.15; }
 .region-panel small { color: var(--muted); }
 .map-promo {
   position: relative;
@@ -1020,6 +1070,10 @@ main, .site-footer { max-width: var(--max); margin: 0 auto; background: var(--pa
   .section-heading h2, .meeting-banner h2, .map-promo h2, .learn-heading h2, .commercial-strip h2 { font-size: clamp(1.6rem, 7vw, 2.2rem); line-height: 1; }
   .text-link { font-size: .68rem; letter-spacing: .06em; }
   .lead-grid, .public-grid, .region-panel { grid-template-columns: 1fr; }
+  .region-visual { min-height: 260px; grid-row: auto; }
+  .region-visual-caption { padding: 14px 16px 16px 18px; }
+  .region-visual-title { font-size: clamp(.88rem, 4.2vw, 1.05rem); }
+  .region-visual-dots { top: 10px; right: 10px; }
   .public-grid { gap: 10px; }
   .public-card { padding: 16px 18px; }
   .story-card-lead { grid-column: auto; }

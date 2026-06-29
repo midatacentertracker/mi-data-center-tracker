@@ -231,32 +231,50 @@
       regionSlideshowTimer = null;
     }
   };
+  const setRegionSlide = (container, index) => {
+    const slides = $$(".region-visual-slide", container);
+    const dots = $$(".region-visual-dot", container);
+    if (!slides.length) return;
+    const next = ((index % slides.length) + slides.length) % slides.length;
+    slides.forEach((slide, i) => slide.classList.toggle("is-active", i === next));
+    dots.forEach((dot, i) => dot.classList.toggle("is-active", i === next));
+    return next;
+  };
   const startRegionSlideshow = container => {
     stopRegionSlideshow();
     if (!container || reducedMotion.matches) return;
     const slides = $$(".region-visual-slide", container);
     if (slides.length < 2) return;
-    let index = 0;
-    slides.forEach((slide, i) => slide.classList.toggle("is-active", i === 0));
+    let index = setRegionSlide(container, 0);
     regionSlideshowTimer = setInterval(() => {
-      slides[index].classList.remove("is-active");
-      index = (index + 1) % slides.length;
-      slides[index].classList.add("is-active");
+      index = setRegionSlide(container, index + 1);
     }, 4500);
   };
-  const renderRegionVisual = visual => {
+  const renderRegionCaption = (key, visual) => `<div class="region-visual-caption">
+      <span class="region-visual-kicker">${escapeHtml(regionTabLabels[key] || "Michigan")}</span>
+      <strong class="region-visual-title">${escapeHtml(visual.caption)}</strong>
+    </div>`;
+  const renderRegionVisual = (key, visual) => {
+    const caption = renderRegionCaption(key, visual);
     if (visual.slides?.length) {
       const slideMarkup = visual.slides.map((src, i) =>
         `<img class="region-visual-slide${i === 0 ? " is-active" : ""}" src="${escapeHtml(src)}" alt="" loading="${i === 0 ? "eager" : "lazy"}" decoding="async" aria-hidden="true">`
       ).join("");
+      const dots = visual.slides.length > 1
+        ? `<div class="region-visual-dots" aria-hidden="true">${visual.slides.map((_, i) =>
+            `<span class="region-visual-dot${i === 0 ? " is-active" : ""}"></span>`
+          ).join("")}</div>`
+        : "";
       return `<div class="region-visual region-visual--slideshow">
           <div class="region-visual-slides" aria-hidden="true">${slideMarkup}</div>
           <div class="region-visual-scrim" aria-hidden="true"></div>
-          <strong>${escapeHtml(visual.caption)}</strong>
+          ${caption}
+          ${dots}
         </div>`;
     }
     return `<div class="region-visual" style="--region-image:url('${escapeHtml(visual.image)}')">
-        <strong>${escapeHtml(visual.caption)}</strong>
+        <div class="region-visual-scrim" aria-hidden="true"></div>
+        ${caption}
       </div>`;
   };
 
@@ -271,7 +289,7 @@
     const items = indexes.map(index => latest[index]).filter(Boolean);
     const visual = regionVisuals[key];
     stopRegionSlideshow();
-    $("#region-panel").innerHTML = renderRegionVisual(visual) + (items.length
+    $("#region-panel").innerHTML = renderRegionVisual(key, visual) + (items.length
       ? items.map(item => `<a href="${safeUrl(item.source_url)}" target="_blank" rel="noopener">
           <span class="region-topic">${escapeHtml(item.region)}</span>
           <strong>${escapeHtml(item.headline)}</strong>
