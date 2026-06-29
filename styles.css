@@ -398,28 +398,54 @@ main, .site-footer { max-width: var(--max); margin: 0 auto; background: var(--pa
 .r2 { right: -4%; width: 540px; height: 540px; }
 .map-pulse { position: absolute; width: 10px; height: 10px; border-radius: 50%; background: var(--red); box-shadow: 0 0 0 9px rgba(207,16,45,.18); }
 .p1 { right: 18%; top: 32%; } .p2 { right: 29%; top: 62%; } .p3 { right: 11%; top: 70%; }
-.learn-section {
-  color: #fff;
-  background:
-    linear-gradient(90deg, rgba(8,9,11,.84) 0%, rgba(8,9,11,.6) 50%, rgba(8,9,11,.28) 100%),
-    url("pictured-rocks.jpg") center 52%/cover;
+.learn-section { background: #f5f6f8; padding: 48px 42px; color: #0b0b0d; }
+.learn-header {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 28px;
+  padding-bottom: 20px;
+  border-bottom: 2px solid #e2e4ea;
 }
-.learn-heading {
-  max-width: 800px;
-  margin: -10px 0 34px -10px;
-  padding: 20px 22px;
-  background: rgba(8,9,11,.72);
-  backdrop-filter: blur(5px);
+.learn-header h2 { font-size: clamp(1.3rem, 2.5vw, 1.7rem); color: #0b0b0d; font-weight: 700; margin: 0; }
+.learn-header .eyebrow { color: var(--red); }
+.learn-rows { display: flex; flex-direction: column; }
+.learn-row {
+  display: grid;
+  grid-template-columns: 190px 1fr 1fr;
+  gap: 16px 32px;
+  align-items: start;
+  padding: 16px 0;
+  border-bottom: 1px solid #e2e4ea;
 }
-.learn-heading p { color: #c8cbd2; }
-.learn-grid { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid #2c2e34; border-left: 1px solid #2c2e34; }
-.learn-grid article { min-height: 270px; display: flex; flex-direction: column; padding: 25px; border-right: 1px solid rgba(255,255,255,.18); border-bottom: 1px solid rgba(255,255,255,.18); background: rgba(8,9,11,.72); backdrop-filter: blur(3px); }
-.learn-number { color: #ff4f68; font-family: var(--display); font-size: 1.5rem; }
-.learn-grid h3 { margin: 20px 0 8px; font-size: 1.3rem; }
-.learn-grid p { color: #afb3bc; font-size: .85rem; }
-.learn-grid a { margin-top: auto; color: #fff; font-size: .72rem; font-weight: 900; text-transform: uppercase; }
-.learn-method { background: var(--red); }
-.learn-method .learn-number, .learn-method p { color: #fff; }
+.learn-row:last-child { border-bottom: none; }
+.learn-row-label {
+  font-size: .7rem;
+  font-weight: 800;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: #0b0b0d;
+  padding-top: 2px;
+}
+.learn-row-desc {
+  font-size: .81rem;
+  color: #555965;
+  line-height: 1.55;
+}
+.learn-row-links {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.learn-row-links a {
+  font-size: .78rem;
+  font-weight: 700;
+  color: var(--red);
+  text-decoration: none;
+  letter-spacing: .02em;
+  transition: opacity .15s;
+}
+.learn-row-links a:hover { opacity: .7; }
 .commercial-strip { display: grid; grid-template-columns: 1fr 1fr; }
 .sponsor-card, .briefing-card { min-height: 420px; padding: 48px 42px; }
 .sponsor-card { background: #f1f3f6; }
@@ -483,7 +509,7 @@ main, .site-footer { max-width: var(--max); margin: 0 auto; background: var(--pa
   .lead-grid { grid-template-columns: 1fr 1fr; }
   .story-card-lead { grid-column: 1 / -1; grid-row: auto; }
   .story-card-lead a { min-height: 460px; }
-  .public-grid, .region-panel, .learn-grid { grid-template-columns: repeat(2, 1fr); }
+  .public-grid, .region-panel { grid-template-columns: repeat(2, 1fr); }
   .map-promo { grid-template-columns: 1fr; }
   .map-promo-stats { display: grid; grid-template-columns: repeat(3, 1fr); }
   .map-promo-stats div { padding-right: 15px; }
@@ -516,7 +542,7 @@ main, .site-footer { max-width: var(--max); margin: 0 auto; background: var(--pa
   .section-heading { align-items: start; }
   .section-heading h2, .meeting-banner h2, .map-promo h2, .learn-heading h2, .commercial-strip h2 { font-size: clamp(1.6rem, 7vw, 2.2rem); line-height: 1; }
   .text-link { display: none; }
-  .lead-grid, .public-grid, .region-panel, .learn-grid { grid-template-columns: 1fr; }
+  .lead-grid, .public-grid, .region-panel { grid-template-columns: 1fr; }
   .story-card-lead { grid-column: auto; }
   .story-card-lead a { min-height: 365px; }
   .story-card-lead h3 { font-size: 1.6rem; }
