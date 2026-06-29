@@ -10,7 +10,7 @@
 
   async function loadMapData() {
     try {
-      const res = await fetch("map-data.json?v=20260629g", { cache: "no-store" });
+      const res = await fetch("map-data.json?v=20260629h", { cache: "no-store" });
       if (!res.ok) throw new Error(`map-data.json HTTP ${res.status}`);
       const json = await res.json();
       if (!json.map_points?.length) throw new Error("map-data.json has no map_points");
@@ -39,6 +39,7 @@
 
     const points = (data.map_points || []).filter(p => Number.isFinite(p.latitude) && Number.isFinite(p.longitude));
     const layersMeta = data.map_layers || [];
+    const boundaryLayersMeta = data.boundary_layers || [];
     const stories = data.map_stories || [];
     const transmissionLines = data.transmission_lines || [];
     const $ = (sel, root = document) => root.querySelector(sel);
@@ -105,10 +106,15 @@
     const initLayers = initLayersRaw ? new Set(initLayersRaw.split(",").map(s => s.trim()).filter(Boolean)) : null;
     const initPoint = params.get("point") || "";
     const initStory = params.get("story") || "";
+    const initBoundariesRaw = params.get("boundaries");
+    const initBoundaries = initBoundariesRaw ? new Set(initBoundariesRaw.split(",").map(s => s.trim()).filter(Boolean)) : null;
 
     const defaultLayers = new Set(layersMeta.filter(l => l.default_on !== false).map(l => l.id));
     if (!defaultLayers.size) ["projects","moratoria","meetings","transmission","policy","generation"].forEach(id => defaultLayers.add(id));
     let activeLayers = initLayers?.size ? initLayers : new Set(defaultLayers);
+
+    const defaultBoundaries = new Set(boundaryLayersMeta.filter(b => b.default_on).map(b => b.id));
+    let activeBoundaries = initBoundaries?.size ? initBoundaries : new Set(defaultBoundaries);
 
     const darkTile = L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", { maxZoom: 19, attribution: '&copy; OSM &copy; CARTO' });
     const dayTile = L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png", { maxZoom: 19, attribution: '&copy; OSM &copy; CARTO' });
@@ -134,6 +140,117 @@
       .then(r => r.json())
       .then(geo => { const mi = geo.features.find(f => f.properties?.name === "Michigan"); if (mi) boundaryLayer.addData(mi); })
       .catch(() => {});
+
+    const boundaryGroups = {}, boundaryLabelGroups = {}, boundaryCache = {}, boundaryLoading = {};
+    const BOUNDARY_VERSION = "20260629h";
+
+    function outerRing(geom) {
+      if (!geom) return [];
+      if (geom.type === "Polygon") return geom.coordinates[0] || [];
+      if (geom.type === "MultiPolygon") return geom.coordinates[0]?.[0] || [];
+      return [];
+    }
+
+    function featureCenter(geom) {
+      const ring = outerRing(geom);
+      if (!ring.length) return null;
+      let lat = 0, lng = 0;
+      ring.forEach(c => { lat += c[1]; lng += c[0]; });
+      return [lat / ring.length, lng / ring.length];
+    }
+
+    function makeBoundaryPopup(props, meta) {
+      const c = meta.color || "#818cf8";
+      const title = props.label || props.name || meta.label;
+      const sub = props.name && props.label && props.name !== props.label ? props.name : meta.description || "";
+      return `<div class="map-popup"><div class="pop-header" style="--status:${c}"><span class="pop-status">${esc(meta.label)}</span><div class="pop-name">${esc(title)}</div>${sub ? `<div class="pop-location">${esc(sub)}</div>` : ""}</div></div>`;
+    }
+
+    function boundaryStyle(meta) {
+      return () => ({
+        color: meta.color,
+        weight: meta.id === "townships" ? 0.9 : 2.2,
+        opacity: meta.id === "townships" ? 0.42 : 0.78,
+        fillColor: meta.color,
+        fillOpacity: meta.id === "congressional" ? 0.07 : 0,
+        dashArray: meta.id === "townships" ? "3 4" : null
+      });
+    }
+
+    async function loadBoundaryGeo(meta) {
+      if (boundaryCache[meta.id]) return boundaryCache[meta.id];
+      const res = await fetch(`${meta.url}?v=${BOUNDARY_VERSION}`, { cache: "force-cache" });
+      if (!res.ok) throw new Error(`${meta.url} HTTP ${res.status}`);
+      const geo = await res.json();
+      boundaryCache[meta.id] = geo;
+      return geo;
+    }
+
+    async function ensureBoundaryLayer(meta) {
+      if (boundaryGroups[meta.id] || boundaryLoading[meta.id]) return boundaryLoading[meta.id];
+      boundaryLoading[meta.id] = loadBoundaryGeo(meta).then(geo => {
+        const group = L.geoJSON(geo, {
+          style: boundaryStyle(meta),
+          interactive: true,
+          onEachFeature: (feature, layer) => {
+            const props = feature.properties || {};
+            if (meta.id === "congressional") {
+              layer.bindPopup(makeBoundaryPopup(props, meta), { maxWidth: 280, className: "tracker-popup" });
+            } else if (meta.id === "townships") {
+              layer.bindTooltip(props.label || props.name || "Township", {
+                className: "boundary-tip",
+                sticky: true,
+                opacity: 0.95
+              });
+            }
+          }
+        });
+        boundaryGroups[meta.id] = group;
+        if (meta.id === "congressional") {
+          const labelGroup = L.layerGroup();
+          geo.features.forEach(f => {
+            const center = featureCenter(f.geometry);
+            const label = f.properties?.label;
+            if (!center || !label) return;
+            labelGroup.addLayer(L.marker(center, {
+              icon: L.divIcon({
+                className: "cd-label-wrap",
+                html: `<span class="cd-label">${esc(label)}</span>`,
+                iconSize: [0, 0]
+              }),
+              interactive: false
+            }));
+          });
+          boundaryLabelGroups[meta.id] = labelGroup;
+        }
+        refreshBoundaries();
+      }).catch(err => {
+        console.warn("[map] boundary load failed", meta.id, err);
+        activeBoundaries.delete(meta.id);
+        const inp = document.querySelector(`#map-boundaries input[value="${escAttr(meta.id)}"]`);
+        if (inp) { inp.checked = false; inp.closest("label")?.classList.add("off"); }
+      }).finally(() => { delete boundaryLoading[meta.id]; });
+      return boundaryLoading[meta.id];
+    }
+
+    function refreshBoundaries() {
+      boundaryLayersMeta.forEach(meta => {
+        const on = activeBoundaries.has(meta.id);
+        const minZoom = meta.min_zoom || 0;
+        const zoomOk = map.getZoom() >= minZoom;
+        const group = boundaryGroups[meta.id];
+        const labels = boundaryLabelGroups[meta.id];
+        if (on && zoomOk && group) {
+          map.addLayer(group);
+          if (labels && map.getZoom() >= (meta.label_zoom || 7)) map.addLayer(labels);
+          else if (labels) map.removeLayer(labels);
+        } else {
+          if (group) map.removeLayer(group);
+          if (labels) map.removeLayer(labels);
+        }
+      });
+      syncUrl();
+    }
 
     function makeIcon(color, active = false, layer = "projects", status = "") {
       const size = active ? 28 : 22;
@@ -178,7 +295,7 @@
     const markerMap = new Map();
     const pointByName = new Map(points.map(p => [p.name, p]));
     let activeMarker = null, activePointName = null, activeRegion = initRegion;
-    const filtersEl = $("#map-filters"), layersEl = $("#map-layers"), dirEl = $("#map-directory"), storiesEl = $("#map-stories");
+    const filtersEl = $("#map-filters"), layersEl = $("#map-layers"), boundariesEl = $("#map-boundaries"), dirEl = $("#map-directory"), storiesEl = $("#map-stories");
     const statuses = [...new Set(points.map(p => p.status))].sort();
     const INITIAL_VIEW = { center: [44.3, -85.2], zoom: 6 };
 
@@ -246,7 +363,10 @@
       const genRows = ["Nuclear", "Coal", "Natural gas", "Wind", "Solar", "Hydroelectric"].map(s =>
         `<div class="legend-row"><span class="legend-swatch" style="background:${STATUS_COLORS[s] || "#14b8a6"}"></span>${esc(s)}</div>`
       ).join("");
-      el.innerHTML = `<div class="map-legend-title">Layers</div>${rows}${txRow}<div class="map-legend-title" style="margin-top:10px">Generation types</div>${genRows}`;
+      const boundaryRows = boundaryLayersMeta.map(b =>
+        `<div class="legend-row"><span class="legend-line" style="background:${b.color}"></span>${esc(b.label)}</div>`
+      ).join("");
+      el.innerHTML = `<div class="map-legend-title">Layers</div>${rows}${txRow}${boundaryRows ? `<div class="map-legend-title" style="margin-top:10px">Boundaries</div>${boundaryRows}` : ""}<div class="map-legend-title" style="margin-top:10px">Generation types</div>${genRows}`;
     }
 
     renderSponsors();
@@ -298,6 +418,8 @@
       if (onStatuses.length && onStatuses.length < statuses.length) p.set("f", onStatuses.join(","));
       const onLayers = [...activeLayers];
       if (onLayers.length && onLayers.length < layersMeta.length) p.set("layers", onLayers.join(","));
+      const onBoundaries = [...activeBoundaries];
+      if (onBoundaries.length) p.set("boundaries", onBoundaries.join(","));
       if (activePointName) p.set("point", activePointName);
       const qs = p.toString();
       history.replaceState(null, "", qs ? `?${qs}` : location.pathname);
@@ -347,6 +469,32 @@
         refreshMarkers();
         fitAll();
       });
+    }
+
+    if (boundariesEl && boundaryLayersMeta.length) {
+      boundariesEl.innerHTML = boundaryLayersMeta.map(b => {
+        const on = activeBoundaries.has(b.id);
+        const count = b.id === "townships" ? "1,240" : b.id === "congressional" ? "13" : "";
+        return `<label class="layer-toggle ${on ? "" : "off"}"><input type="checkbox" value="${esc(b.id)}" ${on ? "checked" : ""}><span class="layer-swatch layer-swatch--line" style="color:${b.color}"></span><span class="layer-copy"><span class="layer-name">${esc(b.label)}</span><span class="layer-desc">${esc(b.description)}</span></span><span class="layer-count">${count}</span></label>`;
+      }).join("");
+      boundariesEl.addEventListener("change", e => {
+        if (!e.target.matches("input")) return;
+        const meta = boundaryLayersMeta.find(b => b.id === e.target.value);
+        if (!meta) return;
+        if (e.target.checked) {
+          activeBoundaries.add(meta.id);
+          ensureBoundaryLayer(meta);
+          if (meta.min_zoom && map.getZoom() < meta.min_zoom) {
+            map.flyTo(map.getCenter(), meta.min_zoom, { duration: 0.6 });
+          }
+        } else {
+          activeBoundaries.delete(meta.id);
+        }
+        e.target.closest("label")?.classList.toggle("off", !e.target.checked);
+        refreshBoundaries();
+      });
+      boundaryLayersMeta.filter(b => activeBoundaries.has(b.id)).forEach(b => ensureBoundaryLayer(b));
+      map.on("zoomend", refreshBoundaries);
     }
 
     if (filtersEl) {
@@ -415,6 +563,13 @@
         i.checked = on;
         i.closest("label")?.classList.toggle("off", !on);
       });
+      activeBoundaries = new Set(boundaryLayersMeta.filter(b => b.default_on).map(b => b.id));
+      $$("#map-boundaries input").forEach(i => {
+        const on = activeBoundaries.has(i.value);
+        i.checked = on;
+        i.closest("label")?.classList.toggle("off", !on);
+      });
+      refreshBoundaries();
       $$(".region-chip").forEach(c => c.classList.toggle("active", c.dataset.region === "all"));
       const storyPanel = $("#story-detail");
       if (storyPanel) { storyPanel.hidden = true; storyPanel.innerHTML = ""; }

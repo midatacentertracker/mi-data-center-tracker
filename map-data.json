@@ -1493,6 +1493,26 @@
       "default_on": true
     }
   ],
+  "boundary_layers": [
+    {
+      "id": "congressional",
+      "label": "Congressional districts",
+      "description": "118th Congress maps (2022 redistricting)",
+      "color": "#818cf8",
+      "url": "geo/mi-congressional-districts.geojson",
+      "default_on": false,
+      "label_zoom": 7
+    },
+    {
+      "id": "townships",
+      "label": "Township lines",
+      "description": "1,240 civil townships — zoom in to view",
+      "color": "#94a3b8",
+      "url": "geo/mi-townships.geojson",
+      "default_on": false,
+      "min_zoom": 8
+    }
+  ],
   "transmission_lines": [
     {
       "id": "itc-oneida-sabine-route-a",
