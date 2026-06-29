@@ -95,7 +95,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, [tabindex]:focus-vis
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: 50% 42%;
+  object-position: 50% 20%;
   filter: brightness(1.2) saturate(1.08) contrast(.98);
 }
 .masthead-scrim {
@@ -179,11 +179,13 @@ a:focus-visible, button:focus-visible, input:focus-visible, [tabindex]:focus-vis
 }
 .nav-wordmark {
   display: block;
-  width: 160px;
+  width: 140px;
+  height: 36px;
   flex-shrink: 0;
   margin-right: 24px;
+  overflow: hidden;
 }
-.nav-wordmark img { display: block; width: 100%; height: auto; }
+.nav-wordmark img { display: block; width: 140px; height: auto; }
 .nav-links {
   display: flex;
   align-items: stretch;
