@@ -16,7 +16,9 @@
   --display: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
   --sans: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --max: 1120px;
-  --nav-h: 92px;
+  --nav-h: 108px;
+  --logo-display-h: 82px;
+  --logo-crop-ratio: 0.861; /* show MICHIGAN + DATA CENTER TRACKER, hide PNG tagline */
   --radius: 2px;
   --shadow-lg: 0 24px 64px rgba(0, 0, 0, .42);
 }
@@ -50,7 +52,7 @@
 }
 
 .site-page .nav-brand-logo-wrap {
-  height: 60px;
+  height: calc(var(--logo-display-h) * var(--logo-crop-ratio));
   overflow: hidden;
   line-height: 0;
   max-width: min(480px, 44vw);
@@ -58,10 +60,10 @@
 
 .site-page .nav-brand-logo {
   display: block;
-  height: 82px;
+  height: var(--logo-display-h);
   width: auto;
-  max-width: 100%;
-  object-fit: cover;
+  max-width: none;
+  object-fit: contain;
   object-position: left top;
 }
 
@@ -138,11 +140,12 @@
 }
 
 @media (min-width: 901px) {
+  :root {
+    --logo-display-h: 102px;
+  }
   .site-page .nav-brand-logo-wrap {
-    height: 74px;
     max-width: min(520px, 38vw);
   }
-  .site-page .nav-brand-logo { height: 102px; }
   .site-page .nav-brand-tag {
     font-size: .78rem;
     letter-spacing: .15em;
@@ -164,7 +167,10 @@
   .site-page .nav-alerts-mobile { display: inline-flex !important; }
   .site-page .primary-nav-inner {
     padding: 8px 16px;
-    min-height: 76px;
+    min-height: 96px;
+  }
+  :root {
+    --logo-display-h: 68px;
   }
   .site-page .nav-brand {
     margin-right: 8px;
@@ -172,10 +178,8 @@
     min-width: 0;
   }
   .site-page .nav-brand-logo-wrap {
-    height: 52px;
     max-width: min(320px, 64vw);
   }
-  .site-page .nav-brand-logo { height: 68px; }
   .site-page .nav-brand-tag {
     font-size: .6rem;
     letter-spacing: .12em;
@@ -198,10 +202,11 @@
     text-overflow: ellipsis;
   }
   .site-page .nav-brand-logo-wrap {
-    height: 48px;
     max-width: min(260px, 56vw);
   }
-  .site-page .nav-brand-logo { height: 62px; }
+  :root {
+    --logo-display-h: 56px;
+  }
 }
 
 /* Page shell */

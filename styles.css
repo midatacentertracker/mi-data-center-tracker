@@ -1384,7 +1384,7 @@ main, .site-footer { max-width: var(--max); margin: 0 auto; background: var(--pa
     background: #0b0b0d;
     box-shadow: 0 2px 12px rgba(0,0,0,.28);
   }
-  .primary-nav-inner { min-height: 76px; height: auto; padding: 8px 12px; display: flex; align-items: center; gap: 8px; }
+  .primary-nav-inner { min-height: 96px; height: auto; padding: 8px 12px; display: flex; align-items: center; gap: 8px; }
   .menu-button { display: grid; width: 48px; height: 48px; gap: 5px; }
   .nav-wordmark {
     display: block !important;
