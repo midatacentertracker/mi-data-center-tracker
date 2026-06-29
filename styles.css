@@ -292,8 +292,8 @@ main, .site-footer { max-width: var(--max); margin: 0 auto; background: var(--pa
 .km-item {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 0 20px;
+  gap: 12px;
+  padding: 0 24px;
   text-decoration: none;
   color: inherit;
   transition: background .15s;
@@ -302,29 +302,21 @@ main, .site-footer { max-width: var(--max); margin: 0 auto; background: var(--pa
 }
 .km-item:hover { background: #17181c; }
 .km-date {
-  font-size: .6rem;
+  font-size: .62rem;
   font-weight: 900;
   color: var(--red);
   white-space: nowrap;
   flex-shrink: 0;
-  letter-spacing: .04em;
+  letter-spacing: .06em;
+  text-transform: uppercase;
 }
 .km-title {
-  font-size: .72rem;
-  font-weight: 600;
-  color: #c8cad0;
+  font-size: .75rem;
+  font-weight: 500;
+  color: #a8aab4;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-}
-.km-county {
-  font-size: .58rem;
-  font-weight: 700;
-  color: #555965;
-  white-space: nowrap;
-  flex-shrink: 0;
-  letter-spacing: .06em;
-  text-transform: uppercase;
 }
 .km-divider {
   width: 1px;
