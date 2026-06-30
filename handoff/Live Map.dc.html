@@ -604,8 +604,9 @@ class Component extends DCLogic {
       { key: 'all', label: 'All' }, { key: 'metro', label: 'SE Michigan' },
       { key: 'west', label: 'West MI' }, { key: 'mid', label: 'Mid-Michigan' }, { key: 'north', label: 'Northern MI' },
     ];
+    this.LOWER_PEN_BOUNDS = [[41.68, -87.5], [45.35, -82.3]];
     this.state = {
-      basemap: 'dark', tab: 'list', region: 'all', query: '', selectedId: 1,
+      basemap: 'dark', tab: 'list', region: 'all', query: '', selectedId: null,
       status: { Operating: true, Construction: true, Permitting: true, Proposed: true, Moratorium: true },
       layers: { transmission: false, substations: false, water: false },
       legendOpen: true, panelOpen: false,
@@ -620,17 +621,28 @@ class Component extends DCLogic {
   }
   componentWillUnmount() { clearInterval(this._wait); if (this._map) this._map.remove(); }
 
+  viewLowerPeninsula() {
+    if (!this._map) return;
+    this._map.fitBounds(this.LOWER_PEN_BOUNDS, { padding: [28, 28], maxZoom: 7.5 });
+  }
+
   initMap() {
     const el = document.getElementById('mdct-map');
     if (!el || this._map) return;
-    const map = L.map(el, { zoomControl: false, attributionControl: true, minZoom: 5, maxZoom: 14, zoomSnap: 0.5 })
-      .setView([43.7, -84.6], 6.8);
+    const map = L.map(el, { zoomControl: false, attributionControl: true, minZoom: 5, maxZoom: 14, zoomSnap: 0.5 });
     this._map = map;
     L.control.zoom({ position: 'topright' }).addTo(map);
+    const carto = { subdomains: 'abcd', maxZoom: 19, attribution: '© OpenStreetMap · © CARTO' };
     this.tiles = {
-      dark: L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png', { subdomains: 'abcd', maxZoom: 19, attribution: '© OpenStreetMap · © CARTO' }),
-      day:  L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png', { subdomains: 'abcd', maxZoom: 19, attribution: '© OpenStreetMap · © CARTO' }),
-      sat:  L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { maxZoom: 18, attribution: '© Esri' }),
+      dark: L.layerGroup([
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png', carto),
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}.png', { subdomains: 'abcd', maxZoom: 19 }),
+      ]),
+      day: L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png', carto),
+      sat: L.layerGroup([
+        L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { maxZoom: 18, attribution: '© Esri' }),
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager_only_labels/{z}/{x}/{y}.png', { subdomains: 'abcd', maxZoom: 19 }),
+      ]),
     };
     this.tiles[this.state.basemap].addTo(map);
     this._basemap = this.state.basemap;
@@ -649,7 +661,7 @@ class Component extends DCLogic {
     this.syncMarkers(); this._sig = this.sig();
     this.syncContext(); this._lsig = JSON.stringify(this.state.layers);
     this._sel = this.state.selectedId;
-    setTimeout(() => { map.invalidateSize(false); this.focusSelected(false); }, 240);
+    setTimeout(() => { map.invalidateSize(false); this.viewLowerPeninsula(); }, 240);
   }
 
   buildContext() {
@@ -741,8 +753,8 @@ class Component extends DCLogic {
   }
 
   reset() {
-    this.setState({ region: 'all', query: '', status: { Operating: true, Construction: true, Permitting: true, Proposed: true, Moratorium: true } });
-    if (this._map) this._map.setView([43.7, -84.6], 6.8);
+    this.setState({ region: 'all', query: '', selectedId: null, status: { Operating: true, Construction: true, Permitting: true, Proposed: true, Moratorium: true } });
+    if (this._map) this.viewLowerPeninsula();
   }
   dist(a, b, c, d) { const R = 3958.8, t = Math.PI / 180, dLat = (c - a) * t, dLng = (d - b) * t, u = Math.sin(dLat / 2) ** 2 + Math.cos(a * t) * Math.cos(c * t) * Math.sin(dLng / 2) ** 2; return 2 * R * Math.asin(Math.sqrt(u)); }
   placeYou(lat, lng) {
@@ -759,7 +771,7 @@ class Component extends DCLogic {
       .then(d => { if (d && d[0]) this.applyUserLoc(+d[0].lat, +d[0].lon, q.trim()); else this.setState({ locBusy: false }); })
       .catch(() => this.setState({ locBusy: false }));
   }
-  clearLoc() { this.setState({ userLoc: null, locInput: '' }); if (this._you && this._map) { this._map.removeLayer(this._you); this._you = null; } if (this._map) this._map.setView([43.7, -84.6], 6.8); }
+  clearLoc() { this.setState({ userLoc: null, locInput: '' }); if (this._you && this._map) { this._map.removeLayer(this._you); this._you = null; } if (this._map) this.viewLowerPeninsula(); }
   locate() { if (this._map && navigator.geolocation) navigator.geolocation.getCurrentPosition(p => this.applyUserLoc(p.coords.latitude, p.coords.longitude, 'Your location')); }
   share() { try { navigator.clipboard && navigator.clipboard.writeText(location.href); } catch (e) {} }
   exportCSV() {

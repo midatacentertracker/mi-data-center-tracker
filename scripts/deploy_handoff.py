@@ -11,6 +11,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from productionize_homepage import productionize_dc_source
 from patch_bundle_template import patch_index_html
+from patch_map_bundle import patch_map_html
 import subprocess
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -89,6 +90,8 @@ def main() -> None:
                 text=True,
             )
             content = patch_index_html(shell)
+        elif name == "live-map.html":
+            content = patch_map_html(patch_html(src.read_text(encoding="utf-8")))
         else:
             content = patch_html(src.read_text(encoding="utf-8"))
         dest.write_text(content, encoding="utf-8")
