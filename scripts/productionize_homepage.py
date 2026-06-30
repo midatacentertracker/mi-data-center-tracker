@@ -112,6 +112,7 @@ RESPONSIVE_HEADER = """
 
 def productionize_homepage(html: str) -> str:
     """Return homepage markup with prototype chrome removed and responsive layout."""
+    html = html.replace('onClick="{{', 'onclick="{{')
     html = html.replace("padding:48px 32px 80px", "padding:0")
 
     # Prototype title block

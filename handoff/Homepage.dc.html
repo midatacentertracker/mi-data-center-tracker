@@ -161,9 +161,9 @@
   <template id="__bundler_thumbnail"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#16140f"/><rect x="28" y="28" width="44" height="44" rx="9" fill="#E03131"/><text x="50" y="65" font-family="Arial, sans-serif" font-weight="800" font-size="32" fill="#fff" text-anchor="middle">M</text></svg></template>
 <!-- 10-second fly-in: email + ZIP capture -->
   <sc-if value="{{ flyOpen }}" hint-placeholder-val="{{ false }}">
-    <div onClick="{{ dismissFly }}" style="position:fixed;inset:0;z-index:1400;background:rgba(8,7,6,.74);backdrop-filter:blur(3px);display:flex;align-items:center;justify-content:center;padding:20px;">
-      <div onClick="{{ stopProp }}" style="position:relative;width:min(460px,100%);background:#16140f;border:1px solid #2b2824;border-top:3px solid #E03131;box-shadow:0 30px 90px rgba(0,0,0,.6);">
-        <button onClick="{{ dismissFly }}" aria-label="Close" style="position:absolute;top:10px;right:12px;background:none;border:none;color:#7d7975;font-size:24px;line-height:1;cursor:pointer;">×</button>
+    <div data-mdct-flyin style="position:fixed;inset:0;z-index:1400;background:rgba(8,7,6,.74);backdrop-filter:blur(3px);display:flex;align-items:center;justify-content:center;padding:20px;">
+      <div data-mdct-flyin-panel style="position:relative;width:min(460px,100%);background:#16140f;border:1px solid #2b2824;border-top:3px solid #E03131;box-shadow:0 30px 90px rgba(0,0,0,.6);">
+        <button type="button" data-mdct-flyin-close aria-label="Close" style="position:absolute;top:10px;right:12px;background:none;border:none;color:#7d7975;font-size:24px;line-height:1;cursor:pointer;">×</button>
         <div style="padding:32px 30px 28px;">
           <sc-if value="{{ flyPending }}" hint-placeholder-val="{{ true }}">
             <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;"><span style="width:7px;height:7px;border-radius:50%;background:#E03131;" class="ld"></span><span style="font-family:'Space Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#E03131;">Daily intelligence brief</span></div>
@@ -173,7 +173,7 @@
               <input type="email" placeholder="you@email.com" aria-label="Email address" style="width:100%;background:#0f0e0d;border:1px solid #322e29;border-radius:0;padding:0 14px;height:48px;color:#f4f1ee;font-family:'Archivo',sans-serif;font-size:15px;outline:none;" style-focus="border-color:#E03131;" />
               <div style="display:flex;gap:10px;">
                 <input type="text" inputmode="numeric" maxlength="5" placeholder="ZIP" aria-label="ZIP code" style="width:108px;flex-shrink:0;background:#0f0e0d;border:1px solid #322e29;border-radius:0;padding:0 14px;height:48px;color:#f4f1ee;font-family:'Space Mono',monospace;font-size:15px;letter-spacing:.1em;outline:none;" style-focus="border-color:#E03131;" />
-                <button type="button" onClick="{{ submitFly }}" style="flex:1;border:none;cursor:pointer;color:#100f0e;background:#E03131;font-family:'Archivo',sans-serif;font-weight:800;font-size:15px;letter-spacing:.03em;text-transform:uppercase;height:48px;" style-hover="background:#f24343;">Get the brief</button>
+                <button type="button" data-mdct-flyin-submit style="flex:1;border:none;cursor:pointer;color:#100f0e;background:#E03131;font-family:'Archivo',sans-serif;font-weight:800;font-size:15px;letter-spacing:.03em;text-transform:uppercase;height:48px;" style-hover="background:#f24343;">Get the brief</button>
               </div>
             </div>
             <div style="font-family:'Space Mono',monospace;font-size:10px;color:#6f6b67;margin-top:12px;letter-spacing:.04em;">No spam · unsubscribe anytime</div>
@@ -203,21 +203,21 @@
         <a class="navlink" href="learn.html">Learn</a>
         <a class="cta" href="sponsor.html" style="text-decoration:none;color:#100f0e;background:#E03131;font-weight:700;padding:11px 19px;border-radius:0;letter-spacing:.04em;">Sponsor</a>
       </nav>
-      <button class="hamburger" onClick="{{ toggleMenu }}" aria-label="Menu"><span></span><span></span><span></span></button>
+      <button class="hamburger" onclick="{{ toggleMenu }}" aria-label="Menu"><span></span><span></span><span></span></button>
     </header>
 <sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}">
     <div style="position:fixed;inset:0;z-index:60;background:rgba(12,11,10,.97);padding:24px 20px;display:flex;flex-direction:column;">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:36px;">
         <span class="lockup" style="font-size:26px;"><img class="mark" src="assets/mark.svg" alt="Michigan Data Center Tracker logo" /><span class="divider"></span><span class="words"><span class="mi">MICHIGAN</span><span class="rule"></span><span class="sub">DATA CENTER TRACKER</span></span></span>
-        <button onClick="{{ toggleMenu }}" aria-label="Close" style="background:none;border:none;color:#cbc7c3;font-size:30px;cursor:pointer;line-height:1;">×</button>
+        <button onclick="{{ toggleMenu }}" aria-label="Close" style="background:none;border:none;color:#cbc7c3;font-size:30px;cursor:pointer;line-height:1;">×</button>
       </div>
       <nav style="display:flex;flex-direction:column;gap:4px;">
-        <a href="index.html" onClick="{{ toggleMenu }}" style="text-decoration:none;color:#f4f1ee;font-family:'Saira Condensed',sans-serif;font-weight:700;font-size:30px;padding:13px 0;border-bottom:1px solid #1a1813;">Home</a>
-        <a href="map/" onClick="{{ toggleMenu }}" style="text-decoration:none;color:#cbc7c3;font-family:'Saira Condensed',sans-serif;font-weight:700;font-size:30px;padding:13px 0;border-bottom:1px solid #1a1813;">Live Map</a>
-        <a href="stories.html" onClick="{{ toggleMenu }}" style="text-decoration:none;color:#cbc7c3;font-family:'Saira Condensed',sans-serif;font-weight:700;font-size:30px;padding:13px 0;border-bottom:1px solid #1a1813;">Stories</a>
-        <a href="meetings.html" onClick="{{ toggleMenu }}" style="text-decoration:none;color:#cbc7c3;font-family:'Saira Condensed',sans-serif;font-weight:700;font-size:30px;padding:13px 0;border-bottom:1px solid #1a1813;">Meetings</a>
-        <a href="learn.html" onClick="{{ toggleMenu }}" style="text-decoration:none;color:#cbc7c3;font-family:'Saira Condensed',sans-serif;font-weight:700;font-size:30px;padding:13px 0;border-bottom:1px solid #1a1813;">Learn</a>
-        <a href="sponsor.html" onClick="{{ toggleMenu }}" style="text-decoration:none;color:#100f0e;background:#E03131;font-weight:700;text-align:center;font-size:16px;text-transform:uppercase;letter-spacing:.04em;padding:15px;border-radius:0;margin-top:20px;">Sponsor the tracker</a>
+        <a href="index.html" onclick="{{ toggleMenu }}" style="text-decoration:none;color:#f4f1ee;font-family:'Saira Condensed',sans-serif;font-weight:700;font-size:30px;padding:13px 0;border-bottom:1px solid #1a1813;">Home</a>
+        <a href="map/" onclick="{{ toggleMenu }}" style="text-decoration:none;color:#cbc7c3;font-family:'Saira Condensed',sans-serif;font-weight:700;font-size:30px;padding:13px 0;border-bottom:1px solid #1a1813;">Live Map</a>
+        <a href="stories.html" onclick="{{ toggleMenu }}" style="text-decoration:none;color:#cbc7c3;font-family:'Saira Condensed',sans-serif;font-weight:700;font-size:30px;padding:13px 0;border-bottom:1px solid #1a1813;">Stories</a>
+        <a href="meetings.html" onclick="{{ toggleMenu }}" style="text-decoration:none;color:#cbc7c3;font-family:'Saira Condensed',sans-serif;font-weight:700;font-size:30px;padding:13px 0;border-bottom:1px solid #1a1813;">Meetings</a>
+        <a href="learn.html" onclick="{{ toggleMenu }}" style="text-decoration:none;color:#cbc7c3;font-family:'Saira Condensed',sans-serif;font-weight:700;font-size:30px;padding:13px 0;border-bottom:1px solid #1a1813;">Learn</a>
+        <a href="sponsor.html" onclick="{{ toggleMenu }}" style="text-decoration:none;color:#100f0e;background:#E03131;font-weight:700;text-align:center;font-size:16px;text-transform:uppercase;letter-spacing:.04em;padding:15px;border-radius:0;margin-top:20px;">Sponsor the tracker</a>
         <a href="https://publicmeetingtracker.com" target="_blank" rel="noopener" style="text-decoration:none;color:#9b9794;font-family:'Space Mono',monospace;font-weight:700;font-size:12px;letter-spacing:.1em;text-transform:uppercase;text-align:center;padding:16px 0 0;">Powered by PublicMeetingTracker.com ↗</a>
       </nav>
     </div>
@@ -240,7 +240,7 @@
 
     <!-- podcast bar -->
     <div class="pod {{ podCls }} pod-inner" style="display:flex;align-items:center;justify-content:center;gap:20px;padding:11px 44px;background:linear-gradient(180deg,#1d0f0c,#16140f);border-bottom:1px solid #2b2824;">
-      <button onClick="{{ togglePod }}" class="pod-play" aria-label="Play the latest episode" style="flex-shrink:0;width:46px;height:46px;display:grid;place-items:center;background:#E03131;color:#100f0e;border:none;cursor:pointer;font-size:16px;">{{ podIcon }}</button>
+      <button onclick="{{ togglePod }}" class="pod-play" aria-label="Play the latest episode" style="flex-shrink:0;width:46px;height:46px;display:grid;place-items:center;background:#E03131;color:#100f0e;border:none;cursor:pointer;font-size:16px;">{{ podIcon }}</button>
       <div style="flex-shrink:0;text-align:left;">
         <div style="display:flex;align-items:center;gap:8px;margin-bottom:2px;"><span style="width:6px;height:6px;border-radius:50%;background:#E03131;" class="ld"></span><span style="font-family:'Space Mono',monospace;font-size:9px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#E03131;">On the Radio · New daily</span></div>
         <div style="display:flex;align-items:baseline;gap:10px;"><span style="font-family:'Saira Condensed',sans-serif;font-weight:800;font-size:19px;line-height:1;letter-spacing:.01em;color:#f6f3f0;text-transform:uppercase;">Michigan Data Wire</span><span style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.04em;color:#8c8884;">{{ podDate }} · {{ podDur }}</span></div>
@@ -299,7 +299,7 @@
       </div>
       <div style="flex-shrink:0;width:400px;">
         <sc-if value="{{ heroPending }}" hint-placeholder-val="{{ true }}">
-          <div style="display:flex;gap:10px;"><input type="email" placeholder="you@email.com" style="flex:1;min-width:0;background:#0f0e0d;border:1px solid #322e29;border-radius:0;padding:0 14px;height:46px;color:#f4f1ee;font-family:'Archivo',sans-serif;font-size:14px;outline:none;" style-focus="border-color:#E03131;" /><button type="button" onClick="{{ subscribeHero }}" style-hover="border-color:#E03131;color:#fff;background:#241f1b;" style="flex-shrink:0;cursor:pointer;color:#f4f1ee;background:#1f1c18;border:1px solid #3a3733;font-family:'Archivo',sans-serif;font-weight:700;font-size:14px;letter-spacing:.02em;padding:0 22px;height:46px;border-radius:0;">Subscribe</button></div>
+          <div style="display:flex;gap:10px;"><input type="email" placeholder="you@email.com" style="flex:1;min-width:0;background:#0f0e0d;border:1px solid #322e29;border-radius:0;padding:0 14px;height:46px;color:#f4f1ee;font-family:'Archivo',sans-serif;font-size:14px;outline:none;" style-focus="border-color:#E03131;" /><button type="button" onclick="{{ subscribeHero }}" style-hover="border-color:#E03131;color:#fff;background:#241f1b;" style="flex-shrink:0;cursor:pointer;color:#f4f1ee;background:#1f1c18;border:1px solid #3a3733;font-family:'Archivo',sans-serif;font-weight:700;font-size:14px;letter-spacing:.02em;padding:0 22px;height:46px;border-radius:0;">Subscribe</button></div>
           <div style="font-family:'Space Mono',monospace;font-size:10px;color:#6f6b67;margin-top:8px;letter-spacing:.04em;">No spam · unsubscribe anytime</div>
         </sc-if>
         <sc-if value="{{ heroSubscribed }}" hint-placeholder-val="{{ false }}"><div style="display:flex;align-items:center;gap:10px;min-height:46px;font-size:15px;color:#9bc49b;"><span style="width:22px;height:22px;border-radius:50%;background:rgba(120,170,120,.16);color:#9bc49b;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;">✓</span>You're on the list — check your inbox to confirm.</div></sc-if>
@@ -492,7 +492,7 @@
         <!-- partner email capture -->
         <div style="margin-top:22px;padding-top:20px;border-top:1px solid #2b2824;max-width:470px;">
           <div style="font-size:13px;color:#8c8884;margin-bottom:10px;">Not ready to commit? Get the media kit and daily briefing by email.</div>
-          <sc-if value="{{ partnerPending }}" hint-placeholder-val="{{ true }}"><div style="display:flex;gap:10px;"><input type="email" placeholder="you@work-email.com" style="flex:1;min-width:0;background:#0f0e0d;border:1px solid #322e29;border-radius:0;padding:0 14px;height:46px;color:#f4f1ee;font-family:'Archivo',sans-serif;font-size:14px;outline:none;" style-focus="border-color:#E03131;" /><button type="button" onClick="{{ subscribePartner }}" style-hover="border-color:#E03131;color:#fff;background:#241f1b;" style="flex-shrink:0;cursor:pointer;color:#f4f1ee;background:#1f1c18;border:1px solid #3a3733;font-family:'Archivo',sans-serif;font-weight:700;font-size:14px;letter-spacing:.02em;padding:0 22px;height:46px;border-radius:0;">Send the kit</button></div></sc-if>
+          <sc-if value="{{ partnerPending }}" hint-placeholder-val="{{ true }}"><div style="display:flex;gap:10px;"><input type="email" placeholder="you@work-email.com" style="flex:1;min-width:0;background:#0f0e0d;border:1px solid #322e29;border-radius:0;padding:0 14px;height:46px;color:#f4f1ee;font-family:'Archivo',sans-serif;font-size:14px;outline:none;" style-focus="border-color:#E03131;" /><button type="button" onclick="{{ subscribePartner }}" style-hover="border-color:#E03131;color:#fff;background:#241f1b;" style="flex-shrink:0;cursor:pointer;color:#f4f1ee;background:#1f1c18;border:1px solid #3a3733;font-family:'Archivo',sans-serif;font-weight:700;font-size:14px;letter-spacing:.02em;padding:0 22px;height:46px;border-radius:0;">Send the kit</button></div></sc-if>
           <sc-if value="{{ partnerSubscribed }}" hint-placeholder-val="{{ false }}"><div style="display:flex;align-items:center;gap:10px;min-height:46px;font-size:15px;color:#9bc49b;"><span style="width:22px;height:22px;border-radius:50%;background:rgba(120,170,120,.16);color:#9bc49b;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;">✓</span>On its way — check your inbox for the media kit.</div></sc-if>
         </div>
       </div>
@@ -572,7 +572,32 @@ class Component extends DCLogic {
 
   // CMS endpoints — set window.MDCT_CMS = 'http://127.0.0.1:8787' (your Grok Build desk) to go live.
   // Falls back to the built-in editorial feed if unreachable (e.g. in preview).
-  cmsBase() { return (typeof window !== 'undefined' && window.MDCT_CMS) || 'http://127.0.0.1:8787'; }
+  cmsBase() { return (typeof window !== 'undefined' && window.MDCT_CMS) || ''; }
+
+  dismissFlyAction() {
+    try { localStorage.setItem('mdct_flyin_seen', '1'); } catch (e) {}
+    const root = document.querySelector('[data-mdct-flyin]');
+    if (root) root.__mdctBound = false;
+    this.setState({ flyOpen: false });
+  }
+  submitFlyAction() {
+    try { localStorage.setItem('mdct_flyin_seen', '1'); } catch (e) {}
+    this.setState({ flyDone: true });
+  }
+  bindFlyin() {
+    if (!this.state.flyOpen) return;
+    const root = document.querySelector('[data-mdct-flyin]');
+    if (!root || root.__mdctBound) return;
+    root.__mdctBound = true;
+    const dismiss = () => this.dismissFlyAction();
+    root.addEventListener('click', (e) => { if (e.target === root) dismiss(); });
+    const panel = root.querySelector('[data-mdct-flyin-panel]');
+    if (panel) panel.addEventListener('click', (e) => e.stopPropagation());
+    const close = root.querySelector('[data-mdct-flyin-close]');
+    if (close) close.addEventListener('click', (e) => { e.preventDefault(); dismiss(); });
+    const submit = root.querySelector('[data-mdct-flyin-submit]');
+    if (submit) submit.addEventListener('click', (e) => { e.preventDefault(); this.submitFlyAction(); });
+  }
 
   componentDidMount() {
     this._wait = setInterval(() => {
@@ -584,11 +609,14 @@ class Component extends DCLogic {
         this._flyTimer = setTimeout(() => { if (!this._dead) this.setState({ flyOpen: true }); }, 10000);
       }
     } catch (e) {}
+    setTimeout(() => this.bindFlyin(), 0);
   }
+  componentDidUpdate() { this.bindFlyin(); }
   componentWillUnmount() { clearInterval(this._wait); clearTimeout(this._flyTimer); this._dead = true; }
 
   loadCMS() {
     const base = this.cmsBase();
+    if (!base) return;
     const grab = (path) => fetch(base + path, { headers: { 'Accept': 'application/json' } })
       .then(r => r.ok ? r.json() : Promise.reject(r.status));
     // Stories / Wire feed
@@ -747,9 +775,8 @@ class Component extends DCLogic {
       lead, wireList, tickerItems, onDeck,
       wireUpdated: ago(rawWire[0].iso),
       flyOpen: this.state.flyOpen, flyPending: !this.state.flyDone, flyDone: this.state.flyDone,
-      stopProp: (e) => { e.stopPropagation(); },
-      dismissFly: () => { try { localStorage.setItem('mdct_flyin_seen', '1'); } catch (e) {} this.setState({ flyOpen: false }); },
-      submitFly: () => { try { localStorage.setItem('mdct_flyin_seen', '1'); } catch (e) {} this.setState({ flyDone: true }); },
+      dismissFly: () => this.dismissFlyAction(),
+      submitFly: () => this.submitFlyAction(),
     };
   }
 }
