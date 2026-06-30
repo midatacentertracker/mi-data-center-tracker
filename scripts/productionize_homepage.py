@@ -275,6 +275,24 @@ def productionize_homepage(html: str) -> str:
     html = html.replace("hero-map-d", "hero-map")
     html = html.replace("hero-map-m", "hero-map")
 
+    # Don't fetch localhost CMS on the public site (causes CORS noise / errors)
+    html = html.replace(
+        "cmsBase() { return (typeof window !== 'undefined' && window.MDCT_CMS) || 'http://127.0.0.1:8787'; }",
+        "cmsBase() { return (typeof window !== 'undefined' && window.MDCT_CMS) || ''; }",
+    )
+    html = html.replace(
+        "loadCMS() {\n    const base = this.cmsBase();",
+        "loadCMS() {\n    const base = this.cmsBase();\n    if (!base) return;",
+    )
+
+    # Base href must live inside the unpacked template (survives replaceWith)
+    if '<base href=' not in html:
+        html = html.replace(
+            '<meta name="viewport" content="width=device-width, initial-scale=1">',
+            '<meta name="viewport" content="width=device-width, initial-scale=1">\n<base href="/mi-data-center-tracker/">',
+            1,
+        )
+
     return html
 
 
@@ -292,12 +310,13 @@ def extract_template_from_bundle(bundle_html: str) -> str:
 def encode_bundle_template(template: str) -> str:
     """JSON-encode template for embedding in HTML <script> tag.
 
-    Must escape ``</script>`` as ``<\\u002Fscript>`` — a literal closing tag
-    inside the JSON string terminates the HTML script element early and
-    breaks JSON.parse in the browser.
+    Must escape closing tags as ``<\\u002F…>`` — literals inside the JSON
+    string can terminate the HTML script element early and break unpacking.
     """
-    encoded = json.dumps(template)
-    return encoded.replace("</script>", r"<\u002Fscript>")
+    encoded = json.dumps(template, ensure_ascii=True)
+    encoded = encoded.replace("</script>", r"<\u002Fscript>")
+    encoded = encoded.replace("</style>", r"<\u002Fstyle>")
+    return encoded
 
 
 def inject_template_into_bundle(bundle_html: str, template: str) -> str:
